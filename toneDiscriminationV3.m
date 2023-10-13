@@ -12,7 +12,7 @@ cd(HFRootFolder_GF);
 % ANIMAL ID
 % cl
 % if nargin < 1
-anID = input('Please eJOnter animal ID:\n','s');
+anID = input('Please enter animal ID:\n','s');
 userID = input('Please enter your text ID (Ex.: VBP or GD or DHY):\n','s');
 if isempty(userID)
     reply = 'gd';

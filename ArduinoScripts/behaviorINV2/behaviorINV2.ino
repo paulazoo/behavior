@@ -1,4 +1,4 @@
-#include <SPI.h>
+#include <SPI.h> // https://www.arduino.cc/reference/en/language/functions/communication/spi/
 
 const int levInput = A0;
 const int xInput = A3;
