@@ -11,7 +11,7 @@
 __A Trial__:
 - an _ITI_ duration between each trial
     - if lever press (_isMVT_ in code), extend _ITI_ delay
-    - `fprintf(ardOut,'I')` ARDUINO LED (pin 8) turns on [?]
+    - `fprintf(ardOut,'I')` ARDUINO LED (pin 8) turns on
     - `fprintf(ardOut,'J')` ARDUINO LED (pin 8) turns off
 - random _foreperiod_ at the beginning of each trial so that trial timing is somewhat random/can't be learned
     - `fprintf(ardOut,'A')` ARDUINO send a laser pulse (pin 10) to digidata
@@ -43,7 +43,7 @@ __data.params__
     - _preReinforcement_: s, duration following a lever press before either water reward or air puff punishment
 - _[7] mvt_:
     - _thresh_: V, threshold for lever sensor to count as lever press
-    - _noMvtThresh_: V, maximum movement allowed during baseline period [?]
+    - _noMvtThresh_: V, maximum movement allowed during foreperiod without trial becoming an NaN trial
 - _[8] tone_selection_: num, possible tone intensities from which one intensity will be randomly selected each trial
     - _ToneID_: `1`-`4` are tone A max-min, `5`-`8` are tone B max-min
 - _[9] punish_: boole, whether punishment is given or not
@@ -84,14 +84,17 @@ __data.response__
 - _[3] respMTXheader_: header,
 `timeTrialStart` | `timeTone` | `leverPressed` | `timePressed` | `MVT0` | `earlyPress` | `rew`
 - _[2] respMTX_: num of actual trials in run x 7 matrix, row vals based on _respMTXheader_
-    - `timeTrialStart`: double, MATLAB time at trial start includes foreperiod duration, but not ITI
+    - `timeTrialStart`: double, MATLAB time at trial start includes foreperiod duration and ITI
     - `timeTone`: double, MATLAB time for tone
     - `leverPressed`: boole, 1 if press, 0 if doesn't press
     - `timePressed`: double, MATLAB time when press happens
     - `MVT0`: V, reference movement as the first value of _dataARDUINO.MVT_ [wait actually seems like the MVT0 is recalibrated every trial?]
     - `earlyPress`: if press lever before tone during the foreperiod duration
+    -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
 
 # ./analysis/dprime.m
 $F^{-1}$(__Hit__ rate) $- F^{-1}$(__FA__ rate)
 N(0, 1) distrib
 
+# 1_rxn_ts.ipynb
+Plot reaction times for each session over the session day
