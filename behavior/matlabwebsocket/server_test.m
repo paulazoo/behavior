@@ -18,8 +18,9 @@ n = 1;
 while 1
     % Get 6 bytes of data
     leverIN_serial_output = fread(leverIN, 6);
-    lever = typecast(uint8(leverIN_serial_output(1:2)), 'uint16');
+    lever = typecast(uint8(leverIN_serial_output(1:2)), 'int16');
     time = typecast(uint8(leverIN_serial_output(3:6)), 'int32');
+    
     %time = round(etime(clock,t0) * 1000);
     
     % Save the data 
