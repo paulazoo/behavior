@@ -14,10 +14,12 @@
     recording from serial port.
 
     231026: tested with Arduino UNO USB virtual serial port on M1 Mac-- 9kHz sampling rate.
+    231027: tested with Arduino UNO USB virtual serial port on Windows--
+    ~9kHz
 %}
 
 %% leverIN Arduino initialization
-leverIN = serial("/dev/cu.usbmodem11401", 'BaudRate', 115200);
+leverIN = serial("COM7", 'BaudRate', 115200);
 fopen(leverIN);
 
 %% Data saving storage initialization

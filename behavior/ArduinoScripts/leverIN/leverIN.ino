@@ -13,7 +13,7 @@ void setup()
 void loop() {
     // tStart signal ==================================
     int tStartValue = digitalRead(tStart);
-    if (tStartValue == HIGH) {
+    if (tStartValue == LOW) {
         // readAnalog has a range of 0-1023, our lever sensor outputs 300 pulled back, to 700 pushed forward
         lever_raw = analogRead(leverInput);
     } else {
@@ -23,4 +23,3 @@ void loop() {
     Serial.write(lowByte(lever_raw));
     Serial.write(highByte(lever_raw));
 }
-
