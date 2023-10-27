@@ -13,7 +13,7 @@ void setup()
 void loop() {
     // tStart signal ==================================
     int tStartValue = digitalRead(tStart);
-    if (tStartValue == LOW) {
+    if (tStartValue == HIGH) {
         // readAnalog has a range of 0-1023, our lever sensor outputs 300 pulled back, to 700 pushed forward
         lever_raw = analogRead(leverInput);
     } else {
