@@ -49,8 +49,8 @@ durPuff = params.durations.puff;
 durPreReinforce = params.durations.preReinforcement; 
 
 % Detection ---
-mvt_thresh = params.mvt.thresh; % in Volts to initiate a trial
-noMvt_thresh = params.mvt.noMvtThresh;
+mvt_thresh = params.mvt.thresh; % in Volts to initiate a trial, aka second threshold
+noMvt_thresh = params.mvt.noMvtThresh; % first threshold that mouse must keep bar behind
 
 % Tone selection --- 
 toneSelect = params.toneSelection; % Range from 1o 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
@@ -107,6 +107,7 @@ end
 if laserMode == 3 && durPreReinforce < 0.01
     error('You cannot use this laser mode if durPreReinforce is set to 0 sec')
 end
+
 %% SETUP ===================================================================
 durValveL = water_reward2duration(amountReward,2);
 
@@ -114,13 +115,6 @@ durValveL = water_reward2duration(amountReward,2);
 [ardIn,ardOut] = lever_cardSetUpInOutV2_GF;
 ARDUINO.in = ardIn;
 ARDUINO.out = ardOut;
-ARDUINO.idx = 1;
-
-% Initialize variables ---
-estSamplingRate = 250;
-estDur = 70; %minutes
-nSamples = estSamplingRate*60*estDur;
-ARDUINO.data = nan(nSamples,7);
 
 responseMTXheader = {'timeTrialStart';'timeTone';'leverPressed';'timePressed';'MVT0';'earlyPress';'rew'};
 respMTX = nan(nTrials,7);
@@ -136,11 +130,7 @@ if any(laserMode == [3 4])
 end
 
 % Keyboard ---
-if strcmp (computer,'MACI64')
-    escapeKey = KbName('ESCAPE');
-else
-    escapeKey = KbName('esc');
-end
+escapeKey = KbName('esc');
 [~,~,keyCode] = KbCheck;
 ESC = keyCode(escapeKey) == 0;
 
@@ -156,8 +146,6 @@ pause(2);
 % Training
 noGoSwitch = false;
 goSwitch = false;
-% Timing message
-tNextMessage = tMessages;
 
 % Initialize graph
 lh = initializePrintPerfo(nTrials);
@@ -195,12 +183,14 @@ while N <= nTrials && ESC
     end
     fprintf('\n');
         
-    % ITI ==================================
+    % ITI ======================================================
     fprintf('ITI: %3.1f sec\n',durITI);
     fprintf(ardOut,'I'); % LED ON
+    respMTX(N,5) = MVT0;
     FIRSTFLAG = true;
     isMVT = true;
     while isMVT && ESC
+        % make sure back below first threshold ------------
         paramsDetectMVT = [durITI MVT0 noMvt_thresh];
         [ARDUINO,isMVT] = detectMVTV2(ARDUINO,paramsDetectMVT,escapeKey);
         if isMVT
@@ -211,6 +201,7 @@ while N <= nTrials && ESC
                 fprintf('.');
             end
         end
+        %------------
         
         [~,~,keyCode] = KbCheck;
         ESC = keyCode(escapeKey) == 0;
@@ -223,15 +214,15 @@ while N <= nTrials && ESC
         fprintf('LASER!')
     end
     
-    % FOREPERIOD ==================================
+    % FOREPERIOD ======================================================
     fprintf('\nForeperiod(%1.2f sec)\n',durFore);
-    respMTX(N,1) = toc(ARDUINO.t0); % TRIAL START
-    paramsDetectMVT = [durFore MVT0 mvt_thresh];
+    respMTX(N,1) = toc(ARDUINO.t0); % TRIAL START, leverIN is aligned to this
+    % make sure back below first threshold ------------
+    paramsDetectMVT = [durFore MVT0 noMvt_thresh];
     [ARDUINO,isMVT,ESC] = detectMVTV2(ARDUINO,paramsDetectMVT,escapeKey);
     if isMVT
-        fprintf('Lever pressed. Return to ITI\n');
+        fprintf('Lever not below first threshold. Return to ITI\n');
         respMTX(N,6) = true;
-        respMTX(N,4) = ARDUINO.data(ARDUINO.idx-1,1);
         % LASER OFF HERE NOT IMPLEMENTED YET <<<<<<<<<<<<<<<<<<<<<<<<<
     elseif ~ESC
         fprintf('ESC pressed. Exit behavior!\n');
@@ -244,24 +235,40 @@ while N <= nTrials && ESC
         if laserIO > 0 && laserMode == 2
             fprintf(ardOut,'A'); % Send a pulse to digidata
             fprintf('LASER!')
-        end        
+        end
         soundPlay(soundID,snd);
     end
+    %------------
     
     if respMTX(N,6) < 1
-        % RESPONSE ================
+        % RESPONSE =======================================================
+        % go forward to meet second threshold ------------
         paramsDetectMVT = [durDecision MVT0 mvt_thresh];
         [ARDUINO,isMVT,ESC] = detectMVTV2(ARDUINO,paramsDetectMVT,escapeKey);
         if isMVT
-            fprintf('Lever pressed\n');
+            
+            % go back to meet first threshold again ------------
+            paramsDetectMVT = [durDecision MVT0 noMvt_thresh]; % the rest of durDecision to come back
+            [ARDUINO,isMVT,ESC] = detectMVTV2(ARDUINO,paramsDetectMVT,escapeKey);
+            if isMVT % came back to first threshold successfully
+            fprintf('Lever pressed forward and back\n');
             respMTX(N,3) = true;
-            respMTX(N,4) = ARDUINO.data(ARDUINO.idx-1,1);
+            respMTX(N,4) = toc(ARDUINO.t0);
+            elseif ~ESC
+                fprintf('ESC pressed. Exit behavior!\n');
+            else
+                fprintf('Lever pressed forward, did not come back to noMvt_thresh\n');
+                respMTX(N,3) = false;
+            end
+            % ------------
+
         elseif ~ESC
             fprintf('ESC pressed. Exit behavior!\n');
         else
             fprintf('No response\n');
             respMTX(N,3) = false;
         end
+        % ------------
         
         % PRE-REINFORCEMENT ====================
         %%LASER ON - ARCH LASER DURING REINFORCEMENT
@@ -367,10 +374,6 @@ while N <= nTrials && ESC
 end
 
 %% SAVE  =======================================================
-
-ARDUINO.data = ARDUINO.data(~isnan(ARDUINO.data(:,1)),:);
-response.dataArduino = ARDUINO.data;
-response.dataArduinoHeader = {'TimeMATLAB','MVT','LICK1','LICK2'};
 response.respMTX = respMTX(1:N-1,:);
 response.respMTXheader = responseMTXheader;
 

@@ -88,7 +88,7 @@ __data.response__
     - `timeTone`: double, MATLAB time for tone
     - `leverPressed`: boole, 1 if press, 0 if doesn't press
     - `timePressed`: double, MATLAB time when press happens
-    - `MVT0`: V, reference movement as the first several value of _dataARDUINO.MVT_
+    - `MVT0`: V, reference movement as the mean of the first 100 values of lever movement
     - `earlyPress`: if press lever before tone during the foreperiod duration
     -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
 
