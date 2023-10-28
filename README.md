@@ -10,12 +10,12 @@
 
 __A Trial__:
 - an _ITI_ duration between each trial
-    - if lever press (_isMVT_ in code), extend _ITI_ delay
+    - if lever pressed past _noMvtThresh_ threshold, extend _ITI_ delay
     - `fprintf(ardOut,'I')` ARDUINO LED (pin 8) turns on
+- random _foreperiod_ at the beginning of each trial so that tone timing is somewhat random/can't be learned
     - `fprintf(ardOut,'J')` ARDUINO LED (pin 8) turns off
-- random _foreperiod_ at the beginning of each trial so that trial timing is somewhat random/can't be learned
     - `fprintf(ardOut,'A')` ARDUINO send a laser pulse (pin 10) to digidata
-    - if lever press (_isMVT_ in code), restart and go back to _ITI_
+    - if lever pressed past _noMvtThresh_ threshold, restart and go back to _ITI_
 - Either __Go trial__ or __No-Go trial__ tone is given
 - _decision_ period after tone for mouse to press lever or not
 - __Go trial__:
@@ -84,11 +84,11 @@ __data.response__
 - _[3] respMTXheader_: header,
 `timeTrialStart` | `timeTone` | `leverPressed` | `timePressed` | `MVT0` | `earlyPress` | `rew`
 - _[2] respMTX_: num of actual trials in run x 7 matrix, row vals based on _respMTXheader_
-    - `timeTrialStart`: double, MATLAB time at trial start includes foreperiod duration and ITI
+    - `timeTrialStart`: double, MATLAB time at trial start includes foreperiod duration but not ITI
     - `timeTone`: double, MATLAB time for tone
     - `leverPressed`: boole, 1 if press, 0 if doesn't press
     - `timePressed`: double, MATLAB time when press happens
-    - `MVT0`: V, reference movement as the first value of _dataARDUINO.MVT_ [wait actually seems like the MVT0 is recalibrated every trial?]
+    - `MVT0`: V, reference movement as the first several value of _dataARDUINO.MVT_
     - `earlyPress`: if press lever before tone during the foreperiod duration
     -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
 

@@ -3,33 +3,34 @@
     and save into `lever_data`
 
     Make sure:
-    1) Serial port selected is EMPTY of anyone else trying to
+    1) Serial port selected MUST BE EMPTY of anyone else trying to
     read it.
     2) BaudRate for the Arduino is also set to what is written here
-    (e.g. 115200 is the max for Arduino UNO)
-    3) Only 2 bytes of data are sent from the Arduino
-`   4) lever_data has enough rows for however long it needs to store data
+    (e.g. 115200 is the max for Arduino UNO) 2 bytes of data are sent from Arduino
+    4) lever_data only stores data for however long it has empty rows for
+    5) MUST BE RUN ON ITS OWN CPU CORE, asynchronously from any other programs
+    6) CLOSE SERIAL PORT CONNECTIONS AFTER FINISHED RUNNING
 
     While the loop is running, simply do Ctrl+C or stop the program to stop
     recording from serial port.
 
-    231026: tested with Arduino UNO USB virtual serial port on M1 Mac-- 9kHz sampling rate.
-    231027: tested with Arduino UNO USB virtual serial port on Windows--
-    ~9kHz
+    231026: tested with Arduino UNO USB virtual serial port on M1 Mac-- 9kHz sampling rate somehow
+    231027: tested with Arduino UNO USB virtual serial port on Windows-- >5kHz
 %}
 
-%% leverIN Arduino initialization
-leverIN = serial("COM7", 'BaudRate', 115200);
+%%
+% leverIN Arduino initialization
+leverIN = serial("/dev/cu.usbmodem11401", 'BaudRate', 115200);
 fopen(leverIN);
 
-%% Data saving storage initialization
+% Data saving storage initialization
 lever_data = zeros(72000000,1); % 2 hours = 7200000 milliseconds
 
-%% Main loop
+% Main loop
 n = 1;
 tic
 while 1
-    % Get 6 bytes of data
+    % Get whatever the latest 2 bytes of data are
     leverIN_serial_output = fread(leverIN, 2);
     lever = typecast(uint8(leverIN_serial_output(1:2)), 'int16');
     
@@ -38,6 +39,10 @@ while 1
     
     n=n+1;
 end
+
+%% Save the lever_data
+lever_data_filename = input("Name file to save the lever_data to: ")
+save(lever_data_filename+".mat","lever_data")
 
 %% Close serial port connections
 fclose(leverIN)
