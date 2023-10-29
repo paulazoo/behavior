@@ -3,27 +3,28 @@
 const int leverInput = A0;
 const int tStart = 7;
 
-int lever_raw;
-int lever_data;
+int lever_data = 0;
 
 void setup()
 {
     // 115200 bits per s = 14400 bytes per s
     Serial.begin(115200);
+    pinMode(7, INPUT);
+    pinMode(A0, INPUT);
 }
 
 void loop() {
     // lever_raw analog data =========================
-    // readAnalog has a range of 0-1023, our lever sensor outputs 300 pulled back, to 700 pushed forward
-    lever_raw = analogRead(leverInput);
+    // readAnalog has a range of 0-1023
+    // our lever sensor outputs ~300 pulled back to ~700 pushed forward, ~550 when neutral
+    int lever_raw = analogRead(leverInput);
     
     // tStart signal ==================================
-    int tStartValue = digitalRead(tStart);
-    if (tStartValue == LOW) {
-        lever_data = lever_raw + 2000; // if lever_raw > 2000, then trial has not started
+    if (digitalRead(tStart) == LOW) {
+        lever_data = (int) (lever_raw + 2000); // if lever_raw > 2000, then trial has not started
     }
-    if (tStartValue == HIGH) {
-        lever_data = lever_raw; // if lever_raw = 0, then trial has not started
+    if (digitalRead(tStart) == HIGH) {
+        lever_data = (int) lever_raw; // if lever_raw = 0, then trial has not started
     }
 
     // send data through serial port as 2 bytes =================

@@ -27,6 +27,6 @@ void loop() {
   Serial.println(time); // prints time since program started
 
   Serial.println(levChar1); // prints the lever output
-  //Serial.print(levChar2);
+  Serial.print(levChar2);
 
 }

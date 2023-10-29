@@ -19,6 +19,7 @@
 %}
 
 %%
+clc
 % leverIN Arduino initialization
 leverIN = serial("/dev/cu.usbmodem11401", 'BaudRate', 115200);
 fopen(leverIN);
@@ -39,6 +40,10 @@ while 1
     
     n=n+1;
 end
+
+%% Plot the lever_data
+scatter(1:1:n, lever_data(1:1:n))
+ylim([0 5000])
 
 %% Save the lever_data
 lever_data_filename = input("Name file to save the lever_data to: ")

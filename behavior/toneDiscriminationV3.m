@@ -1,6 +1,6 @@
 clear all; close all; clc;
 setUpDirHFB_GF;
-cd(HFRootFolder_GF);
+cd('D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\');
  
 
 % NOTES ON VERSION 3: Uses new way to read arduino (need to upload
@@ -14,9 +14,6 @@ anID = input('Please enter animal ID:\n','s');
 
 % Define params
 params = defineParamsToneDiscrimination_GF(anID);
-if ~isstruct(params) && isnan(params)
-    returnARDUINO
-end
 
 % N s ---
 nTrials = params.nTrials;
@@ -51,6 +48,7 @@ durPreReinforce = params.durations.preReinforcement;
 % Detection ---
 mvt_thresh = params.mvt.thresh; % in Volts to initiate a trial, aka second threshold
 noMvt_thresh = params.mvt.noMvtThresh; % first threshold that mouse must keep bar behind
+ARDUINO.idx = 1;
 
 % Tone selection --- 
 toneSelect = params.toneSelection; % Range from 1o 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
@@ -140,7 +138,7 @@ vol = [35:-10:5 35:-10:5]; % BASED ON CALIBRATION
 
 % Reference movement ---
 fprintf('Finding MVT0\n');
-MVT0 = referenceMVTV2(ARDUINO,100);
+MVT0 = mean(referenceMVTV2(ARDUINO,100));
 pause(2);
 
 % Training
@@ -243,17 +241,19 @@ while N <= nTrials && ESC
     if respMTX(N,6) < 1
         % RESPONSE =======================================================
         % go forward to meet second threshold ------------
+        decision_start_time = toc(ARDUINO.t0);
         paramsDetectMVT = [durDecision MVT0 mvt_thresh];
         [ARDUINO,isMVT,ESC] = detectMVTV2(ARDUINO,paramsDetectMVT,escapeKey);
         if isMVT
-            
+            fprintf('Lever pressed forward\n');
             % go back to meet first threshold again ------------
-            paramsDetectMVT = [durDecision MVT0 noMvt_thresh]; % the rest of durDecision to come back
-            [ARDUINO,isMVT,ESC] = detectMVTV2(ARDUINO,paramsDetectMVT,escapeKey);
+            leftover_durDecision = durDecision - (toc(ARDUINO.t0) - decision_start_time);
+            paramsDetectMVT = [leftover_durDecision MVT0 noMvt_thresh]; % the rest of durDecision to come back
+            [ARDUINO,isMVT,ESC] = detectMVTVback(ARDUINO,paramsDetectMVT,escapeKey);
             if isMVT % came back to first threshold successfully
-            fprintf('Lever pressed forward and back\n');
-            respMTX(N,3) = true;
-            respMTX(N,4) = toc(ARDUINO.t0);
+                fprintf('Lever pressed forward and back\n');
+                respMTX(N,3) = true;
+                respMTX(N,4) = toc(ARDUINO.t0);
             elseif ~ESC
                 fprintf('ESC pressed. Exit behavior!\n');
             else
@@ -386,7 +386,7 @@ data.params = params;
 data.response = response;
 
 % Check or Create folder for anID
-cd(HFRootFolder_GF)
+cd('D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\');
 
 if exist('Data','dir') == 0
     mkdir(pwd,'Data');
@@ -424,7 +424,7 @@ lever_cleanArduino(ARDUINO.out);
 
 
 %% DISPLAY SESSION AVERAGES  ========================
-plotSessionAverages(data)
+%%plotSessionAverages(data)
 %% SAVE FIGURES
 if exist(['Data\ToneDiscrimination\AN' anID '\Figures'],'dir') == 0
     mkdir(['Data\ToneDiscrimination\AN' anID],'Figures');

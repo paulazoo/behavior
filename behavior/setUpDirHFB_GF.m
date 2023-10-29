@@ -8,9 +8,11 @@ switch systName
         cd 'D:\Dropbox (MIT)\Giselle Fernandes\RL motor learning\';
         
     case 'Giselle-HP'
-        S = 'C:\Users\gisfe\Dropbox (MIT)\Giselle Fernandes\RL motor learning\';
+        cd 'C:\Users\gisfe\Dropbox (MIT)\Giselle Fernandes\RL motor learning\';
 
 end
+
+cd 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\';
 
 addpath([pwd filesep 'helpers' filesep]);
 addpath([pwd filesep 'helpers' filesep 'analysis']);

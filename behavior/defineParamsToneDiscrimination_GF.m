@@ -47,9 +47,9 @@ params.laserExp = {'Arch/Jaws','ChR2', 'Arch/Jaws-Reinf', 'ArchSuprise'};
 
 % CASE BY CASE PARAMETERS ==================================
 switch anID
-    case '01' % FOR TESTING THE RIG
+    case '01' % FOR TESTING THE only go tone
         % N s
-        params.fractNoGo = 100; %fraction of Go trials
+        params.fractNoGo = 0; %fraction of Go trials
         params.fractRewCorrRej = 0;
         
         % Durations ---
@@ -58,11 +58,11 @@ switch anID
         params.durations.preReinforcement = 0;
         
         % Detection MVT ---
-        params.mvt.thresh = 0.15; % in Volts to initiate a trial
+        params.mvt.thresh = 0.35; % in Volts to initiate a trial
         params.mvt.noMvtThresh = 0.1;
         
         % Tone selection ---
-        params.toneSelection = 4; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
+        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
         
         % Switches
         params.punish = true; % punish false alarm with puff
@@ -75,7 +75,7 @@ switch anID
         params.laser = [0 0 1]; %fractLaser trials; ntrial baseline (at the beginning of a session)
         % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
 
-        case '02' % FOR TESTING THE air puff
+    case '02' % FOR TESTING only no-go tone
         % N s
         params.fractNoGo = 1; %fraction of Go trials
         params.fractRewCorrRej = 0;
@@ -90,7 +90,7 @@ switch anID
         params.mvt.noMvtThresh = 0.1;
         
         % Tone selection ---
-        params.toneSelection = 4; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
+        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
         
         % Switches
         params.punish = true; % punish false alarm with puff
@@ -103,6 +103,33 @@ switch anID
         params.laser = [0 0 1]; %fractLaser trials; ntrial baseline (at the beginning of a session)
         % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
  
+    case '03' % FOR TESTING both tones
+        % N s
+        params.fractNoGo = 0.5; %fraction of Go trials
+        params.fractRewCorrRej = 0;
+        
+        % Durations ---
+        params.durations.ITI = 2.5;
+        params.durations.decision = 0.8; %time after tone to make decision
+        params.durations.preReinforcement = 0;
+        
+        % Detection MVT ---
+        params.mvt.thresh = 0.15; % in Volts to initiate a trial
+        params.mvt.noMvtThresh = 0.1;
+        
+        % Tone selection ---
+        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
+        
+        % Switches
+        params.punish = true; % punish false alarm with puff
+        params.training = true;
+        
+        % AutoStop
+        params.maxTotHits = 20; % Maximum total of hits. Use nan for no limits.
+        
+        % Laser
+        params.laser = [0 0 1]; %fractLaser trials; ntrial baseline (at the beginning of a session)
+        % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
         
     case 'VBP' % FOR TESTING THE RIG
         % N s
@@ -134,20 +161,20 @@ switch anID
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-        case 'Monk'
+        case 'Paula'
         % N s
-        params.fractNoGo = 0.5; %fraction of no-Go trials
+        params.fractNoGo = 0; %fraction of no-Go trials
         
 %         params.fractRewCorrRej = 0.25; %.25 for surprise reward CR
         
         % Durations ---
-%         params.durations.ITI = 2.5;
-        params.durations.decision = 0.8; %time after tone to make decision
+%        params.durations.ITI = 2.5;
+        params.durations.decision = 30; %time after tone to make decision
         params.amountReward = 5; % In uL. Run calibration
         params.durations.preReinforcement = 0.25;
         
         % Detection MVT ---
-        params.mvt.thresh = 0.16; % in Volts to initiate a trial
+        params.mvt.thresh = 0.35; % in Volts to initiate a trial
         params.mvt.noMvtThresh = 0.12;
         
         % Tone selection ---
@@ -165,20 +192,20 @@ switch anID
         %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
         %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
         
-        case 'Gus'
+        case 'A1'
         % N s
-        params.fractNoGo = 0.5; %fraction of no-Go trials
+        params.fractNoGo = 0; %fraction of no-Go trials
         
 %         params.fractRewCorrRej = 0.25; %.25 for surprise reward CR
         
         % Durations ---
-%         params.durations.ITI = 2.5;
-        params.durations.decision = 0.8; %time after tone to make decision
+%        params.durations.ITI = 2.5;
+        params.durations.decision = 30; %time after tone to make decision
         params.amountReward = 5; % In uL. Run calibration
         params.durations.preReinforcement = 0.25;
         
         % Detection MVT ---
-        params.mvt.thresh = 0.16; % in Volts to initiate a trial
+        params.mvt.thresh = 0.35; % in Volts to initiate a trial
         params.mvt.noMvtThresh = 0.12;
         
         % Tone selection ---
@@ -195,6 +222,100 @@ switch anID
         % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
         %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
         %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
+        
+           case 'A2'
+        % N s
+        params.fractNoGo = 0; %fraction of no-Go trials
+        
+%         params.fractRewCorrRej = 0.25; %.25 for surprise reward CR
+        
+        % Durations ---
+%         params.durations.ITI = 2.5;
+        params.durations.decision = 30; %time after tone to make decision
+        params.amountReward = 5; % In uL. Run calibration
+        params.durations.preReinforcement = 0.25;
+        
+        % Detection MVT ---
+        params.mvt.thresh = 0.18; % in Volts to initiate a trial
+        params.mvt.noMvtThresh = 0.12;
+        
+        % Tone selection ---
+        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
+        
+        % Switches
+        params.training = true;
+        
+        % AutoStop
+        params.maxTotHits = 100; % Maximum total of hits. Use nan for no limits.
+        
+        % Laser
+        params.laser = [0 10 4]; %fractLaser trials; ntrial baseline (at the beginning of a session)
+        % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
+        %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
+        %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
+
+           case 'B1'
+        % N s
+        params.fractNoGo = 0; %fraction of no-Go trials
+        
+%         params.fractRewCorrRej = 0.25; %.25 for surprise reward CR
+        
+        % Durations ---
+%         params.durations.ITI = 2.5;
+        params.durations.decision = 30; %time after tone to make decision
+        params.amountReward = 5; % In uL. Run calibration
+        params.durations.preReinforcement = 0.25;
+        
+        % Detection MVT ---
+        params.mvt.thresh = 0.18; % in Volts to initiate a trial
+        params.mvt.noMvtThresh = 0.12;
+        
+        % Tone selection ---
+        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
+        
+        % Switches
+        params.training = true;
+        
+        % AutoStop
+        params.maxTotHits = 100; % Maximum total of hits. Use nan for no limits.
+        
+        % Laser
+        params.laser = [0 10 4]; %fractLaser trials; ntrial baseline (at the beginning of a session)
+        % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
+        %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
+        %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
+
+           case 'B2'
+        % N s
+        params.fractNoGo = 0; %fraction of no-Go trials
+        
+%         params.fractRewCorrRej = 0.25; %.25 for surprise reward CR
+        
+        % Durations ---
+%         params.durations.ITI = 2.5;
+        params.durations.decision = 30; %time after tone to make decision
+        params.amountReward = 5; % In uL. Run calibration
+        params.durations.preReinforcement = 0.25;
+        
+        % Detection MVT ---
+        params.mvt.thresh = 0.18; % in Volts to initiate a trial
+        params.mvt.noMvtThresh = 0.12;
+        
+        % Tone selection ---
+        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
+        
+        % Switches
+        params.training = true;
+        
+        % AutoStop
+        params.maxTotHits = 100; % Maximum total of hits. Use nan for no limits.
+        
+        % Laser
+        params.laser = [0 10 4]; %fractLaser trials; ntrial baseline (at the beginning of a session)
+        % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
+        %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
+        %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
+        
         
         case 'Ross'
         % N s
@@ -258,69 +379,7 @@ switch anID
         %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
         %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
         
-        case 'Chandler'
-        % N s
-        params.fractNoGo = 0.5; %fraction of no-Go trials
-        
-%         params.fractRewCorrRej = 0.25; %.25 for surprise reward CR
-        
-        % Durations ---
-%         params.durations.ITI = 2.5;
-        params.durations.decision = 0.8; %time after tone to make decision
-        params.amountReward = 5; % In uL. Run calibration
-        params.durations.preReinforcement = 0.25;
-        
-        % Detection MVT ---
-        params.mvt.thresh = 0.16; % in Volts to initiate a trial
-        params.mvt.noMvtThresh = 0.12;
-        
-        % Tone selection ---
-        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
-        
-        % Switches
-        params.training = true;
-        
-        % AutoStop
-        params.maxTotHits = 100; % Maximum total of hits. Use nan for no limits.
-        
-        % Laser
-        params.laser = [0 10 4]; %fractLaser trials; ntrial baseline (at the beginning of a session)
-        % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
-        %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
-        %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
-        
-         case 'Pheobe'
-        % N s
-        params.fractNoGo = 0.5; %fraction of no-Go trials
-        
-%         params.fractRewCorrRej = 0.25; %.25 for surprise reward CR
-        
-        % Durations ---
-%         params.durations.ITI = 2.5;
-        params.durations.decision = 5; %time after tone to make decision
-        params.amountReward = 5; % In uL. Run calibration
-        params.durations.preReinforcement = 0.25;
-        
-        % Detection MVT ---
-        params.mvt.thresh = 0.16; % in Volts to initiate a trial
-        params.mvt.noMvtThresh = 0.12;
-        
-        % Tone selection ---
-        params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
-        
-        % Switches
-        params.training = true;
-        
-        % AutoStop
-        params.maxTotHits = 100; % Maximum total of hits. Use nan for no limits.
-        
-        % Laser
-        params.laser = [0 10 4]; %fractLaser trials; ntrial baseline (at the beginning of a session)
-        % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
-        %1-fractLaser trials; 2-ntrial baseline (at the beginning of a
-        %session); 3- Type 1 = Arch; 2=ChR2;3=Arch reinforcement; 4= CR
-        
-
+       
         
          case 'DbhArchRec11'
         % N s
