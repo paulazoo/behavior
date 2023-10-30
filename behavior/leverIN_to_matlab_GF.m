@@ -20,9 +20,11 @@
 
 %%
 clc
+anID = input('What is the animal ID?:\n','s'); %GF edit
+date = input('What is the date (YYYYMMDD)?:\n','s'); %GF edit
+
 % leverIN Arduino initialization
 %leverIN = serial("/dev/cu.usbmodem11401", 'BaudRate', 115200);
-
 leverIN = serial("COM4", 'BaudRate', 115200);
 fopen(leverIN);
 

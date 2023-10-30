@@ -58,7 +58,7 @@ switch anID
         params.durations.preReinforcement = 0;
         
         % Detection MVT ---
-        params.mvt.thresh = 0.35; % in Volts to initiate a trial
+        params.mvt.thresh = 0.18; % in Volts to initiate a trial
         params.mvt.noMvtThresh = 0.1;
         
         % Tone selection ---
@@ -201,11 +201,11 @@ switch anID
         % Durations ---
 %        params.durations.ITI = 2.5;
         params.durations.decision = 30; %time after tone to make decision
-        params.amountReward = 5; % In uL. Run calibration
+        params.amountReward = 6; % In uL. Run calibration
         params.durations.preReinforcement = 0.25;
         
         % Detection MVT ---
-        params.mvt.thresh = 0.35; % in Volts to initiate a trial
+        params.mvt.thresh = 0.18; % in Volts to initiate a trial
         params.mvt.noMvtThresh = 0.12;
         
         % Tone selection ---
@@ -232,7 +232,7 @@ switch anID
         % Durations ---
 %         params.durations.ITI = 2.5;
         params.durations.decision = 30; %time after tone to make decision
-        params.amountReward = 5; % In uL. Run calibration
+        params.amountReward = 6; % In uL. Run calibration
         params.durations.preReinforcement = 0.25;
         
         % Detection MVT ---
@@ -263,7 +263,7 @@ switch anID
         % Durations ---
 %         params.durations.ITI = 2.5;
         params.durations.decision = 30; %time after tone to make decision
-        params.amountReward = 5; % In uL. Run calibration
+        params.amountReward = 6; % In uL. Run calibration
         params.durations.preReinforcement = 0.25;
         
         % Detection MVT ---
@@ -294,7 +294,7 @@ switch anID
         % Durations ---
 %         params.durations.ITI = 2.5;
         params.durations.decision = 30; %time after tone to make decision
-        params.amountReward = 5; % In uL. Run calibration
+        params.amountReward = 6; % In uL. Run calibration
         params.durations.preReinforcement = 0.25;
         
         % Detection MVT ---
