@@ -57,7 +57,7 @@ if exist ('Lever_data', 'dir') == 0
     mkdir (pwd, 'Lever_data');
 end
 save_filename = sprintf('Lever_data_%s_%s',anID,date);
-save(['Lever_data\An'anID'\'save_filenamesave_filename);
+save(['Lever_data\An'anID'\'save_filename']);
 fprint ('Data was saved properly!');
     
 lever_data_filename = input("Name file to save the lever_data to: ")
