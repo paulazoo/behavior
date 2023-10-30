@@ -52,16 +52,36 @@ ylim([0 5000])
 %% Save the lever_data
 
 %check and create folder for the animal
-cd ('D:\Dropbox (MIT)\Giselle Fernandes\RL motor learning\Data\'
+cd ('C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\RL motor learning\Data\');
 if exist ('Lever_data', 'dir') == 0
     mkdir (pwd, 'Lever_data');
 end
+
+cd ('C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\RL motor learning\Data\Lever_data\');
+if exist (anID, 'dir') == 0
+    mkdir (pwd, anID);
+end
+
+cd ('C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\RL motor learning\Data\Lever_data\',anID);
 save_filename = sprintf('Lever_data_%s_%s',anID,date);
-save(['Lever_data\An'anID'\'save_filename']);
+
+% check if filename already exists
+
+numbers = 'bcdefghijklmnopqrstuvwxyz';
+idArd = 1;
+while exist(['Data\Lever_data\An' anID '\' save_filename '.mat'],'file') && idArd <= length(alphabets)
+    if idArd == 1
+        save_filename(end+1) = alphabets(idArd);
+    else
+        save_filename(end) = alphabets(idArd);
+    end
+    idArd = idArd+1;
+end
+save(save_filename);
 fprint ('Data was saved properly!');
     
-lever_data_filename = input("Name file to save the lever_data to: ")
-save(lever_data_filename+".mat","lever_data")
+% lever_data_filename = input("Name file to save the lever_data to: ")
+% save(lever_data_filename+".mat","lever_data")
 
 %% Close serial port connections
 fclose(leverIN)

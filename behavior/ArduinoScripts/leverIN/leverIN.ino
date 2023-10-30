@@ -22,12 +22,11 @@ void loop() {
     // tStart signal ==================================
     if (digitalRead(tStart) == LOW) {
         lever_data = (int) (lever_raw + 2000); // if lever_raw > 2000, then trial has not started
-    }
-    if (digitalRead(tStart) == HIGH) {
+    } else {
         lever_data = (int) lever_raw; // if lever_raw = 0, then trial has not started
     }
 
-    // send data through serial port as 2 bytes =================
+00    // send data through serial port as 2 bytes =================
     Serial.write(lowByte(lever_data));
     Serial.write(highByte(lever_data));
 }

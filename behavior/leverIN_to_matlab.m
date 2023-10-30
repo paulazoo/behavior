@@ -16,6 +16,10 @@
 
     231026: tested with Arduino UNO USB virtual serial port on M1 Mac-- 9kHz sampling rate somehow
     231027: tested with Arduino UNO USB virtual serial port on Windows-- >5kHz
+    231030: tested with the real setup, start lever_data before session,
+    end lever_data before session ESC OR after session ends normally
+    ends--> 9kHz
+
 %}
 
 %%
@@ -45,11 +49,19 @@ end
 
 %% Plot the lever_data
 scatter(1:1:n, lever_data(1:1:n))
-ylim([0 5000])
+%ylim([400 2700])
 
 %% Save the lever_data
-lever_data_filename = input("Name file to save the lever_data to: ")
-save(lever_data_filename+".mat","lever_data")
+lever_data_filename = input('filename:\n','s');
+save(lever_data_filename+".mat","lever_data");
+
+%% Save the lever_data as json
+% lever_data_json = jsonencode(lever_data)
+% 
+% lever_data_filename = input('filename:\n','s');
+% json_file = fopen(lever_data_filename+'.json', 'w');
+% fprintf(json_file, '%s', lever_data_json);
+% fclose(json_file);
 
 %% Close serial port connections
 fclose(leverIN)

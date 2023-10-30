@@ -365,6 +365,8 @@ while N <= nTrials && ESC
         
     % Stop if nH > maxTotHits ======================
     if ~isnan(maxTotHits) && nH > maxTotHits        
+        askStop = input('Do you want to stop:[y/n]: /n', 's');
+        if askStop = 'y'
         fprintf('Session stopped. Max number of hits (%d) reached\n',maxTotHits);
         ESC = false;
     end

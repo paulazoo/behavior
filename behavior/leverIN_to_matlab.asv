@@ -16,15 +16,17 @@
 
     231026: tested with Arduino UNO USB virtual serial port on M1 Mac-- 9kHz sampling rate somehow
     231027: tested with Arduino UNO USB virtual serial port on Windows-- >5kHz
+    231030: tested with the real setup, start lever_data before session,
+    end lever_data before session ESC OR after session ends normally
+    ends--> 9kHz
+
 %}
 
 %%
 clc
-anID = input('What is the animal ID?:\n','s'); %GF edit
-date = input('What is the date (YYYYMMDD)?:\n','s'); %GF edit
-
 % leverIN Arduino initialization
 %leverIN = serial("/dev/cu.usbmodem11401", 'BaudRate', 115200);
+
 leverIN = serial("COM4", 'BaudRate', 115200);
 fopen(leverIN);
 
@@ -46,42 +48,13 @@ while 1
 end
 
 %% Plot the lever_data
+n=
 scatter(1:1:n, lever_data(1:1:n))
 ylim([0 5000])
 
 %% Save the lever_data
-
-%check and create folder for the animal
-cd ('C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\RL motor learning\Data\');
-if exist ('Lever_data', 'dir') == 0
-    mkdir (pwd, 'Lever_data');
-end
-
-cd ('C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\RL motor learning\Data\Lever_data\');
-if exist (anID, 'dir') == 0
-    mkdir (pwd, anID);
-end
-
-cd ('C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\RL motor learning\Data\Lever_data\',anID);
-save_filename = sprintf('Lever_data_%s_%s',anID,date);
-
-% check if filename already exists
-
-numbers = 'bcdefghijklmnopqrstuvwxyz';
-idArd = 1;
-while exist(['Data\Lever_data\An' anID '\' save_filename '.mat'],'file') && idArd <= length(alphabets)
-    if idArd == 1
-        save_filename(end+1) = alphabets(idArd);
-    else
-        save_filename(end) = alphabets(idArd);
-    end
-    idArd = idArd+1;
-end
-save(save_filename);
-fprint ('Data was saved properly!');
-    
-% lever_data_filename = input("Name file to save the lever_data to: ")
-% save(lever_data_filename+".mat","lever_data")
+lever_data_filename = input('filename:\n','s');
+save(lever_data_filename+".mat","lever_data");
 
 %% Close serial port connections
 fclose(leverIN)
