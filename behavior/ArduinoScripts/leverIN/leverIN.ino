@@ -26,7 +26,7 @@ void loop() {
         lever_data = (int) lever_raw; // if lever_raw = 0, then trial has not started
     }
 
-00    // send data through serial port as 2 bytes =================
+    // send data through serial port as 2 bytes =================
     Serial.write(lowByte(lever_data));
     Serial.write(highByte(lever_data));
 }
