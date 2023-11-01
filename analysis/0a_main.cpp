@@ -89,6 +89,11 @@ int main() {
                 " trialITI length: " << i - previous_switch_i << " samples = ~" << (i - previous_switch_i)/5000 << "s" << endl;
                 
                 vector<double> lever_data_chunk = slice_double_vec(lever_data, previous_switch_i, i);
+                for (size_t j = 0; j < lever_data_chunk.size(); ++j) {
+                    if (lever_data_chunk[j] > 2000) {
+                        lever_data_chunk[j] = lever_data_chunk[j] - 2000;
+                    }
+                }
                 save_double_vec_to_bin(lever_data_chunk, \
                 "./Data/AnB1/B1_20231030_trial"+to_string(num_switches)+".bin");
 
