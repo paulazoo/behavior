@@ -49,7 +49,7 @@ end
 
 %% Plot the lever_data
 scatter(1:1:n, lever_data(1:1:n))
-ylim([400 3700])
+%ylim([400 3700])
 
 %% Save the lever_data
 lever_data_filename = input('filename:\n','s');
