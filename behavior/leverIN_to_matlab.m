@@ -48,6 +48,9 @@ while 1
 end
 
 %% Plot the lever_data
+%n = 10274480
+%n = 15470
+%scatter(15460:1:n, lever_data(15460:1:n))
 scatter(1:1:n, lever_data(1:1:n))
 %ylim([400 3700])
 
