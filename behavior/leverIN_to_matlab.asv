@@ -27,7 +27,7 @@ clc
 % leverIN Arduino initialization
 %leverIN = serial("/dev/cu.usbmodem11401", 'BaudRate', 115200);
 
-leverIN = serial("COM4", 115200);
+leverIN = serialport("COM4", 115200);
 fopen(leverIN);
 
 % Data saving storage initialization
@@ -39,17 +39,21 @@ n = 1;
 t0 = tic;
 while 1
     % Get whatever the latest 2 bytes of data are
-    leverIN_serial_output = fopen(leverIN, 1);
-    lever_bytes(n, :) = uint8(leverIN_serial_output(1:2);
-    lever = typecast(uint8(leverIN_serial_output(1:2)), 'int16');
+    leverIN_serial_output = read(leverIN, 2);
+    lever = typecast(uint8(leverIN_serial_output), 'int16');
+    reversed_lever = typecast(uint8(flip(leverIN_serial_output)), 'int16');
     
     % Save the data
+    lever_data(n, :) = lever;
     lever_data(n, :) = lever;
     
     n=n+1;
 end
 
 %% Plot the lever_data
+%n = 10274480
+n = 15470
+%scatter(15460:1:n, lever_data(15460:1:n))
 scatter(1:1:n, lever_data(1:1:n))
 %ylim([400 3700])
 

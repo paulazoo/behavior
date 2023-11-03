@@ -29,4 +29,5 @@ void loop() {
     // send data through serial port as 2 bytes =================
     Serial.write((byte) (lever_data>>8));
     Serial.write((byte) (lever_data));
+    //Serial.println(lever_raw);
 }
