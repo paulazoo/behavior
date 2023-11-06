@@ -25,14 +25,11 @@
 %%
 clc
 % leverIN Arduino initialization
-%leverIN = serial("/dev/cu.usbmodem11401", 'BaudRate', 115200);
-
 leverIN = serial("COM4", 115200);
 fopen(leverIN);
 
 % Data saving storage initialization
-lever_data = zeros(72000000,1); % 2 hours = 7200000 milliseconds
-reversed_lever_data = zeros(72000000,1); % 2 hours = 7200000 milliseconds
+lever_bytes = zeros(72000000,2); % 2 hours = 7200000 milliseconds
 
 % Main loop
 n = 1;
@@ -40,22 +37,19 @@ t0 = tic;
 while 1
     % Get whatever the latest 2 bytes of data are
     leverIN_serial_output = fopen(leverIN, 1);
-    lever_bytes(n, :) = uint8(leverIN_serial_output(1:2);
-    lever = typecast(uint8(leverIN_serial_output(1:2)), 'int16');
-    
-    % Save the data
-    lever_data(n, :) = lever;
+    lever_bytes(n, :) = uint8(leverIN_serial_output(1:2));
     
     n=n+1;
 end
 
 %% Plot the lever_data
-scatter(1:1:n, lever_data(1:1:n))
+%scatter(1:1:n, typecast(lever_bytes(1:1:n, :), 'int16'))
+%scatter(1:1:n, typecast(lever_bytes(1:1:n, :), 'int16'))
 %ylim([400 3700])
 
 %% Save the lever_data
-lever_data_filename = input('filename:\n','s');
-save(lever_data_filename+".mat","lever_data");
+lever_bytes_filename = input('filename:\n','s');
+save(lever_bytes_filename+".mat","lever_bytes");
 
 %% Save the lever_data as json
 % lever_data_json = jsonencode(lever_data)
