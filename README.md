@@ -1,3 +1,6 @@
+# TODO:
+Need to make sure foreperiod is always at least 5 ms
+
 # toneDiscriminationV3.m
 - reads from behaviorINV2.ino
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`

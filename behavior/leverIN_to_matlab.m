@@ -23,9 +23,10 @@
 %}
 
 %%
-clc
+clc; clear all;
+disp("recording from leverIN...")
 % leverIN Arduino initialization
-leverIN = serial("COM4", 115200);
+leverIN = serial("COM4", "Baudrate", 115200);
 fopen(leverIN);
 
 % Data saving storage initialization
@@ -33,31 +34,17 @@ lever_bytes = zeros(72000000,2); % 2 hours = 7200000 milliseconds
 
 % Main loop
 n = 1;
-t0 = tic;
 while 1
     % Get whatever the latest 2 bytes of data are
-    leverIN_serial_output = fopen(leverIN, 1);
+    leverIN_serial_output = fread(leverIN, 2);
     lever_bytes(n, :) = uint8(leverIN_serial_output(1:2));
     
     n=n+1;
 end
 
-%% Plot the lever_data
-%scatter(1:1:n, typecast(lever_bytes(1:1:n, :), 'int16'))
-%scatter(1:1:n, typecast(lever_bytes(1:1:n, :), 'int16'))
-%ylim([400 3700])
-
-%% Save the lever_data
+%% Save the lever_bytes
 lever_bytes_filename = input('filename:\n','s');
-save(lever_bytes_filename+".mat","lever_bytes");
-
-%% Save the lever_data as json
-% lever_data_json = jsonencode(lever_data)
-% 
-% lever_data_filename = input('filename:\n','s');
-% json_file = fopen(lever_data_filename+'.json', 'w');
-% fprintf(json_file, '%s', lever_data_json);
-% fclose(json_file);
+save(lever_bytes_filename+".mat","lever_bytes","n");
 
 %% Close serial port connections
 fclose(leverIN)
