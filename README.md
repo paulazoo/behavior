@@ -101,9 +101,7 @@ __data.response__
     - `earlyPress`: if press lever before tone during the foreperiod duration
     -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
 
-# ./analysis/dprime.m
+### ./analysis/dprime.m
 $F^{-1}$(__Hit__ rate) $- F^{-1}$(__FA__ rate)
 N(0, 1) distrib
 
-# 1_rxn_ts.ipynb
-Plot reaction times for each session over the session day
