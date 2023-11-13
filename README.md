@@ -1,5 +1,11 @@
 # TODO:
-Need to make sure foreperiod is always at least 5 ms
+
+
+# Data_Renamed
+Original, renamed Data. Leave alone.
+
+# Data_Copy
+Data copied over for analysis. Also includes AnalysisData.
 
 # toneDiscriminationV3.m
 - reads from behaviorINV2.ino
