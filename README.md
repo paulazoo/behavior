@@ -7,6 +7,9 @@ Original, renamed Data. Leave alone.
 # Data_Copy
 Data copied over for analysis. Also includes AnalysisData.
 
+# analysis
+Each analysis notebook has documentation explaining what is going on inside of it.
+
 # toneDiscriminationV3.m
 - reads from behaviorINV2.ino
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
