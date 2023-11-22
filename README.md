@@ -1,5 +1,11 @@
 # TODO:
+__behavior needs at least 1.5 between two thresholds__:
+Komiyama's movements take 500ms...
+I think pushing down on the lever makes it so mice have to unpush in order to drink effectively
+With our paradigm, it's easier for them to just hold it there and drink
 
+__analysis1__:
+Also want to extract movements by velocity threshold -> then movements are defined by windows with a reward delivery/lever press detection and velocity being above the threshold; this would also affect reaction time
 
 # Data_Renamed
 Original, renamed Data. Leave alone.
