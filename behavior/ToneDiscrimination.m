@@ -17,6 +17,7 @@ addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 
 % Define params
 run(fullfile(pathname, filename));
+animalID = params.animalID;
 
 % N s ---
 nTrials = params.nTrials;
@@ -41,11 +42,11 @@ if fractRewCR >0.001
 end
 
 % Durations ---
-foreperiod = params.durations.foreperiod;
 % dur_preReward = params.durations.preReward;
-durITI = params.durations.ITI;
+durITISettings = params.durations.ITI.settings;
 durConsumption = params.durations.rewardConsumption;
 durDecision = params.durations.decision;
+maxMvtDuration = params.durations.maxMvtDuration;
 durAirPuff = params.durations.puff;
 durPreReinforce = params.durations.preReinforcement; 
 
@@ -110,8 +111,6 @@ if laserMode == 3 && durPreReinforce < 0.01
 end
 
 %% SETUP ===================================================================
-durWaterValve = water_reward2duration(amountReward,2);
-
 % Open communication with Arduino ---
 [ardIn,ardOut] = setupArduino();
 ARDUINO.in = ardIn;
@@ -122,7 +121,7 @@ respMTX = nan(nTrials,7);
 nM = 0;
 nH = 0;
 % Randomize trials ---
-MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractNoGo,foreperiod.settings, paramsLaser);
+MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractNoGo, durITISettings, paramsLaser);
 
 % If opto mode == 3 or 4; 0 laser trial. it will be determined while running
 % trials instead
@@ -139,18 +138,29 @@ ESC = keyCode(escapeKey) == 0;
 soundPlayer = soundInit();
 vol = [35:-10:5 35:-10:5]; % BASED ON CALIBRATION
 
-%% RUN TRIALS ==============================================================
-% =========================================================================
+% MVT0 baseline ---
 fprintf('Finding MVT0\n');
 MVT0 = mean(referenceMVT(ARDUINO,100));
+disp('Thresholds to pass:')
+disp(MVT0 + noMvtThresh);
+disp(MVT0 + mvtThresh);
 
+% Water ---
+durWaterValve = water_reward2duration(amountReward,2);
+cd(root_dir);
+
+% Asynchronous LeverData ---
+AsyncLeverDataStarted = input('did you start the asynchronous LeverData recording? [y/n]\n', 's');
+
+%% RUN TRIALS ==============================================================
+% =========================================================================
 ARDUINO.t0 = tic;
 N = 1;
 
 while N <= nTrials && ESC
     % Load params specific for each trial 
     trialType = MTXTrialType(N,2);
-    soundID = MTXTrialType(N,3);
+    cueSoundID = MTXTrialType(N,3);
     durFore = MTXTrialType(N,4);
     
     laserIO = MTXTrialType(N,5);
@@ -164,24 +174,28 @@ while N <= nTrials && ESC
     end
 
     % ITI =================================================================
+    durITI = MTXTrialType(N, 4);
+    respMTX(N,6) = 0;
     fprintf('ITI: %3.1f sec\n',durITI);
     fprintf(ardOut,'I'); % ITI, turn tStart to LOW
     respMTX(N,5) = MVT0;
     pause(durITI);
+
+    % TODO: possibly detect early press by std over 100 samples OR already past first threshold and if so, skip this trial
+    % by setting respMTX(N,6) == 1
     
     % TRIAL ==============================================================
     fprintf(ardOut,'J'); % ITI finished, turn tStart to HIGH
     respMTX(N,1) = toc(ARDUINO.t0); % TRIAL START, leverIN is aligned to this
-    soundPlay(soundID,soundPlayer);
+    soundPlay(cueSoundID,soundPlayer);
     
-    if respMTX(N,6) < 1
+    if respMTX(N,6) < 1 % if not early press
         % RESPONSE =======================================================
         % go forward to meet second threshold ------------
-        decision_start_time = toc(ARDUINO.t0);
-        paramsDetectMVT = [durDecision MVT0 noMvtThresh mvtThresh];
-        [ARDUINO,isMVT,ESC] = detectLeverPress(ARDUINO,paramsDetectMVT,escapeKey);
-        if isMVT
-            fprintf('Lever pressed forward\n');
+        paramsDetectMVT = [durDecision MVT0 noMvtThresh mvtThresh maxMvtDuration];
+        [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,paramsDetectMVT,escapeKey);
+        if leverPress
+            fprintf('Lever press detected\n');
             respMTX(N,3) = true;
             respMTX(N,4) = toc(ARDUINO.t0);
         elseif ~ESC
@@ -195,24 +209,25 @@ while N <= nTrials && ESC
         % REINFORCEMENT ==================================================
         if trialType == 1
             durReinforce = durWaterValve;
-            if isMVT
+            if leverPress
                 fprintf('HIT\n')
                 % HIT: Water reward
+                soundPlay(2,soundPlayer); % Reward sound
                 fprintf(ardOut,'W'); % WATER REWARD
                 respMTX(N,7) = true;
                 nH = nH + 1 ; % Total number of hits
-            elseif ~isMVT
+            elseif ~leverPress
                 fprintf('MISS\n');
                 respMTX(N,7) = false;
             end
         elseif trialType == 0
             durReinforce = durAirPuff;
-            if isMVT
+            if leverPress
                 fprintf('FALSE ALARM\n');
                 respMTX(N,7) = false;
                 % FALSE ALARM: Air Puff
                 fprintf(ardOut,'A'); % AIR PUNISHMENT
-            elseif ~isMVT
+            elseif ~leverPress
                 fprintf('CORR. REJECTION\n');
                 respMTX(N,7) = false;
                 if fractRewCR > 0
@@ -245,11 +260,12 @@ while N <= nTrials && ESC
     ESC = keyCode(escapeKey) == 0;
 
     % Print performance so far =====================================================
-    str = printPerformance(respMTX,MTXTrialType,N);
+    performanceString = printPerformance(respMTX,MTXTrialType,N);
+    disp(performanceString);
         
     % Stop if nH > maxTotHits
     if ~isnan(maxTotHits) && nH > maxTotHits        
-        askStop = input('Do you want to stop:[y/n]: /n', 's');
+        askStop = input('Do you want to stop [y/n]: ', 's');
         if askStop == 'y'
         fprintf('Session stopped. Max number of hits (%d) reached\n',maxTotHits);
         ESC = false;
@@ -272,25 +288,25 @@ params.systName = systName(1:end-1);
 data.params = params;
 data.response = response;
 
-% Check or Create folder for anID
+% Check or Create folder for animalName
 cd(root_dir);
-if exist('Data','dir') == 0
+if exist([root_dir 'Data'],'dir') == 0
     mkdir(pwd,'Data');
 end
-if exist('Data\ToneDiscrimination','dir') == 0
+if exist([root_dir 'Data\ToneDiscrimination'],'dir') == 0
     mkdir('Data','ToneDiscrimination');
 end
 
-if exist(['Data\ToneDiscrimination\AN' anID],'dir') == 0
-    mkdir('Data\ToneDiscrimination',['AN' anID]);
+if exist([root_dir 'Data\ToneDiscrimination\' animalID],'dir') == 0
+    mkdir('Data\ToneDiscrimination',[animalID]);
 end
 
 % Make sure you do not overwrite previous data by creating a different save
 % name (append b,c,d,...)
-saveName = sprintf('ToneDisc_AN%s_%s',anID,date);
+saveName = sprintf('ToneDisc_AN%s_%s',animalID,date);
 alphabets = 'bcdefghijklmnopqrstuvwxyz';
 idArd = 1;
-while exist(['Data\ToneDiscrimination\AN' anID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
+while exist(['Data\ToneDiscrimination\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
     if idArd == 1
         saveName(end+1) = alphabets(idArd);
     else
@@ -300,7 +316,7 @@ while exist(['Data\ToneDiscrimination\AN' anID '\' saveName '.mat'],'file') && i
 end
 
 % save
-save(['Data\ToneDiscrimination\AN' anID '\' saveName],'data');
+save(['Data\ToneDiscrimination\' animalID '\' saveName],'data');
 fprintf('Data was saved properly\n');
 
 %% CLEAN UP =========================================

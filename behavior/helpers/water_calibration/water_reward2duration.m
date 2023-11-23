@@ -45,3 +45,4 @@ if rewAmount ~= r(end)
 else
     durValve = d(end);
 end
+

@@ -3,6 +3,7 @@ int Air = 4;
 int Water = 7;
 int val = 0;
 int TStart = 11;
+int yellowLED = 8;
 int Laser = 10;
 
 void setup() {
@@ -12,6 +13,7 @@ void setup() {
   pinMode(Air, OUTPUT);
   pinMode(Water, OUTPUT);
   pinMode(TStart, OUTPUT);
+  pinMode(yellowLED, OUTPUT);
   pinMode(Laser, OUTPUT);
 }
 
@@ -43,10 +45,12 @@ void loop() {
       
      case 'I':
       digitalWrite(TStart,LOW);
+      digitalWrite(yellowLED,HIGH);
       break;
       
      case 'J':
       digitalWrite(TStart,HIGH);
+      digitalWrite(yellowLED,LOW);
       break;
       
      case 'L':

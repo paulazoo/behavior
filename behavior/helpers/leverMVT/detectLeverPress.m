@@ -13,9 +13,9 @@ function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
     %        d(5) = accelerator X value
     %        d(6) = accelerator Y value
     %        d(7) = accelerator Z value
-    % params = [duration MVT0 noMvtThresh mvtThresh maxMvtDuration];
+    % params = [detectionDuration MVT0 noMvtThresh mvtThresh maxMvtDuration];
     
-    duration = params(1);
+    detectionDuration = params(1);
     MVT0 = params(2);
     noMvtThresh = params(3);
     mvtThresh = params(4);
@@ -29,13 +29,13 @@ function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
     started_below_noMvtThresh = false;
     time_since_noMvtThresh = 0;
     detectionStart_time = tic;
-    while leverPress == false && ESC && current_time < duration
+    current_time = toc(detectionStart_time);
+    while leverPress == false && ESC && current_time < detectionDuration
         % update time
-        current_time = toc(detectionStart_time)
+        current_time = toc(detectionStart_time);
 
         % update arduinoIN data
         ARDUINO.data(ARDUINO.idx,:) = readArduino(ARDUINO.in, ARDUINO.t0);
-        deltaMVT = ARDUINO.data(ARDUINO.idx,2)-MVT0;
 
         % if we previously started below the noMvtThresh
         if started_below_noMvtThresh == true
@@ -49,6 +49,7 @@ function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
             elseif time_since_noMvtThresh > maxMvtDuration
                 started_below_noMvtThresh = false;
                 time_since_noMvtThresh = 0;
+                disp('ran out of time to pass both noMvtThresh and mvtThresh.')
             end
         end
 

@@ -19,7 +19,7 @@ while keepTrying
     if max(std(MVT0))<0.05
         keepTrying = false;
         fprintf('Measured BL:  %1.3f\n',median(MVT0,'omitnan'))
-        if median(MVT0,'omitnan') > -0.1 || median(MVT0,'omitnan') < -4.9
+        if median(MVT0,'omitnan') < 0.1 || median(MVT0,'omitnan') > 4.9
             error('Lever voltage is off. Are you sure it is connected???')
         end
     else
