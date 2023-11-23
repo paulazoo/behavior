@@ -14,37 +14,12 @@ Original, renamed Data. Leave alone.
 Data copied over for analysis. Also includes AnalysisData.
 
 # analysis
-Each analysis notebook has documentation explaining what is going on inside of it.
+Each analysis notebook has documentation explaining what is going on inside of it, including what should be outputted to the analysis output folder.
 
-# toneDiscriminationV3.m
+# ToneDiscrimination.m
 - reads from behaviorINV2.ino
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
 - lever sensor movement in ./helpers/leverMVT/detectMVTV2.m
-
-# helpers/general/toneDiscrRandomizeTrial.m
-- randomize Go vs No Go trials, tone according to trial type, durITI, and laser
-
-# helpers/general/vecOfRandPerm.m
-- helper function for random permutations of vectors
-
-# helpers/card/setupArduino.m
-- setup and open serial ports for ArdIN and ArdOUT
-
-# helpers/sound/soundInit.m
-- initialize sound player
-
-# helpers/sound/soundPlay.m
-- play a sound
-
-# helpers/water_calibration/water_reward2duration.m
-- get valve duration based on water reward amount and calibration .mat file (should be in the helpers/water_calibration folder)
-
-# helpers/leverMVT/referenceMVT.m
-- get referenceMVT for some number of Arduino samples
-
-# helpers/card/cleanArduino.m
-- turn all to LOW if ArdOUT, then close regardless if ArdIN or ArdOUT
-
 
 ## description:
 - water-restricted mouse does 1 run of program per day
@@ -69,7 +44,7 @@ __A Trial__:
     - __FA__: (false alarm) mouse press lever $\to$ air puff punishment
         - ARDUINO left air (pin 4) `fprintf(ARDUINO.out,'L')`
 
-## toneDiscriminationV3.m Output:
+## ToneDiscrimination.m Output:
 __data.params__
 - _[0] animalID_: string, animal ID
 - _[2] nTrials_: num, number of trials per run
@@ -133,7 +108,82 @@ __data.response__
     - `earlyPress`: if press lever before tone during the foreperiod duration
     -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
 
-### ./analysis/dprime.m
+
+# ./helpers/card/setupArduino.m
+setup and open serial ports for ArdIN and ArdOUT
+- outputs: `ardIn`,`ardOut`
+
+# ./helpers/card/readArduino.m
+read most recent values from ArdIN
+- arguments: `ard`, `t0`, optional `msgOn`
+- outputs: `d` the data
+    - d(1) = absolute time
+    - d(2) = lever value
+    - d(3) = lickspout1 value
+    - d(4) = lickspout2 value
+    - d(5) = accelerator X value
+    - d(6) = accelerator Y value
+    - d(7) = accelerator Z value
+
+# ./helpers/card/cleanArduino.m
+turn all to LOW if ArdOUT, then close regardless if ArdIN or ArdOUT
+- arguments: `ard`, `type` such as `OUT`
+
+# ./helpers/general/printPerformance.m
+Print a performance string based on responses so far
+- arguments: `respMTX`,`MTXTrialType`,`N`
+- outputs: `str` as string about the performance to display
+
+# ./helpers/general/toneDiscrRandomizeTrial.m
+randomize Go vs No Go trials, tone according to trial type, durITI, and laser
+- arguments: `nTrials`,`toneSelect`,`fractGo`,`ITISettings`,`paramLaser`
+- outputs: `MTXTrialType`
+
+# ./helpers/general/vecOfRandPerm.m
+helper function for random permutations of vectors
+
+# ./helpers/sound/soundInit.m
+initialize sound player
+- outputs: `snd` the sound player
+
+# ./helpers/sound/soundPlay.m
+play a sound
+- arguments: `soundId`, `snd` the sound player
+
+# ./helpers/water_calibration/water_reward2duration.m
+get valve duration based on water reward amount and calibration .mat file (should be in the helpers/water_calibration folder)
+- arguments: `rewAmount`,`valveID`
+- outputs: `durValve`
+
+# ./helpers/leverMVT/referenceMVT.m
+get referenceMVT for some number of Arduino samples
+- arguments: `ARDUINO`,`num_reference_samples`
+- outputs: `MVT0`
+
+# ./helpers/leverMVT/detectLeverPress.m
+detect a lever press
+- arguments: `ARDUINO`, `params`, `escapeKey`
+    - `ARDUINO` is a structure with fields
+        - in = serial port for input arduino
+        - out = serial port for output arduino
+        - idx = current idx number. Increased everytime arduino in is sampled
+        - t0 = reference start time to evaluate data from
+    - data = data read from arduino:
+        - d(1) = absolute time
+        - d(2) = lever value
+        - d(3) = lickspout1 value
+        - d(4) = lickspout2 value
+        - d(5) = accelerator X value
+        - d(6) = accelerator Y value
+        - d(7) = accelerator Z value
+    - `params` = [`detectionDuration` `MVT0` `noMvtThresh` `mvtThresh` `maxMvtDuration`];
+- outputs: `ARDUINO`, `leverPress`, `ESC`
+
+# ./helpers/leverMVT/testLeverValues.m
+For troubleshooting and testing lever displacement to voltage relationships
+
+
+# ./analysis/dprime.m
 $F^{-1}$(__Hit__ rate) $- F^{-1}$(__FA__ rate)
 N(0, 1) distrib
 

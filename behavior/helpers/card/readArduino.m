@@ -1,5 +1,4 @@
-function d = lever_readArduinoV2(ard,t0,msgOn)
-% function d = lever_readArduino(ard,t0,message)
+function d = readArduino(ard,t0,msgOn)
 %
 % d(1) = absolute time
 % d(2) = lever value
