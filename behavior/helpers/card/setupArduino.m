@@ -1,4 +1,4 @@
-function [ardIn,ardOut] = lever_cardSetUpInOutV2_GF
+function [ardIn,ardOut] = setupArduino()
 % set up arduino used to send output
 % - 2020 VBP -
 
@@ -11,6 +11,7 @@ switch systName
     
 end
 
+% close all currently open ports
 if ~isempty(instrfind)
     fclose(instrfind);
     delete(instrfind);
@@ -21,16 +22,12 @@ ardIn.InputBufferSize = 50000;
 ardIn.BaudRate = 19200;
 ardIn.Timeout = 2;
 
-if ~(strcmp(systName,'DESKTOP-TC5GOAV') || strcmp(systName,'FIN-DE-SEMAINE.local') || strcmp(systName,'FIN-DE-SEMAINE.lan'))
-    ardOut = serial(portOut);
-    ardOut.InputBufferSize = 50000;
-    ardOut.BaudRate = 9600;
-    ardOut.Timeout = 2;
-    % ard.FlowControl = 'hardware';
-    fopen(ardOut);
-else
-    ardOut = nan;
-end
+ardOut = serial(portOut);
+ardOut.InputBufferSize = 50000;
+ardOut.BaudRate = 9600;
+ardOut.Timeout = 2;
+% ard.FlowControl = 'hardware';
+fopen(ardOut);
 
 fopen(ardIn);
 fscanf(ardIn); % Read value returned via Serial communication

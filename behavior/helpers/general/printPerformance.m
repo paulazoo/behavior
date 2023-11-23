@@ -1,4 +1,4 @@
-function str = strPerfo(respMTX,MTXTrialType,N)
+function str = printPerformance(respMTX,MTXTrialType,N)
 respWindow4Hit = 0.8; % Used for Hrate corrected
 
 % PRINT PERFORMANCE ========================================================================================

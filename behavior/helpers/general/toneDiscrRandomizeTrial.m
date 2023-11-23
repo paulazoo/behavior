@@ -1,10 +1,9 @@
-function MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractGo,foreperiod,paramLaser)
-% function MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractGo,foreperiod,paramLaser)
+function MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractGo,ITI,paramLaser)
 % % EXAMPLE:
 % nTrials = 301;
 % toneSelect = 4; %number of tone intensities per tone A or B
 % fractGo = 0.4; %fraction of go trials.
-% foreperiod = [0.65 0.2];
+% ITI = [1 3];
 % paramLaser = [0.25 10]; %fractLaser trials; ntrial baseline (at the beginning of a session)
 % % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
 
@@ -23,7 +22,7 @@ idx = vecOfRandPerm(length(a),nTrials);
 trialType = a(idx)';
 
 
-%% Randomize tone
+%% Randomize tone according to trial type
 a = 1:toneSelect; %GO;
 b = a+4; %noGo
 idx1 = vecOfRandPerm(length(a),nTrials);
@@ -34,14 +33,9 @@ toneID(trialType == 0) = X(1,1:sum(trialType == 0));
 toneID(trialType == 1) = X(2,1:sum(trialType == 1));
 
 
-%% Dur foreperiod
-durFore = -ones(nTrials,1);
-while any(durFore < 0) % Negative values get re-shuffled
-    i = durFore < 0;
-    N = sum(i);
-    durFore(i) = randn(1,N)*foreperiod(2)+foreperiod(1);
-end
-durFore = round(durFore,2);
+%% Randomize ITI duration
+durITI = randi(ITI,1,nTrials)
+
 
 %% Create sequence laser trial
 % fract laser has to be less or equal to 0.5 (50%)
@@ -75,6 +69,7 @@ if paramLaser(2) >= 1
     laserIO(1:round(paramLaser(2))) = 0;
 end
 
+
 %% Some checkups
 if size(trialID,2) == 1
     trialID = trialID';
@@ -85,12 +80,12 @@ end
 if size(toneID,2) == 1
     toneID = toneID';
 end
-if size(durFore,2) == 1
-    durFore = durFore';
+if size(durITI,2) == 1
+    durITI = durITI';
 end
 if size(laserIO,2) == 1
     laserIO = laserIO';
 end
 
-% Concatenate in one matrix [TRIAL#; TRIALTYPE(0 no-go / 1 go); TONEID; durFOREPERIOD]
-MTXTrialType = [trialID; trialType; toneID; durFore; laserIO]';
+% Concatenate in one matrix [TRIAL#; TRIALTYPE(0 no-go / 1 go); TONEID; durITI]
+MTXTrialType = [trialID; trialType; toneID; durITI; laserIO]';

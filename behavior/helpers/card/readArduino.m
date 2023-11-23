@@ -38,7 +38,7 @@ d(1) = toc(t0);
 if length(a) == nBytes + 2    
     x = double(a);
     d(2) = x(1) * 255 + x(2); % lever
-    d(2) = d(2) * -0.0049;
+    d(2) = d(2) * 5/1023;
     x(3) = x(3) - 100;
     d(3) = floor(x(3)/10);
     d(4) = mod(x(3),10);

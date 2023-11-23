@@ -17,6 +17,7 @@
         "ios": "cpp",
         "iosfwd": "cpp",
         "filesystem": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "istream": "cpp"
     }
 }

@@ -21,20 +21,43 @@ Each analysis notebook has documentation explaining what is going on inside of i
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
 - lever sensor movement in ./helpers/leverMVT/detectMVTV2.m
 
+# helpers/general/toneDiscrRandomizeTrial.m
+- randomize Go vs No Go trials, tone according to trial type, durITI, and laser
+
+# helpers/general/vecOfRandPerm.m
+- helper function for random permutations of vectors
+
+# helpers/card/setupArduino.m
+- setup and open serial ports for ArdIN and ArdOUT
+
+# helpers/sound/soundInit.m
+- initialize sound player
+
+# helpers/sound/soundPlay.m
+- play a sound
+
+# helpers/water_calibration/water_reward2duration.m
+- get valve duration based on water reward amount and calibration .mat file (should be in the helpers/water_calibration folder)
+
+# helpers/leverMVT/referenceMVT.m
+- get referenceMVT for some number of Arduino samples
+
+# helpers/card/cleanArduino.m
+- turn all to LOW if ArdOUT, then close regardless if ArdIN or ArdOUT
+
+
 ## description:
 - water-restricted mouse does 1 run of program per day
 - up to many (1000) trials per run
 - a run ends after _maxTotHits_ number of __Hits__ occur
 
 __A Trial__:
-- an _ITI_ duration between each trial
+- a random _ITI_ duration between each trial
     - if lever pressed past _noMvtThresh_ threshold, extend _ITI_ delay
-    - `fprintf(ardOut,'I')` ARDUINO LED (pin 8) turns on
-- random _foreperiod_ at the beginning of each trial so that tone timing is somewhat random/can't be learned
-    - `fprintf(ardOut,'J')` ARDUINO LED (pin 8) turns off
-    - `fprintf(ardOut,'A')` ARDUINO send a laser pulse (pin 10) to digidata
+    - `fprintf(ardOut,'I')` ARDUINO tStart (pin 8) turns on
     - if lever pressed past _noMvtThresh_ threshold, restart and go back to _ITI_
 - Either __Go trial__ or __No-Go trial__ tone is given
+    - `fprintf(ardOut,'J')` ARDUINO tStart (pin 8) turns off
 - _decision_ period after tone for mouse to press lever or not
 - __Go trial__:
     - __Hit__: mouse press lever $\to$ H2O reward delivered $\to$ given _reward_consumption_ duration time to lick
@@ -60,7 +83,7 @@ __data.params__
     - _decision_: s, time after cue for mouse to make decision and press lever or not
     - _preReinforcement_: s, duration following a lever press before either water reward or air puff punishment
 - _[7] mvt_:
-    - _thresh_: V, threshold for lever sensor to count as lever press
+    - _mvtThresh_: V, threshold for lever sensor to count as lever press
     - _noMvtThresh_: V, maximum movement allowed during foreperiod without trial becoming an NaN trial
 - _[8] tone_selection_: num, possible tone intensities from which one intensity will be randomly selected each trial
     - _ToneID_: `1`-`4` are tone A max-min, `5`-`8` are tone B max-min
