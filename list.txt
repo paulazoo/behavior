@@ -2,9 +2,9 @@ Paula:
 - name, organize, and run all recent data for ANA1, ANA2, ANB1, ANB2 through analysis notebooks
 - calculate and divide by minimal jerk
 - stain brains for c-fos, TH+
-- train some WT, headbar mice on Komiyama-based parameters in December:
+- train some WT, headbar mice on Komiyama-based parameters in December: CODE DONE see ./behavior
 	- water restricted >= 5 days
-	- no yellow light
+	- yellow light on entire ITI, no foreperiod
 	- ITI 1st day 2-4s, 2nd day 4-8s, 3rd day 8-12s
 	- durDecision 1st day 30s, 2nd day 10s
 	- fake image leading up to 4th day, only image 4th day, then fake image leading up to last day, only image last day
