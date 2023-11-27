@@ -45,9 +45,8 @@ end
 % Durations ---
 durITISettings = params.durations.ITISettings;
 % check that ITI is at least 1 second
-if durITISettings[0] < 1.0
-    error('ITI must be at least 1.0s')
-    return
+if durITISettings(1,1) < 1.0
+    error('ITI must be at least 1.0s');
  end
 durConsumption = params.durations.rewardConsumption;
 durDecision = params.durations.decision;
@@ -90,7 +89,7 @@ if fractionLaser > 0 % if any of the trials have laser
 end
 
 if ~laserControlSwitch
-    reply = input('This is not a control experiment, OKAY? Y/N [Y]:\n')
+    reply = input('This is not a control experiment, OKAY? Y/N [Y]:\n');
     if ~strcmp(reply,'Y')
         fprintf('Exiting!\n');
         return
@@ -100,8 +99,7 @@ end
 % Verification that dur pre-reinforcement is larger than 0 if laser mode 3
 % is selected.
 if laserMode == 3 && durPreReinforcement < 0.01
-    error('You cannot use this laser mode if durPreReinforcement is set to 0 sec')
-    return
+    error('You cannot use this laser mode if durPreReinforcement is set to 0 sec');
 end
 
 %% SETUP ===================================================================
@@ -141,8 +139,7 @@ disp(MVT0 + noMvtThresh);
 disp(MVT0 + mvtThresh);
 
 % Water ---
-durWaterValve = waterReward2duration(amountReward,2);
-cd(root_dir);
+durWaterValve = waterReward2duration(amountReward,2,root_dir);
 
 % Asynchronous LeverData ---
 AsyncLeverDataStarted = input('did you start the asynchronous LeverData recording? [y/n]\n', 's');
@@ -216,7 +213,7 @@ while N <= nTrials && ESC
     [ARDUINO, ESC] = recordContinuous(ARDUINO, durPreReinforcement, escapeKey);
     
     % REINFORCEMENT ==================================================
-    if trialType == 1 && leverPress:
+    if trialType == 1 && leverPress
         fprintf('HIT, REWARD\n')
         respMTX(N,7) = true; % rewarded trial
         soundPlay(rewardSoundID,soundStorage);
@@ -225,26 +222,26 @@ while N <= nTrials && ESC
         fprintf(ardOut,'X'); % STOP WATER
         nHits = nHits + 1 ; % Total number of hits 
 
-    elseif trialType == 1 && ~leverPress:
+    elseif trialType == 1 && ~leverPress
         fprintf('MISS, DO NOTHING'\n);
         respMTX(N,7) = false; % not a rewarded trial
 
-    elseif trialType == 0 && leverPress && punishSwitch:
+    elseif trialType == 0 && leverPress && punishSwitch
         fprintf('FALSE ALARM, PUNISHMENT'\n);
         respMTX(N,7) = false; % not a rewarded trial
         fprintf(ardOut,'A'); % AIR PUNISHMENT
         [ARDUINO, ESC] = recordContinuous(ARDUINO, durAirPuff, escapeKey); % keep reinforcement going
         fprintf(ardOut,'B'); % STOP AIR
 
-    elseif trialType = 0 && leverPress && ~punishSwitch:
+    elseif trialType == 0 && leverPress && ~punishSwitch
         fprintf('FALSE ALARM, DO NOTHING'\n);
         respMTX(N,7) = false; % not a rewarded trial
 
-    elseif trialType = 0 && ~leverPress && unifrnd(0, 1) > fractRewCR:
+    elseif trialType == 0 && ~leverPress && unifrnd(0, 1) > fractRewCR
         fprintf('CORRECT REJECTION, DO NOTHING'\n);
         respMTX(N,7) = false; % not a rewarded trial
 
-    elseif trialType = 0 && ~leverPress: % so unifrnd(0, 1) was < fractRewCR
+    elseif trialType == 0 && ~leverPress % so unifrnd(0, 1) was < fractRewCR
         fprintf('CORRECT REJECTION, REWARD SURPRISE!!!\n');
         respMTX(N,7) = true; % rewarded trial
         fprintf(ardOut,'W'); % WATER REWARD
@@ -252,8 +249,8 @@ while N <= nTrials && ESC
         fprintf(ardOut,'X'); % STOP WATER
     
     else
-        error("No logic for reinforcement found.")
-        return
+        error("No logic for reinforcement found.");
+    end
         
     % Post trial (consumption)  ===================================================
     fprintf(ardOut,'I'); % ITI again, turn tStart to LOW
