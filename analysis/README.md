@@ -131,3 +131,49 @@ This analysis requires 7.5ms before the actual movement to find the moving avera
 ## Outputs to folder:
 - movement_trial#.npy for each extracted hit movement
 - buffered_velocity_trial#.npy for each extracted hit movement with a 300 sample buffer on either side
+
+# Jerk
+TODO: normalize by minimum jerk
+
+__Motivation for using jerk__: So the previous notebooks analyzed variability across multiple curves throughout a day's session. The variability within a single trial, however, is impossible to calculate without making assumptions about the hidden deterministic curve. I originally wanted to try to fit some class of deterministic function to the movements (and then do, for example, a Kalman filter to figure out the exact hidden parameters/function for each movement curve and subtract this to find variability), but later realized that the entire class of target movements the mice are actually aiming for internally might still be completely different between WT and diseased models.
+
+The smoothest movement between point A and point B will be the movement trajectory that minimizes jerk, the third derivative of position, between these two points. As it turns out, for animal movements, this minimal jerk trajectory is also the one expert animals (practiced adult WT humans) will perform for maximum motor efficiency [(Todorov and Jordan 1998)](doi.org/10.1152/jn.1998.80.2.696).
+
+Therefore, as a measure of smoothness across a single movement curve, I want to calculate the jerk across the entire movement. Of course, the cumulative jerk squared (squared to ignore changes in sign) across an entire movement will depend on the time it takes to do the movement (speed) and initial acceleration. Therefore, I will normalize the cumulative jerk calculated by the cumulative jerk from an ideal most efficient trajectory that minimizes jerk. Specifically, I want to calculate $\frac{\int j(t)^2dt}{\int j_\text{min}(t)^2dt}$ were $j(t)$ is the jerk across the movement and $j_\text{min}(t)$ is the ideal smoothest minimal jerk. 
+
+__On finding the ideal smoothest minimal jerk, from [Todorov and Jordan 1998](doi.org/10.1152/jn.1998.80.2.696)__: _It has been shown (Flash and Hogan 1985) that for given passage times T, positions x, velocities ν, and accelerations a at the end points of one segment, the minimum-jerk trajectory is a 5th-order polynomial in t, the coefficients of which can be determined easily using the end-point constraints. It is then possible to integrate the squared jerk analytically, and sum it over all segments._
+
+So if I'm understanding that correctly,
+$x_\text{min}(t)=C_1 t^5 + C_2 t^4 + C_3 t^3 + C_4 t^2 + C_5 t + C_6$
+
+with boundary conditions:
+1) $x(0)=x_0$
+2) $v(0)=v_0$
+3) $a(0)=a_0$ and 
+4) $x(t_f)=x_f$
+5) $v(t_f)=v_f$
+6) $a(t_f)=a_f$
+
+where $t_f$ is the end/final time of the movement when point B is reached.
+
+Then after the constants are solved for,
+$j_\text{min}(t)=x_\text{min}'''(t)$
+
+__Jerk estimation__:
+A fourth-order Savitsky–Golay filter is equivalent to taking the second derivative at the window's centre of the continuous least-squares best-fit fourth-order polynomial. The cutoff frequency for this polynomial fit can be calculated as $f_c  = \frac{N+1}{3.2M - 4.6}$
+
+where $f_c = \frac{w}{\pi} = 2 \frac{f_\text{cutoff}}{f_\text{sample}}$, $N=$ order polynomial, and $M=\frac{\text{num samples from window}-1 }{2}$ according to [(Schafer 2011)](inst.eecs.berkeley.edu/~ee123/sp16/docs/SGFilter.pdf)
+
+# ReactionTimes
+One thing NE might affect is the reaction time to the tone. Here, we plot the reaction time defined as the time between the tone time and the time it took to hit the second lever press threshold (the MATLAB time for lever press time as saved in `respMTX`). We get the means and vars of these reaction times, `rxn_ts`, for all the trials from each day (where each day is a .mat file from a folder specified in `folder_name`), and then we save all the means and vars from every day in the folder to a .pickle. We also plot the means and vars across days and save the plotted figure .pngs in that same folder too.
+
+TODO: currently does not exclude _b and _c sessions for the same day
+
+## This notebook analyzes all sessions for 1 animal.
+
+## Requires:
+- **HitMovements** outputs for all sessions for the animal
+- ToneDisc matfiles for all sessions for the animal
+
+## Outputs to folder:
+- rxn_ts_means_vars.pickle, a pandas table of reaction time means and vars for each session
