@@ -129,7 +129,7 @@ escapeKey = KbName('esc');
 ESC = keyCode(escapeKey) == 0;
 
 % Sound ---
-soundStorage = soundInit();
+soundStorage = soundInit(root_dir);
 vol = [35:-10:5 35:-10:5]; % BASED ON CALIBRATION
 rewardSoundID = 9;
 
