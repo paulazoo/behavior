@@ -43,7 +43,12 @@ end
 
 % Durations ---
 % dur_preReward = params.durations.preReward;
-durITISettings = params.durations.ITI.settings;
+durITISettings = params.durations.ITISettings;
+% check that ITI is at least 1 second
+if durITISettings[0] < 1.0
+    error('ITI must be at least 1.0s')
+    return
+ end
 durConsumption = params.durations.rewardConsumption;
 durDecision = params.durations.decision;
 maxMvtDuration = params.durations.maxMvtDuration;
@@ -51,6 +56,7 @@ durAirPuff = params.durations.puff;
 durPreReinforce = params.durations.preReinforcement; 
 
 % Detection ---
+% note that maxMvtDuration is set in params.durations.maxMvtDuration
 mvtThresh = params.mvt.mvtThresh; % in Volts to initiate a trial, aka second threshold
 noMvtThresh = params.mvt.noMvtThresh; % first threshold that mouse must keep bar behind
 ARDUINO.idx = 1;
@@ -116,7 +122,7 @@ end
 ARDUINO.in = ardIn;
 ARDUINO.out = ardOut;
 
-responseMTXheader = {'timeTrialStart';'timeTone';'leverPressed';'timePressed';'MVT0';'earlyPress';'rew'};
+responseMTXheader = {'timeTrialStart';'timeTone';'leverPressed';'timePressed';'MVT0';'ITIPress';'rew'};
 respMTX = nan(nTrials,7);
 nM = 0;
 nH = 0;
@@ -161,8 +167,6 @@ while N <= nTrials && ESC
     % Load params specific for each trial 
     trialType = MTXTrialType(N,2);
     cueSoundID = MTXTrialType(N,3);
-    durFore = MTXTrialType(N,4);
-    
     laserIO = MTXTrialType(N,5);
         
     % DISPLAY TRIAL NUMBER & TRIAL TYPE
@@ -173,85 +177,97 @@ while N <= nTrials && ESC
         fprintf('NO-GO\n')
     end
 
+    respMTX(N,2) = NaN; % tone time
+    respMTX(N,3) = false; % successful lever press
+    respMTX(N,4) = NaN; % lever press time
+    respMTX(N,5) = MVT0;
+    respMTX(N,6) = false; % pressed during ITI
+    respMTX(N,7) = false; % rewarded trial
+    
+    respMTX(N,1) = toc(ARDUINO.t0); % TRIAL START, leverIN is aligned to this
+
     % ITI =================================================================
     durITI = MTXTrialType(N, 4);
-    respMTX(N,6) = 0;
     fprintf('ITI: %3.1f sec\n',durITI);
     fprintf(ardOut,'I'); % ITI, turn tStart to LOW
-    respMTX(N,5) = MVT0;
-    pause(durITI);
 
-    % TODO: possibly detect early press by std over 100 samples OR already past first threshold and if so, skip this trial
-    % by setting respMTX(N,6) == 1
+    [ARDUINO, ESC] = recordContinuous(ARDUINO, durITI - 1.0, escapeKey);
+    % For the last second of the ITI, don't go to trial unless no movement past noMvtThresh
+    detectionParams = [1.0 MVT0 noMvtThresh];
+    [ARDUINO, ITIMovement, ESC] = detectITIMovement(ARDUINO, detectionParams, escapeKey);
+    % if ITIMovement detected, restart ITI until no movement is detected for entire ITI
+    while ITIMovement == true
+        respMTX(N,6) = true; % pressed during ITI
+        disp('movement detected, extending ITI...\n')
+        [ARDUINO, ITIMovement, ESC] = detectITIMovement(ARDUINO, detectionParams, escapeKey);
+    end
     
-    % TRIAL ==============================================================
+    % TONE ==============================================================
     fprintf(ardOut,'J'); % ITI finished, turn tStart to HIGH
-    respMTX(N,1) = toc(ARDUINO.t0); % TRIAL START, leverIN is aligned to this
+    respMTX(N,2) = toc(ARDUINO.t0); % tone time
     soundPlay(cueSoundID,soundPlayer);
     
-    if respMTX(N,6) < 1 % if not early press
-        % RESPONSE =======================================================
-        % go forward to meet second threshold ------------
-        paramsDetectMVT = [durDecision MVT0 noMvtThresh mvtThresh maxMvtDuration];
-        [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,paramsDetectMVT,escapeKey);
+    % RESPONSE =======================================================
+    % go forward to meet second threshold ------------
+    detectionParams = [durDecision MVT0 noMvtThresh mvtThresh maxMvtDuration];
+    [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,detectionParams,escapeKey);
+    if leverPress
+        fprintf('Lever press detected\n');
+        respMTX(N,3) = true; % lever pressed successfully
+        respMTX(N,4) = toc(ARDUINO.t0); % lever press time
+    elseif ~ESC
+        fprintf('ESC pressed. Exit behavior!\n');
+    else
+        fprintf('No response\n');
+        respMTX(N,3) = false; % lever not pressed successfully
+    end
+    % ------------
+    
+    % REINFORCEMENT ==================================================
+    if trialType == 1
+        durReinforce = durWaterValve;
         if leverPress
-            fprintf('Lever press detected\n');
-            respMTX(N,3) = true;
-            respMTX(N,4) = toc(ARDUINO.t0);
-        elseif ~ESC
-            fprintf('ESC pressed. Exit behavior!\n');
-        else
-            fprintf('No response\n');
-            respMTX(N,3) = false;
+            fprintf('HIT\n')
+            % HIT: Water reward
+            respMTX(N,7) = true; % rewarded trial
+            nH = nH + 1 ; % Total number of hits
+            fprintf(ardOut,'W'); % WATER REWARD
+        elseif ~leverPress
+            fprintf('MISS\n');
+            respMTX(N,7) = false; % not a rewarded trial
         end
-        % ------------
-        
-        % REINFORCEMENT ==================================================
-        if trialType == 1
-            durReinforce = durWaterValve;
-            if leverPress
-                fprintf('HIT\n')
-                % HIT: Water reward
-                soundPlay(2,soundPlayer); % Reward sound
-                fprintf(ardOut,'W'); % WATER REWARD
-                respMTX(N,7) = true;
-                nH = nH + 1 ; % Total number of hits
-            elseif ~leverPress
-                fprintf('MISS\n');
-                respMTX(N,7) = false;
-            end
-        elseif trialType == 0
-            durReinforce = durAirPuff;
-            if leverPress
-                fprintf('FALSE ALARM\n');
-                respMTX(N,7) = false;
-                % FALSE ALARM: Air Puff
-                fprintf(ardOut,'A'); % AIR PUNISHMENT
-            elseif ~leverPress
-                fprintf('CORR. REJECTION\n');
-                respMTX(N,7) = false;
-                if fractRewCR > 0
-                    durReinforce = durWaterValve;
-                    if rand > 1-fractRewCR
-                       if laserMode == 4 && N > paramsLaser(2)
-                           % Determine if it is a laser trial
-                           if rand <= laserFract
-                               MTXTrialType(N,5) = 1;
-                               fprintf(ardOut,'L'); % Send a pulse to digidata
-                               fprintf('LASER (SURPRISE)!\n')
-                           end
-                       end
-                        fprintf('REWARD SURPRISE!!!\n');
-                        fprintf(ardOut,'W'); % WATER REWARD
-                        respMTX(N,7) = true;
+    elseif trialType == 0
+        durReinforce = durAirPuff;
+        if leverPress
+            fprintf('FALSE ALARM\n');
+            respMTX(N,7) = false; % not a rewarded trial
+            % FALSE ALARM: Air Puff
+            fprintf(ardOut,'A'); % AIR PUNISHMENT
+        elseif ~leverPress
+            fprintf('CORR. REJECTION\n');
+            respMTX(N,7) = false; % not a rewarded trial
+            if fractRewCR > 0
+                durReinforce = durWaterValve;
+                if rand > 1-fractRewCR
+                    if laserMode == 4 && N > paramsLaser(2)
+                        % Determine if it is a laser trial
+                        if rand <= laserFract
+                            MTXTrialType(N,5) = 1;
+                            fprintf(ardOut,'L'); % Send a pulse to digidata
+                            fprintf('LASER (SURPRISE)!\n')
+                        end
                     end
+                    fprintf('REWARD SURPRISE!!!\n');
+                    respMTX(N,7) = true; % rewarded trial
+                    fprintf(ardOut,'W'); % WATER REWARD
                 end
             end
         end
-        pause(durReinforce); % keep reinforcement going
-        fprintf(ardOut,'X'); % STOP WATER
-        fprintf(ardOut,'B'); % STOP AIR
     end
+
+    [ARDUINO, ESC] = recordContinuous(ARDUINO, durReinforce, escapeKey); % keep reinforcement going
+    fprintf(ardOut,'X'); % STOP WATER
+    fprintf(ardOut,'B'); % STOP AIR
         
     % Post trial (consumption)  ===================================================
     fprintf(ardOut,'I'); % ITI again, turn tStart to LOW
@@ -281,7 +297,7 @@ response.respMTX = respMTX(1:N-1,:);
 response.respMTXheader = responseMTXheader;
 
 params.MTXTrialType = MTXTrialType;
-params.MTXTrialTypeHeader = {'TRIAL#'; 'TRIALTYPE(0 no-go / 1 go)'; 'TONEID'; 'durFOREPERIOD'};
+params.MTXTrialTypeHeader = {'TRIAL#'; 'TRIALTYPE(0 no-go / 1 go)'; 'TONEID'; 'durITI'};
 [~,systName] = system('hostname');
 params.systName = systName(1:end-1);
 
@@ -318,6 +334,15 @@ end
 % save
 save(['Data\ToneDiscrimination\' animalID '\' saveName],'data');
 fprintf('Data was saved properly\n');
+
+
+% Plot all the data
+figure()
+hold on
+plot(ARDUINO.data(:, 1), ARDUINO.data(:, 2)) % lever data
+plot(ARDUINO.data(:, 1), ARDUINO.data(:, 4)) % lick data
+for 
+
 
 %% CLEAN UP =========================================
 cleanArduino(ARDUINO.in);

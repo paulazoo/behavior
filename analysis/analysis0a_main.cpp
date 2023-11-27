@@ -44,7 +44,6 @@ int main(int argc, char** argv) {
     char* output_folder = argv[1]; // the output folder where the binaries will be saved e.g. ./Data/AnB1/B1_20231030/
     char* matlab_filename = argv[2]; // the lever data .mat filename e.g. ./Data/AnB1/B1_20231030.mat
     int beginning_samples_to_skip = atoi(argv[3]); // number of beginning samples to skip
-    int trial_i_to_start = atoi(argv[4]); // which number trial to start, if seems like 
 
     // Create output folder directory
     mkdir(output_folder, 0777);
@@ -91,7 +90,7 @@ int main(int argc, char** argv) {
         double previous_lever_value = lever_data[beginning_samples_to_skip];
         double lever_value = lever_data[beginning_samples_to_skip];
         int previous_switch_i = beginning_samples_to_skip;
-        int num_switches = trial_i_to_start;
+        int num_switches = 0;
         // iterating through lever values...
         for (size_t i = beginning_samples_to_skip; i < lever_data.size(); ++i) {
             lever_value = lever_data[i];

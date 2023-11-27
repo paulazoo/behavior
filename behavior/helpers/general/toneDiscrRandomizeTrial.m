@@ -34,7 +34,7 @@ toneID(trialType == 1) = X(2,1:sum(trialType == 1));
 
 
 %% Randomize ITI duration
-durITI = randi(ITISettings,1,nTrials);
+durITI = unifrnd(ITISettings(0),ITISettings(1),[1 nTrials]);
 
 
 %% Create sequence laser trial

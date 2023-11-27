@@ -11,7 +11,7 @@ params.fractRewCorrRej = 0; %fraction of correct rejection trials that are rewar
 
 % Durations ---
 % params.durations.preReward = 0.5;
-params.durations.ITI.settings = [8.0 12.0];
+params.durations.ITISettings = [8.0 12.0];
 params.durations.rewardConsumption = 2.5; % time after reward delivery
 params.durations.decision = 10; %time after tone to make decision
 params.durations.maxMvtDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
