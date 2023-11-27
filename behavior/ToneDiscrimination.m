@@ -319,7 +319,7 @@ end
 
 % Make sure you do not overwrite previous data by creating a different save
 % name (append b,c,d,...)
-saveName = sprintf('ToneDisc_AN%s_%s',animalID,date);
+saveName = sprintf('ToneDisc_%s_%s',animalID,date);
 alphabets = 'bcdefghijklmnopqrstuvwxyz';
 idArd = 1;
 while exist(['Data\ToneDiscrimination\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
@@ -335,14 +335,12 @@ end
 save(['Data\ToneDiscrimination\' animalID '\' saveName],'data');
 fprintf('Data was saved properly\n');
 
-
 % Plot all the data
 figure()
 hold on
 plot(ARDUINO.data(:, 1), ARDUINO.data(:, 2)) % lever data
 plot(ARDUINO.data(:, 1), ARDUINO.data(:, 4)) % lick data
-for 
-
+hold off
 
 %% CLEAN UP =========================================
 cleanArduino(ARDUINO.in);
