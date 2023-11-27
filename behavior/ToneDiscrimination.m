@@ -1,4 +1,4 @@
-% You are on version1's branch
+% You are on version5's (the first reward sound with new sound player) branch
 clear all; close all; clc;
 root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\';
 
