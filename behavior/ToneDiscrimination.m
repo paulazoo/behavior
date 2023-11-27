@@ -29,7 +29,7 @@ if fractRewCR > 1
 end
 
 % Ask user if reward surprise is okay
-if fractRewCR >0.001
+if fractRewCR > 0.001
     str = sprintf('Warning: Reward surprise mode is selected, is that OKAY? Y/N [Y]:\n');
     reply = input(str,'s');
     if isempty(reply)
@@ -42,7 +42,6 @@ if fractRewCR >0.001
 end
 
 % Durations ---
-% dur_preReward = params.durations.preReward;
 durITISettings = params.durations.ITISettings;
 % check that ITI is at least 1 second
 if durITISettings[0] < 1.0
@@ -68,10 +67,9 @@ toneSelect = params.toneSelection; % Range from 1o 4. 1 means only max. 2 means 
 punishSwitch = params.punish;
 trainingSwitch = params.training; % True for training for FA. Next trial is No-GO
 
-% Auto-stop / Messaged
+% Termination Criteria
 maxMiss = params.maxMiss; % NOT IMPLEMENTED YET Maximum miss trials in a row. Use nan for no limits
 maxTotalHits = params.maxTotalHits; % Maximum total of hits. Use nan for no limits.
-tMessages = 900; % In seconds, time interval to display messages
 
 % Laser
 fractionLaser = params.laser.fractionLaser;
