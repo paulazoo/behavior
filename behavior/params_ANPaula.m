@@ -13,22 +13,22 @@ params.fractRewCorrRej = 0; %fraction of correct rejection trials that are rewar
 % params.durations.preReward = 0.5;
 params.durations.ITISettings = [8.0 12.0];
 params.durations.rewardConsumption = 2.5; % time after reward delivery
+params.durations.airPuff = 0.3; % time for air puff valve
 params.durations.decision = 10; %time after tone to make decision
-params.durations.maxMvtDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
 % params.durations.decisionFA = 0.8;
-params.durations.puff = 0.3;
-params.durations.preReinforcement = 0.25;
+params.durations.preReinforcement = 0.25; % time after successful lever press and before reinforcement
+params.durations.maxMvtDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
 
 % Detection MVT ---
-params.mvt.mvtThresh = 0.25; % in Volts to initiate a trial
-params.mvt.noMvtThresh = 0.12;
+params.mvt.noMvtThresh = 0.12; % first threshold in Volts
+params.mvt.mvtThresh = 0.25; % second threshold in Volts
 
 % Tone selection ---
 params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
 
 % Switches
 params.punish = false; % punish false alarm with puff
-params.training = true;
+params.training = true; % training or not
 
 % AutoStop
 params.maxMiss = nan; % NOT IMPLEMENTED YET Maximum miss trials in a row. Use nan for no limits
