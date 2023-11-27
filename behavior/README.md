@@ -1,13 +1,4 @@
-# Data_Renamed
-Original, renamed Data. Leave alone.
-
-# Data_Copy
-Data copied over for analysis. Also includes AnalysisData.
-
-# analysis
-Each analysis notebook has documentation explaining what is going on inside of it, including what should be outputted to the analysis output folder.
-
-# ./behavior/ToneDiscrimination.m
+# ./ToneDiscrimination.m
 - reads from behaviorIN.ino
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
 - lever sensor movement in ./helpers/leverMVT/detectMVTV2.m
@@ -95,11 +86,11 @@ __data.response__
     -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
 
 
-# ./behavior/helpers/card/setupArduino.m
+# ./helpers/card/setupArduino.m
 setup and open serial ports for ArdIN and ArdOUT
 - outputs: `ardIn`,`ardOut`
 
-# ./behavior/helpers/card/readArduino.m
+# ./helpers/card/readArduino.m
 read most recent values from ArdIN
 - arguments: `ard`, `t0`, optional `msgOn`
 - outputs: `d` the data
@@ -111,29 +102,29 @@ read most recent values from ArdIN
     - d(6) = accelerator Y value
     - d(7) = accelerator Z value
 
-# ./behavior/helpers/card/cleanArduino.m
+# ./helpers/card/cleanArduino.m
 turn all to LOW if ArdOUT, then close regardless if ArdIN or ArdOUT
 - arguments: `ard`, `type` such as `OUT`
 
-# ./behavior/helpers/card/recordContinuous.m
+# ./helpers/card/recordContinuous.m
 record lever and lick data continuously for some duration of time
 - arguments: `ARDUINO`, `recordingDuration` the duration to record, `ESC`
 - outputs: `ARDUINO` with updated `ARDUINO.data`, `ESC`
 
-# ./behavior/helpers/general/printPerformance.m
+# ./helpers/general/printPerformance.m
 Print a performance string based on responses so far
 - arguments: `respMTX`,`MTXTrialType`,`N`
 - outputs: `str` as string about the performance to display
 
-# ./behavior/helpers/general/toneDiscrRandomizeTrial.m
+# ./helpers/general/toneDiscrRandomizeTrial.m
 randomize Go vs No Go trials, tone according to trial type, durITI, and laser
 - arguments: `nTrials`,`toneSelect`,`fractGo`,`ITISettings`,`paramLaser`
 - outputs: `MTXTrialType`
 
-# ./behavior/helpers/general/vecOfRandPerm.m
+# ./helpers/general/vecOfRandPerm.m
 helper function for random permutations of vectors
 
-# ./behavior/helpers/sound/soundInit.m
+# ./helpers/sound/soundInit.m
 initialize sound player with a `soundStimMatrix` = 
 ```
 [
@@ -151,21 +142,21 @@ initialize sound player with a `soundStimMatrix` =
 columns: index | freq | amplitude | sound duration | SNR
 - outputs: `snd` the sound player
 
-# ./behavior/helpers/sound/soundPlay.m
+# ./helpers/sound/soundPlay.m
 play a sound
 - arguments: `soundId`, `snd` the sound player
 
-# ./behavior/helpers/waterCalibration/waterReward2duration.m
+# ./helpers/waterCalibration/waterReward2duration.m
 get valve duration based on water reward amount and calibration .mat file (should be in the helpers/waterCalibration folder)
 - arguments: `rewAmount`,`valveID`
 - outputs: `durValve`
 
-# ./behavior/helpers/leverMVT/referenceMVT.m
+# ./helpers/leverMVT/referenceMVT.m
 get referenceMVT for some number of Arduino samples
 - arguments: `ARDUINO`,`num_reference_samples`
 - outputs: `MVT0`
 
-# ./behavior/helpers/leverMVT/detectLeverPress.m
+# ./helpers/leverMVT/detectLeverPress.m
 detect a lever press
 - arguments: `ARDUINO`, `params`, `escapeKey`
     - `ARDUINO` is a structure with fields
@@ -184,7 +175,7 @@ detect a lever press
     - `params` = [`detectionDuration` `MVT0` `noMvtThresh` `mvtThresh` `maxLeverPressDuration`];
 - outputs: `ARDUINO`, `leverPress`, `ESC`
 
-# ./behavior/helpers/leverMVT/detectITIMovement.m
+# ./helpers/leverMVT/detectITIMovement.m
 detect movement past noMvtThresh (for during ITI)
 - arguments: `ARDUINO`, `params`, `escapeKey`
     - `ARDUINO` is a structure with fields
@@ -203,7 +194,7 @@ detect movement past noMvtThresh (for during ITI)
     - `params` = [`detectionDuration` `MVT0` `noMvtThresh`];
 - outputs: `ARDUINO`, `ITIMovement`, `ESC`
 
-# ./behavior/helpers/leverMVT/testLeverValues.m
+# ./helpers/leverMVT/testLeverValues.m
 For troubleshooting and testing lever displacement to voltage relationships
 
 

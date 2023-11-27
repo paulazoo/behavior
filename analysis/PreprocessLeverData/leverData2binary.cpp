@@ -8,7 +8,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-
 #include <matio.h> // for reading .mat files into C
 
 using namespace std;
@@ -141,3 +140,71 @@ int main(int argc, char** argv) {
 
     return EXIT_SUCCESS;
 }
+
+/*
+Equivalent python program for Giselle:
+
+import numpy as np
+import struct
+
+def save_double_vec_to_bin(data_to_save, filename):
+    with open(filename, 'wb') as outputFile:
+        outputFile.write(struct.pack('d'*len(data_to_save), *data_to_save))
+    print("vector saved to .bin file", filename)
+
+def slice_double_vec(data, start_i, end_i):
+    if start_i < 0:
+        start_i = 0
+    if end_i > len(data):
+        end_i = len(data)
+    if start_i > end_i:
+        return []
+    return data[start_i:end_i]
+
+beginning_samples_to_skip = 15460
+
+matfp = matio.matopen("./Data/AnB1/B1_20231030.mat", "r")
+if matfp is None:
+    print("Error opening MAT file")
+    exit(1)
+
+matvar = matio.matvarread(matfp, "lever_data")
+if matvar is None:
+    print("Error reading variable 'lever_data' from MAT file")
+    exit(1)
+print("lever_data from .mat size:", matvar.dims[0], ",", matvar.dims[0])
+print("lever_data from .mat rank:", matvar.rank)
+
+if matvar.rank == 2 and matvar.dims[1] == 1 and matvar.class_type == matio.MAT_C_DOUBLE:
+    data = matvar.data
+    numElements = matvar.dims[0]
+
+    lever_data = np.array(data[:numElements])
+    print("lever_data vector size:", lever_data.size)
+
+    lever_data = lever_data[lever_data != 0]
+    print("lever_data vector with unused rows taken out size:", lever_data.size)
+
+    save_double_vec_to_bin(lever_data, "./Data/AnB1/B1_20231030_lever_data.bin")
+
+    previous_lever_value = lever_data[beginning_samples_to_skip]
+    lever_value = lever_data[beginning_samples_to_skip]
+    previous_switch_i = beginning_samples_to_skip
+    num_switches = 0
+    for i in range(beginning_samples_to_skip, len(lever_data)):
+        lever_value = lever_data[i]
+        if lever_value < 2000 and previous_lever_value > 2000:
+            print("finished a trialITI:", i, "trialITI length:", i - previous_switch_i, "samples = ~", (i - previous_switch_i)/5000, "s")
+            lever_data_chunk = slice_double_vec(lever_data, previous_switch_i, i)
+            lever_data_chunk[lever_data_chunk > 2000] -= 2000
+            save_double_vec_to_bin(lever_data_chunk, "./Data/AnB1/B1_20231030_trial" + str(num_switches) + ".bin")
+            num_switches += 1
+            previous_switch_i = i
+        previous_lever_value = lever_value
+    print("total switches:", num_switches)
+else:
+    print("The variable is not a 1D array of type double.")
+
+matio.matvarfree(matvar)
+matio.matclose(matfp)
+*/
