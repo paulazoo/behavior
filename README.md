@@ -7,7 +7,7 @@ Data copied over for analysis. Also includes AnalysisData.
 # analysis
 Each analysis notebook has documentation explaining what is going on inside of it, including what should be outputted to the analysis output folder.
 
-# ToneDiscrimination.m
+# ./behavior/ToneDiscrimination.m
 - reads from behaviorIN.ino
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
 - lever sensor movement in ./helpers/leverMVT/detectMVTV2.m
@@ -99,11 +99,11 @@ __data.response__
     -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
 
 
-# ./helpers/card/setupArduino.m
+# ./behavior/helpers/card/setupArduino.m
 setup and open serial ports for ArdIN and ArdOUT
 - outputs: `ardIn`,`ardOut`
 
-# ./helpers/card/readArduino.m
+# ./behavior/helpers/card/readArduino.m
 read most recent values from ArdIN
 - arguments: `ard`, `t0`, optional `msgOn`
 - outputs: `d` the data
@@ -115,61 +115,61 @@ read most recent values from ArdIN
     - d(6) = accelerator Y value
     - d(7) = accelerator Z value
 
-# ./helpers/card/cleanArduino.m
+# ./behavior/helpers/card/cleanArduino.m
 turn all to LOW if ArdOUT, then close regardless if ArdIN or ArdOUT
 - arguments: `ard`, `type` such as `OUT`
 
-# ./helpers/card/recordContinuous.m
+# ./behavior/helpers/card/recordContinuous.m
 record lever and lick data continuously for some duration of time
 - arguments: `ARDUINO`, `recordingDuration` the duration to record, `ESC`
 - outputs: `ARDUINO` with updated `ARDUINO.data`, `ESC`
 
-# ./helpers/general/printPerformance.m
+# ./behavior/helpers/general/printPerformance.m
 Print a performance string based on responses so far
 - arguments: `respMTX`,`MTXTrialType`,`N`
 - outputs: `str` as string about the performance to display
 
-# ./helpers/general/toneDiscrRandomizeTrial.m
+# ./behavior/helpers/general/toneDiscrRandomizeTrial.m
 randomize Go vs No Go trials, tone according to trial type, durITI, and laser
 - arguments: `nTrials`,`toneSelect`,`fractGo`,`ITISettings`,`paramLaser`
 - outputs: `MTXTrialType`
 
-# ./helpers/general/vecOfRandPerm.m
+# ./behavior/helpers/general/vecOfRandPerm.m
 helper function for random permutations of vectors
 
-# ./helpers/sound/soundInit.m
+# ./behavior/helpers/sound/soundInit.m
 initialize sound player with a `soundStimMatrix` = 
 ```
 [
-    1 freq1 scalingFact(1)*soundAmp dur 50
-    2 freq1 scalingFact(1)*soundAmp*0.3163 dur 50
-    3 freq1 scalingFact(1)*soundAmp*0.1 dur 50
-    4 freq1 scalingFact(1)*soundAmp*0.03163 dur 50
+    1 4000 computerScalingFactor(1)*soundAmplitude 0.5 50
+    2 4000 computerScalingFactor(1)*soundAmplitude*0.3163 0.5 50
+    3 4000 computerScalingFactor(1)*soundAmplitude*0.1 0.5 50
+    4 4000 computerScalingFactor(1)*soundAmplitude*0.03163 0.5 50
     
-    5 freq2 scalingFact(2)*soundAmp dur 50
-    6 freq2 scalingFact(2)*soundAmp*0.3163 dur 50
-    7 freq2 scalingFact(2)*soundAmp*0.1 dur 50
-    8 freq2 scalingFact(2)*soundAmp*0.03163 dur 50
+    5 12000 computerScalingFactor(2)*soundAmplitude 0.5 50
+    6 12000 computerScalingFactor(2)*soundAmplitude*0.3163 0.5 50
+    7 12000 computerScalingFactor(2)*soundAmplitude*0.1 0.5 50
+    8 12000 computerScalingFactor(2)*soundAmplitude*0.03163 0.5 50
     ]
 ```
-column 1 is index, 2 is freq, 3: amp, 4: dur; 5: SNR
+columns: index | freq | amplitude | sound duration | SNR
 - outputs: `snd` the sound player
 
-# ./helpers/sound/soundPlay.m
+# ./behavior/helpers/sound/soundPlay.m
 play a sound
 - arguments: `soundId`, `snd` the sound player
 
-# ./helpers/water_calibration/water_reward2duration.m
+# ./behavior/helpers/water_calibration/water_reward2duration.m
 get valve duration based on water reward amount and calibration .mat file (should be in the helpers/water_calibration folder)
 - arguments: `rewAmount`,`valveID`
 - outputs: `durValve`
 
-# ./helpers/leverMVT/referenceMVT.m
+# ./behavior/helpers/leverMVT/referenceMVT.m
 get referenceMVT for some number of Arduino samples
 - arguments: `ARDUINO`,`num_reference_samples`
 - outputs: `MVT0`
 
-# ./helpers/leverMVT/detectLeverPress.m
+# ./behavior/helpers/leverMVT/detectLeverPress.m
 detect a lever press
 - arguments: `ARDUINO`, `params`, `escapeKey`
     - `ARDUINO` is a structure with fields
@@ -188,7 +188,7 @@ detect a lever press
     - `params` = [`detectionDuration` `MVT0` `noMvtThresh` `mvtThresh` `maxMvtDuration`];
 - outputs: `ARDUINO`, `leverPress`, `ESC`
 
-# ./helpers/leverMVT/detectITIMovement.m
+# ./behavior/helpers/leverMVT/detectITIMovement.m
 detect movement past noMvtThresh (for during ITI)
 - arguments: `ARDUINO`, `params`, `escapeKey`
     - `ARDUINO` is a structure with fields
@@ -207,11 +207,11 @@ detect movement past noMvtThresh (for during ITI)
     - `params` = [`detectionDuration` `MVT0` `noMvtThresh`];
 - outputs: `ARDUINO`, `ITIMovement`, `ESC`
 
-# ./helpers/leverMVT/testLeverValues.m
+# ./behavior/helpers/leverMVT/testLeverValues.m
 For troubleshooting and testing lever displacement to voltage relationships
 
 
-# ./analysis/dprime.m
+# dprime definition
 $F^{-1}$(__Hit__ rate) $- F^{-1}$(__FA__ rate)
 N(0, 1) distrib
 
