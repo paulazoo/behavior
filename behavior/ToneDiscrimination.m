@@ -51,12 +51,12 @@ if durITISettings[0] < 1.0
  end
 durConsumption = params.durations.rewardConsumption;
 durDecision = params.durations.decision;
-maxMvtDuration = params.durations.maxMvtDuration;
+maxLeverPressDuration = params.durations.maxLeverPressDuration;
 durAirPuff = params.durations.airPuff;
 durPreReinforcement = params.durations.preReinforcement; 
 
 % Detection ---
-% note that maxMvtDuration is set in params.durations.maxMvtDuration
+% note that maxLeverPressDuration is set in params.durations.maxLeverPressDuration
 mvtThresh = params.mvt.mvtThresh; % in Volts to initiate a trial, aka second threshold
 noMvtThresh = params.mvt.noMvtThresh; % first threshold that mouse must keep bar behind
 ARDUINO.idx = 1;
@@ -70,43 +70,31 @@ trainingSwitch = params.training; % True for training for FA. Next trial is No-G
 
 % Auto-stop / Messaged
 maxMiss = params.maxMiss; % NOT IMPLEMENTED YET Maximum miss trials in a row. Use nan for no limits
-maxTotHits = params.maxTotHits; % Maximum total of hits. Use nan for no limits.
+maxTotalHits = params.maxTotalHits; % Maximum total of hits. Use nan for no limits.
 tMessages = 900; % In seconds, time interval to display messages
 
 % Laser
-paramsLaser = params.laser; %fractLaser trials; ntrial baseline (at the beginning of a session)
-params.laserCtrlIO = true;
-laserMode = paramsLaser(3);
-laserFract = paramsLaser(1);
+fractionLaser = params.laser.fractionLaser;
+nTrialBaseline = params.laser.nTrialBaseline; % ntrial baseline (at the beginning of a session)
+laserMode = params.laser.laserMode; % laser mode; either 'Arch/Jaws', 'ChR2, 'Arch/Jaws-Reinf', or 'ArchSuprise'
+laserLocation = params.laser.laserLocation; % LC=1 PFC=2 MC=3
+laserControlSwitch = params.laser.controlExperiments; 
 
-%Check up laser
-if paramsLaser(1) > 0 %Ask if laser are ctrl experiments
-    str = sprintf('Warning: %s is selected as the optogenetic mode, OKAY? Y/N [Y]:\n',params.laserExp{laserMode});
+% Laser Check
+if fractionLaser > 0 % if any of the trials have laser
+    str = sprintf('Warning: %s is selected as the optogenetic mode, OKAY? Y/N [Y]:\n', laserMode);
     reply = input(str,'s');
-    if isempty(reply)
-        reply = 'Y';
-    end
-    if strcmp(reply,'N') || strcmp(reply,'n')
-        fprintf('Exit!\n');
+    if ~strcmp(reply,'Y')
+        fprintf('Exiting!\n');
         return
     end
+end
 
-    reply = input('Are these control laser experiments? Y/N [N]:','s');
-    if isempty(reply)
-        reply = 'N';
-    end
-    if strcmp(reply,'N') || strcmp(reply,'n')
-        params.laserCtrlIO = false;
-    end
-    
-    reply = input('Location? LC=1 PFC=2 MC=3 [1]:');
-    if isempty(reply)
-        reply = 1;
-    end
-    if any(reply == [1,2,3])
-        params.laserLocation = reply;
-    else
-        params.laserLocation = nan;
+if ~laserControlSwitch
+    reply = input('This is not a control experiment, OKAY? Y/N [Y]:\n')
+    if ~strcmp(reply,'Y')
+        fprintf('Exiting!\n');
+        return
     end
 end
 
@@ -114,6 +102,7 @@ end
 % is selected.
 if laserMode == 3 && durPreReinforcement < 0.01
     error('You cannot use this laser mode if durPreReinforcement is set to 0 sec')
+    return
 end
 
 %% SETUP ===================================================================
@@ -125,7 +114,7 @@ ARDUINO.out = ardOut;
 responseMTXheader = {'timeTrialStart';'timeTone';'leverPressed';'timePressed';'MVT0';'ITIPress';'rew'};
 respMTX = nan(nTrials,7);
 nM = 0;
-nH = 0;
+nHits = 0;
 % Randomize trials ---
 MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractNoGo, durITISettings, paramsLaser);
 
@@ -209,7 +198,7 @@ while N <= nTrials && ESC
     
     % RESPONSE =======================================================
     % go forward to meet second threshold ------------
-    detectionParams = [durDecision MVT0 noMvtThresh mvtThresh maxMvtDuration];
+    detectionParams = [durDecision MVT0 noMvtThresh mvtThresh maxLeverPressDuration];
     [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,detectionParams,escapeKey);
     if leverPress
         fprintf('Lever press detected\n');
@@ -233,7 +222,7 @@ while N <= nTrials && ESC
         fprintf(ardOut,'W'); % WATER REWARD
         [ARDUINO, ESC] = recordContinuous(ARDUINO, durWaterValve, escapeKey); % keep reinforcement going
         fprintf(ardOut,'X'); % STOP WATER  
-        nH = nH + 1 ; % Total number of hits 
+        nHits = nHits + 1 ; % Total number of hits 
 
     elseif trialType == 1 && ~leverPress:
         fprintf('MISS, DO NOTHING'\n);
@@ -275,11 +264,11 @@ while N <= nTrials && ESC
     performanceString = printPerformance(respMTX,MTXTrialType,N);
     disp(performanceString);
         
-    % Stop if nH > maxTotHits
-    if ~isnan(maxTotHits) && nH > maxTotHits        
+    % Stop if nHits > maxTotalHits
+    if ~isnan(maxTotalHits) && nHits > maxTotalHits        
         askStop = input('Do you want to stop [y/n]: ', 's');
         if askStop == 'y'
-        fprintf('Session stopped. Max number of hits (%d) reached\n',maxTotHits);
+        fprintf('Session stopped. Max number of hits (%d) reached\n',maxTotalHits);
         ESC = false;
         end
     end

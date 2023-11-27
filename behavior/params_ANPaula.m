@@ -16,8 +16,8 @@ params.durations.rewardConsumption = 2.5; % time after reward delivery
 params.durations.airPuff = 0.3; % time for air puff valve
 params.durations.decision = 10; %time after tone to make decision
 % params.durations.decisionFA = 0.8;
-params.durations.preReinforcement = 0.25; % time after successful lever press and before reinforcement
-params.durations.maxMvtDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
+params.durations.preReinforcement = 0.1; % time after successful lever press and before reinforcement
+params.durations.maxLeverPressDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
 
 % Detection MVT ---
 params.mvt.noMvtThresh = 0.12; % first threshold in Volts
@@ -32,13 +32,12 @@ params.training = true; % training or not
 
 % AutoStop
 params.maxMiss = nan; % NOT IMPLEMENTED YET Maximum miss trials in a row. Use nan for no limits
-params.maxTotHits = 3; % Maximum total of hits. Use nan for no limits.
+params.maxTotalHits = 3; % Maximum total of hits. Use nan for no limits.
 
 % Laser
-params.laser = [0 10 4]; %fractLaser trials; ntrial baseline (at the beginning of a session)
-params.laserExp = {'Arch/Jaws','ChR2', 'Arch/Jaws-Reinf', 'ArchSuprise'};
-% % possible values for fractLaser: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
-
-params.fractNoGo = 0; %fraction of no-Go trials
-
+params.laser.fractionLaser = 0; % fraction of laser trials. possible values: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
+params.laser.nTrialBaseline = 10; % ntrial baseline (at the beginning of a session)
+params.laser.laserMode = 'ChR2'; % laser mode; either 'Arch/Jaws', 'ChR2, 'Arch/Jaws-Reinf', or 'ArchSuprise'
+params.laser.laserLocation = nan; % LC=1 PFC=2 MC=3
+params.laser.controlExperiments = true; 
         

@@ -15,7 +15,7 @@ Each analysis notebook has documentation explaining what is going on inside of i
 ## description:
 - water-restricted mouse does 1 run of program per day
 - up to many (1000) trials per run
-- a run ends after _maxTotHits_ number of __Hits__ occur
+- a run ends after _maxTotalHits_ number of __Hits__ occur
 
 __A Trial__:
 - a random _ITI_ duration between each trial:
@@ -37,46 +37,42 @@ __A Trial__:
 ## ToneDiscrimination.m Output:
 __data.params__
 - _[0] animalID_: string, animal ID
+- _[1] computerName_: string, system/computer hostname
 - _[2] nTrials_: num, number of trials per run
 - _[3] amountReward_: uL, amount of water reward
 - _[4] fractNoGo_: [0,1], fraction of total trials that are __No-Go__ (vs __Go__)
 - _[5] fractRewCorrRej_: [0,1], fraction of correct rejection (CR) trials that are rewarded, aka "Reward surprise mode"
 - _[6] durations_:
-    - _ITISettings_: [a, b] s, parameters of the Uniform random distribution for inter-trial interval (e.g. [`8.0`, `12.0`]) so that mouse can't just lick at regular intervals and have to learn cue (trials start somewhat randomly)
+    - _[0] ITISettings_: [a, b] s, parameters of the Uniform random distribution for inter-trial interval (e.g. [`8.0`, `12.0`]) so that mouse can't just lick at regular intervals and have to learn cue (trials start somewhat randomly)
         - ITI must be at least 1.0s
-    - _reward_consumption_: s, reward delivery period duration
-    - _decision_: s, time after cue for mouse to make decision and press lever or not
-    - _preReinforcement_: s, duration following a lever press before either water reward or air puff punishment
+    - _[1] rewardConsumption_: s, water reward delivery valve duration
+    - _[2] airPuff_: s, air puff valve duration
+    - _[3] decision_: s, time after cue for mouse to make decision and press lever or not
+    - _[4] preReinforcement_: s, duration following a lever press before either water reward or air puff punishment
+    - _[5] maxLeverPressDuration_: s, maximum duration for crossing both thresholds in order to count as a lever press
 - _[7] mvt_:
-    - _mvtThresh_: V, threshold for lever sensor to count as lever press
-    - _noMvtThresh_: V, maximum movement allowed during foreperiod without trial becoming an NaN trial
-- _[8] tone_selection_: num, possible tone intensities from which one intensity will be randomly selected each trial
-    - _ToneID_: `1`-`4` are tone A max-min, `5`-`8` are tone B max-min
-- _[9] punish_: boole, whether punishment is given or not
+    - _[0] mvtThresh_: V, threshold for lever sensor to count as lever press
+    - _[1] noMvtThresh_: V, maximum movement allowed during foreperiod without trial becoming an NaN trial
+- _[8] toneSelection_: num, possible tones from which one will be randomly selected each trial. `1`-`4` are 4kHz max-min, `5`-`8` are 12kHz max-min.
+- _[9] punish_: boole, whether air puff punishment is given or not
 - _[10] training_: boole, whether this is a training run or not
 - _[11] maxMiss_: NOT IMPLEMENTED YET, num, number of misses before stopping the run; if don't stop run based on misses, set as NaN
-- _[12] maxTotHits_: num, number of hits before stopping the run; if don't stop run based on hits, set as NaN
-- _[13] laser_: 3 elem vector
-    - [
-        _fractLaser_: random fraction of trials to have optogenetic laser,
-        ntrial baseline [?],
-        laserExp index,
-    ]
-    - possible values for _fractLaser_: 0.5, 0.4, 1/3, 0.3, 1/4, 0.2, 0.1, 0
-- _[14] laserExp_: possible optogenetic laser expt settings (3rd elem in _laser_)
-    - `{'Arch/Jaws','ChR2', 'Arch/Jaws-Reinf', 'ArchSuprise'}`
-    - 0 if no optogenetics
-- _[15] laserCtrlIO_: boole, whether this is a control laser run or not (laser settings are all the same, but no optogenetic laser light actually delivered)
-- _laserLocation_: num, LC=1 PFC=2 MC=3
-- _[17] MTXTrialTypeHeader_: header,
+- _[12] maxTotalHits_: num, number of hits before stopping the run; if don't stop run based on hits, set as NaN
+- _[13] laser_:
+    - _[0] fractionLaser_: float, random fraction of trials to have optogenetic laser
+        - possible values for _fractLaser_: 0.5, 0.4, 1/3, 0.3, 1/4, 0.2, 0.1, 0
+    - _[1] nTrialBaseline_: int, ntrial baseline [?]
+    - _[2] laserMode_: either 'Arch/Jaws', 'ChR2, 'Arch/Jaws-Reinf', or 'ArchSuprise'
+    - _[3] laserLocation_: num, LC=1 PFC=2 MC=3
+    - _[4] controlExperiments_: boole, whether this is a control laser run or not (laser settings are all the same, but no optogenetic laser light actually delivered)
+- _[15] MTXTrialTypeHeader_: header,
 `TRIAL#` | `TRIALTYPE(0 no-go / 1 go)` | `TONEID` | `durITI`
-- _[16] MTXTrialType_: nTrials x 5 [what's the last col?] matrix, row vals based on _MTXTrialTypeHeader_. Trials not run (d/t reaching _MaxTotHits_ number of hits) are rows of NaN
+- _[14] MTXTrialType_: nTrials x 5 [what's the last col?] matrix, row vals based on _MTXTrialTypeHeader_. Trials not run (d/t reaching _maxTotalHits_ number of hits) are rows of NaN
     - `TRIAL#`: num, index of trial
     - `TRIALTYPE(0 no-go / 1 go)`: boole, 1 if __Go trial__ or 0 if __No-Go trial__
     - `TONEID`: num, tone id that was played
     - `durITI`: ITI duration for that trial
-- _[1] computerName_: string, system/computer hostname
-- _[18] systName_: string, system/computer hostname
+- _[16] systName_: string, system/computer hostname
 
 __data.response__
 - _[1] dataArduinoHeader_: header,
@@ -185,7 +181,7 @@ detect a lever press
         - d(5) = accelerator X value
         - d(6) = accelerator Y value
         - d(7) = accelerator Z value
-    - `params` = [`detectionDuration` `MVT0` `noMvtThresh` `mvtThresh` `maxMvtDuration`];
+    - `params` = [`detectionDuration` `MVT0` `noMvtThresh` `mvtThresh` `maxLeverPressDuration`];
 - outputs: `ARDUINO`, `leverPress`, `ESC`
 
 # ./behavior/helpers/leverMVT/detectITIMovement.m

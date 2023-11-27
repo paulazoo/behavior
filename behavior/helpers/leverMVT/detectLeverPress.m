@@ -13,13 +13,13 @@ function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
     %        d(5) = accelerator X value
     %        d(6) = accelerator Y value
     %        d(7) = accelerator Z value
-    % params = [detectionDuration MVT0 noMvtThresh mvtThresh maxMvtDuration];
+    % params = [detectionDuration MVT0 noMvtThresh mvtThresh maxLeverPressDuration];
     
     detectionDuration = params(1);
     MVT0 = params(2);
     noMvtThresh = params(3);
     mvtThresh = params(4);
-    maxMvtDuration = params(5);
+    maxLeverPressDuration = params(5);
 
     leverPress = false;
 
@@ -46,7 +46,7 @@ function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
                 leverPress = true;
             
             % otherwise check if the time for completing a leverPress Mvt is up
-            elseif time_since_noMvtThresh > maxMvtDuration
+            elseif time_since_noMvtThresh > maxLeverPressDuration
                 started_below_noMvtThresh = false;
                 time_since_noMvtThresh = 0;
                 disp('ran out of time to pass both noMvtThresh and mvtThresh.')
