@@ -1,5 +1,5 @@
-function durValve = water_reward2duration(rewAmount,valveID)
-% function durValve = water_reward2duration(rewAmount,valveID);
+function durValve = waterReward2duration(rewAmount,valveID)
+% function durValve = waterReward2duration(rewAmount,valveID);
 % Function to obtain the duration the valve should be opened (durValve) in sec
 % for delivering a reward amount (rewAmount) in uL. Min is 2 uL.
 
@@ -10,7 +10,7 @@ end
 
 [~,systName] = system('hostname');
 systName = systName(1:end-1);
-cd([pwd filesep 'helpers' filesep 'water_calibration' filesep]);
+cd([pwd filesep 'helpers' filesep 'waterCalibration' filesep]);
 
 % Load calibration
 if exist([systName filesep 'dataCalibration_valve' num2str(valveID) '.mat'],'file') > 0

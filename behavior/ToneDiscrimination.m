@@ -4,7 +4,7 @@ root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\';
 cd(root_dir);
 addpath([pwd filesep 'helpers' filesep]);
 addpath([pwd filesep 'helpers' filesep 'analysis']);
-addpath([pwd filesep 'helpers' filesep 'water_calibration' filesep]);
+addpath([pwd filesep 'helpers' filesep 'waterCalibration' filesep]);
 addpath([pwd filesep 'helpers' filesep 'card']);
 addpath([pwd filesep 'helpers' filesep 'general']);
 addpath([pwd filesep 'helpers' filesep 'sound']);
@@ -152,7 +152,7 @@ disp(MVT0 + noMvtThresh);
 disp(MVT0 + mvtThresh);
 
 % Water ---
-durWaterValve = water_reward2duration(amountReward,2);
+durWaterValve = waterReward2duration(amountReward,2);
 cd(root_dir);
 
 % Asynchronous LeverData ---

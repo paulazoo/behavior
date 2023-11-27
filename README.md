@@ -159,8 +159,8 @@ columns: index | freq | amplitude | sound duration | SNR
 play a sound
 - arguments: `soundId`, `snd` the sound player
 
-# ./behavior/helpers/water_calibration/water_reward2duration.m
-get valve duration based on water reward amount and calibration .mat file (should be in the helpers/water_calibration folder)
+# ./behavior/helpers/waterCalibration/waterReward2duration.m
+get valve duration based on water reward amount and calibration .mat file (should be in the helpers/waterCalibration folder)
 - arguments: `rewAmount`,`valveID`
 - outputs: `durValve`
 
