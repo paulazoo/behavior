@@ -134,21 +134,16 @@ randomize Go vs No Go trials, tone according to trial type, durITI, and laser
 helper function for random permutations of vectors
 
 # ./behavior/helpers/sound/soundInit.m
-initialize sound player with a `soundStimMatrix` = 
+initialize sound storage 
 ```
-[
-    1 4000 computerScalingFactor(1)*soundAmplitude 0.5 50
-    2 4000 computerScalingFactor(1)*soundAmplitude*0.3163 0.5 50
-    3 4000 computerScalingFactor(1)*soundAmplitude*0.1 0.5 50
-    4 4000 computerScalingFactor(1)*soundAmplitude*0.03163 0.5 50
-    
-    5 12000 computerScalingFactor(2)*soundAmplitude 0.5 50
-    6 12000 computerScalingFactor(2)*soundAmplitude*0.3163 0.5 50
-    7 12000 computerScalingFactor(2)*soundAmplitude*0.1 0.5 50
-    8 12000 computerScalingFactor(2)*soundAmplitude*0.03163 0.5 50
-    ]
+[soundStorage(1).waves, soundStorage(1).Fs] = audioread('soundFiles/4000Hz_500ms_48000.mp3');
+
+[soundStorage(5).waves, soundStorage(5).Fs] = audioread('soundFiles/12000Hz_500ms_48000.mp3');
+
+[soundStorage(9).waves, soundStorage(9).Fs] = audioread('soundFiles/click_500ms.mp3');
 ```
 columns: index | freq | amplitude | sound duration | SNR
+- arguments: `root_dir` the root directory to go back to
 - outputs: `snd` the sound player
 
 # ./behavior/helpers/sound/soundPlay.m
