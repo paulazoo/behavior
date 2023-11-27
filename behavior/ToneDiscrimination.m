@@ -1,3 +1,4 @@
+% This is the master branch
 clear all; close all; clc;
 root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\';
 
