@@ -34,7 +34,7 @@ I will define a `movement` as the recorded lever movement between a defined firs
 
 __Note on possible movements:__
 
-<img src="./images/analysis2_var_p_cases.jpg" width="250" height="250" />
+<img src="./images/path_cases.jpg" width="250" height="250" />
 
 This image lists some of the possible cases that could occur with movement. For our analysis, all of these movements will count. The first, second, and third thresholds are marked with stars, and the beginning of the movement window and ending of the movement window are marked with vertical lines.
 
@@ -60,6 +60,7 @@ I will then plot the variance of this path, `var_p`, over the % movement complet
 ## This book analyzes 1 day session.
 
 ## Requires:
+- ToneDisc matfile
 - **HitMovements** outputs
 
 ## Outputs to folder:
@@ -92,14 +93,14 @@ As previously explained, there are two parts to how a movement between point A a
 - var_ss.npy the Var[speed] of movement completion across days
 
 # Velocity
-Find the velocity path of movements. Velocity is calculated as the difference of consecutive points with a moving average filter of about 5 ms (29 samples).
+Find the velocity path of movements. Velocity is calculated as the difference of consecutive points with a moving average filter of about 5 ms (~29 samples usually).
 
 __cutoff frequency of a moving average filter__:
 for a moving average filter, $H(w) = \frac{1}{N} | \frac{\sin(wN/2)}{\sin(w/2)} | =0.5= -3 \text{dB}$
 
 where $w = 2\pi \frac{f_\text{cutoff}}{f_\text{sample}}$ and $N=$ num samples per window
 
-This analysis requires 7.5ms before the actual movement to find the moving average. We are assuming reaction time after tone is always more than 7.5 ms.
+This analysis requires 7.5ms of trial data before the actual movement to find the moving average. We are assuming reaction time after tone is always more than 7.5 ms.
 
 ## This notebook analyzes 1 day session.
 
@@ -144,6 +145,15 @@ A fourth-order Savitsky–Golay filter is equivalent to taking the second deriva
 
 where $f_c = \frac{w}{\pi} = 2 \frac{f_\text{cutoff}}{f_\text{sample}}$, $N=$ order polynomial, and $M=\frac{\text{num samples from window}-1 }{2}$ according to [(Schafer 2011)](inst.eecs.berkeley.edu/~ee123/sp16/docs/SGFilter.pdf)
 
+## This notebook analyzes 1 day session.
+
+## Requires:
+- ToneDisc matfile
+- **PreprocessLeverData** output (for trial frequencies)
+- **HitMovements** output
+
+## Outputs to folder:
+
 # ReactionTimes
 One thing NE might affect is the reaction time to the tone. Here, we plot the reaction time defined as the time between the tone time and the time it took to hit the second lever press threshold (the MATLAB time for lever press time as saved in `respMTX`). We get the means and vars of these reaction times, `rxn_ts`, for all the trials from each day (where each day is a .mat file from a folder specified in `folder_name`), and then we save all the means and vars from every day in the folder to a .pickle. We also plot the means and vars across days and save the plotted figure .pngs in that same folder too.
 
@@ -157,3 +167,22 @@ TODO: currently does not exclude _b and _c sessions for the same day
 
 ## Outputs to folder:
 - rxn_ts_means_vars.pickle, a pandas table of reaction time means and vars for each session
+
+# Submodules
+
+## Module `leverdata2binary.cpp`
+Make binary files for each trial from the LeverData matfile
+- opens and reads in the corresponding .mat file
+- extracts the `leverdata` variable and puts into a C++ vector<double>
+- remove unused empty rows of zeroes (`leverdata` is initialized in ../behavior/leverIN_to_matlab.m to hold up to 2 hours worth of data, but the unused values are just 0s)
+- extracts each individual trial+subsequent ITI of the `leverdata` and re-lowers the ITI values back down to 0-1023 instead of 2000-2023
+- save each trial+ITI chunk of `leverdata` to its own .bin file
+
+arguments:
+- char* output_folder = the output folder where the binaries will be saved e.g. ./Data/AnB1/B1_20231030/
+- char* matlab_filename = the lever data .mat filename e.g. ./Data/AnB1/B1_20231030.mat
+- int beginning_samples_to_skip = number of beginning samples to skip
+
+To compile on Mac M1 with libmatio installed via homebrew: `!g++ -I/opt/homebrew/opt/libmatio/include/ -L/opt/homebrew/Cellar/libmatio/1.5.24/lib/ -o leverData2binary leverData2binary.cpp -lmatio`
+
+Example syntax: `./leverData2binary ./Data/AnB1/B1_20231030/ ./Data/AnB1/B1_20231030.mat 15460`
