@@ -1,6 +1,6 @@
 import numpy as np
 
-def get_velocity_movingavgs(selected_trials, window_duration, binaries_folder, output_folder):
+def get_velocity_movingavgs(window_duration, binaries_folder, num_trials, output_folder):
     """
     The function calculates the moving average of velocity for selected trials using lever data and
     sample times.
@@ -16,14 +16,14 @@ def get_velocity_movingavgs(selected_trials, window_duration, binaries_folder, o
     saved
     :return: The function does not return anything.
     """
-    for trial_index in selected_trials:
+    for trial_index in range(0, num_trials):
         leverdata = np.fromfile(binaries_folder+"processed_trial"+str(trial_index)+".bin", dtype=np.double)
         sample_times = np.fromfile(binaries_folder+"sample_times_trial"+str(trial_index)+".bin", dtype=np.double)
         instantaneous_velocity = np.diff(leverdata) / np.diff(sample_times)
-        window_size_samples = int(window_duration / np.median(np.diff(sample_times)))
-        print("samples per window: ", window_size_samples)
+        num_window_samples = int(window_duration / np.median(np.diff(sample_times)))
+        print("samples per window: ", num_window_samples)
 
-        velocity_movingavg = np.convolve(instantaneous_velocity, np.ones(window_size_samples) / window_size_samples, mode='same')
+        velocity_movingavg = np.convolve(instantaneous_velocity, np.ones(num_window_samples))
 
         np.save(output_folder+"velocity_trial"+str(trial_index), velocity_movingavg)
     return

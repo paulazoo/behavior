@@ -1,9 +1,4 @@
-# Namespace `analysis` {#id}
-
-
-
-
-    
+# Namespace `analysis` {#id}    
 ## Sub-modules
 
 * [analysis.common](#analysis.common)
@@ -12,18 +7,8 @@
 * [analysis.preprocess_leverdata](#analysis.preprocess_leverdata)
 * [analysis.velocity](#analysis.velocity)
 
-
-
-
-
-
     
-# Namespace `analysis.common` {#id}
-
-
-
-
-    
+# Namespace `analysis.common` {#id}    
 ## Sub-modules
 
 * [analysis.common.align_times](#analysis.common.align_times)
@@ -32,30 +17,15 @@
 * [analysis.common.set_matplotlib_settings](#analysis.common.set_matplotlib_settings)
 * [analysis.common.sort_folders](#analysis.common.sort_folders)
 
-
-
-
-
-
     
 # Module `analysis.common.align_times` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `get_leverdata_indices` {#id}
-
-
-
-
->     def get_leverdata_indices(
+### Function `get_leverdata_indices` {#id}>     def get_leverdata_indices(
 >         binaries_folder,
 >         respMTX,
 >         num_trials
@@ -74,41 +44,21 @@ different response time. The columns are as follows:
 :return: The function does not return anything.
 
     
-### Function `tonedisc_time2leverdata_index` {#id}
-
-
-
-
->     def tonedisc_time2leverdata_index(
+### Function `tonedisc_time2leverdata_index` {#id}>     def tonedisc_time2leverdata_index(
 >         tonedisc_time,
 >         leverdata_sample_times
 >     )
 
 
-
-
-
-
-
     
 # Module `analysis.common.load_tonedisc_matfile` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `load_tonedisc_matfile` {#id}
-
-
-
-
->     def load_tonedisc_matfile(
+### Function `load_tonedisc_matfile` {#id}>     def load_tonedisc_matfile(
 >         tone_discriminiation_matfile
 >     )
 
@@ -123,30 +73,15 @@ to the ToneDisc .mat file that you want to load
 - response: a numpy array containing the response data of the loaded .mat file
 - respMTX: a numpy array containing the response matrix from the response data
 - MTXTrialType: a numpy array containing the trial types from the parameters
-- num_trials: int number of trials
-
-
-
-
-    
+- num_trials: int number of trials    
 # Module `analysis.common.select_trials` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `select_hit_trials` {#id}
-
-
-
-
->     def select_hit_trials(
+### Function `select_hit_trials` {#id}>     def select_hit_trials(
 >         respMTX,
 >         num_trials
 >     )
@@ -160,57 +95,27 @@ trial. It has dimensions (num_trials, num_columns), where each row represents a 
 column represents a different aspect of the response
 :param num_trials: The <code>num\_trials</code> parameter represents the total number of trials in the <code>respMTX</code>
 matrix
-:return: a list of selected trials.
-
-
-
-
-    
+:return: a list of selected trials.    
 # Module `analysis.common.set_matplotlib_settings` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `set_matplotlib_settings` {#id}
-
-
-
-
->     def set_matplotlib_settings()
+### Function `set_matplotlib_settings` {#id}>     def set_matplotlib_settings()
 
 
 The function sets various settings for matplotlib to customize the appearance of plots.
-:return: nothing (None).
-
-
-
-
-    
+:return: nothing (None).    
 # Module `analysis.common.sort_folders` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `sort_folders_by_day` {#id}
-
-
-
-
->     def sort_folders_by_day(
+### Function `sort_folders_by_day` {#id}>     def sort_folders_by_day(
 >         unsorted_folders_pattern
 >     )
 
@@ -220,48 +125,23 @@ The function sorts a list of folder names based on the day number (d#) in the fo
 :param unsorted_folders_key: The parameter <code>unsorted\_folders\_pattern</code> is a string that represents a file
 path or a pattern to match multiple file paths. It is used as an argument for the <code>glob.glob()</code>
 function to retrieve a list of file paths that match the pattern
-:return: a list of folders sorted by the day number extracted from their names.
-
-
-
-
-    
-# Namespace `analysis.hit_movements` {#id}
-
-
-
-
-    
+:return: a list of folders sorted by the day number extracted from their names.    
+# Namespace `analysis.hit_movements` {#id}    
 ## Sub-modules
 
 * [analysis.hit_movements.extract_leverpresses](#analysis.hit_movements.extract_leverpresses)
-* [analysis.hit_movements.extract_movements](#analysis.hit_movements.extract_movements)
+* [analysis.hit_movements.extract_movement_leverdatas](#analysis.hit_movements.extract_movement_leverdatas)
 * [analysis.hit_movements.get_movement_thresholds](#analysis.hit_movements.get_movement_thresholds)
-
-
-
-
-
 
     
 # Module `analysis.hit_movements.extract_leverpresses` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `bilateral_threshold_search_from_point` {#id}
-
-
-
-
->     def bilateral_threshold_search_from_point(
+### Function `bilateral_threshold_search_from_point` {#id}>     def bilateral_threshold_search_from_point(
 >         time_series,
 >         start_index,
 >         thresholds
@@ -284,12 +164,7 @@ threshold for the right side of the time series
 first and third thresholds are met, respectively.
 
     
-### Function `extract_leverpresses` {#id}
-
-
-
-
->     def extract_leverpresses(
+### Function `extract_leverpresses` {#id}>     def extract_leverpresses(
 >         trials_to_consider,
 >         binaries_folder,
 >         movement_baseline,
@@ -315,30 +190,15 @@ threshold for movement detection
 determine when there is no movement detected in the lever data. It is added to the
 <code>movement\_baseline</code> value to create a threshold for detecting movement
 :return: the leverpress_indices, which is a numpy array containing the indices of leverpresses for
-each trial in trials_to_consider.
-
-
-
-
-    
-# Module `analysis.hit_movements.extract_movements` {#id}
-
-
-
-
-
+each trial in trials_to_consider.    
+# Module `analysis.hit_movements.extract_movement_leverdatas` {#id}
 
     
 ## Functions
 
 
     
-### Function `extract_movements` {#id}
-
-
-
-
->     def extract_movements(
+### Function `extract_movement_leverdatas` {#id}>     def extract_movement_leverdatas(
 >         movement_informations,
 >         binaries_folder,
 >         movement_baseline,
@@ -360,30 +220,15 @@ lever data. It is subtracted from the lever data during the movement extraction 
 the relative movement values
 :param output_folder: The <code>output\_folder</code> parameter is the directory where the extracted movement
 data will be saved
-:return: a list of movements.
-
-
-
-
-    
+:return: a list of movements.    
 # Module `analysis.hit_movements.get_movement_thresholds` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `get_movement_thresholds` {#id}
-
-
-
-
->     def get_movement_thresholds(
+### Function `get_movement_thresholds` {#id}>     def get_movement_thresholds(
 >         params,
 >         respMTX
 >     )
@@ -397,46 +242,21 @@ accessed using indexing, such as <code>params\[7]\[0]\[0]\[0]\[0]\[0]</code>
 :param respMTX: The <code>respMTX</code> parameter is a matrix that contains response data. It is a 2D
 matrix with shape (n_trials, n_columns), where each row represents a trial and each column
 represents a different measurement or response
-:return: three values: movement_baseline, movement_threshold, and no_movement_threshold.
-
-
-
-
-    
-# Namespace `analysis.path` {#id}
-
-
-
-
-    
+:return: three values: movement_baseline, movement_threshold, and no_movement_threshold.    
+# Namespace `analysis.path` {#id}    
 ## Sub-modules
 
 * [analysis.path.make_movements_percent_scaled](#analysis.path.make_movements_percent_scaled)
 
-
-
-
-
-
     
 # Module `analysis.path.make_movements_percent_scaled` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `make_movements_percent_scaled` {#id}
-
-
-
-
->     def make_movements_percent_scaled(
+### Function `make_movements_percent_scaled` {#id}>     def make_movements_percent_scaled(
 >         selected_trials,
 >         num_interpolation_samples,
 >         movements_folder,
@@ -454,32 +274,17 @@ granularity of the interpolated movement data
 :param movements_folder: The <code>movements\_folder</code> parameter is the path to the folder where the
 movement data files are stored
 :param output_folder: The output folder is the directory where the scaled movements will be saved
-:return: the numpy array <code>movements\_percent\_scaled</code>.
-
-
-
-
-    
-# Namespace `analysis.preprocess_leverdata` {#id}
-
-
-
-
-    
+:return: the numpy array <code>movements\_percent\_scaled</code>.    
+# Namespace `analysis.preprocess_leverdata` {#id}    
 ## Sub-modules
 
-* [analysis.preprocess_leverdata.leverData2binary.cpp](#analysis.preprocess_leverdata.leverData2binary.cpp)
+* [analysis.preprocess_leverdata.leverdata2binary.cpp](#analysis.preprocess_leverdata.leverData2binary.cpp)
 * [analysis.preprocess_leverdata.butterworth_filter_leverdata](#analysis.preprocess_leverdata.butterworth_filter_leverdata)
 * [analysis.preprocess_leverdata.calculate_leverdata_sample_times](#analysis.preprocess_leverdata.calculate_leverdata_sample_times)
 * [analysis.preprocess_leverdata.get_trial_frequencies](#analysis.preprocess_leverdata.get_trial_frequencies)
 * [analysis.preprocess_leverdata.rescale_leverdata](#analysis.preprocess_leverdata.rescale_leverdata)
 * [analysis.preprocess_leverdata.view_processed_trial_FFT](#analysis.preprocess_leverdata.view_processed_trial_FFT)
-
-
-
-
-
-# Module `leverData2binary.cpp`
+# Module `leverdata2binary.cpp`
 Make binary files for each trial from the LeverData matfile
 - opens and reads in the corresponding .mat file
 - extracts the `leverdata` variable and puts into a C++ vector<double>
@@ -500,22 +305,12 @@ Example syntax: `./leverData2binary ./Data/AnB1/B1_20231030/ ./Data/AnB1/B1_2023
     
 # Module `analysis.preprocess_leverdata.butterworth_filter_leverdata` {#id}
 
-
-
-
-
-
     
 ## Functions
 
 
     
-### Function `butterworth_filter_leverdata` {#id}
-
-
-
-
->     def butterworth_filter_leverdata(
+### Function `butterworth_filter_leverdata` {#id}>     def butterworth_filter_leverdata(
 >         binaries_folder,
 >         num_trials,
 >         cutoff_frequency
@@ -532,30 +327,15 @@ to be filtered. It determines how many times the filtering process will be repea
 :param cutoff_frequency: The cutoff frequency is the frequency at which the filter starts
 attenuating the signal. It determines the range of frequencies that will be allowed to pass through
 the filter
-:return: The function does not return anything.
-
-
-
-
-    
+:return: The function does not return anything.    
 # Module `analysis.preprocess_leverdata.calculate_leverdata_sample_times` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `calculate_leverdata_sample_times` {#id}
-
-
-
-
->     def calculate_leverdata_sample_times(
+### Function `calculate_leverdata_sample_times` {#id}>     def calculate_leverdata_sample_times(
 >         binaries_folder,
 >         respMTX,
 >         num_trials
@@ -576,12 +356,7 @@ calculate the leverdata sample times
 :return: The function does not return anything.
 
     
-### Function `calculate_sample_times` {#id}
-
-
-
-
->     def calculate_sample_times(
+### Function `calculate_sample_times` {#id}>     def calculate_sample_times(
 >         data,
 >         sampling_frequency,
 >         start_time
@@ -596,30 +371,15 @@ element of the array represents a sample of the signal
 represents the rate at which the data is collected
 :param start_time: The start time is the time at which the first sample was taken. It is a scalar
 value representing the starting point of the time axis
-:return: an array of sample times.
-
-
-
-
-    
+:return: an array of sample times.    
 # Module `analysis.preprocess_leverdata.get_trial_frequencies` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `get_trial_frequencies` {#id}
-
-
-
-
->     def get_trial_frequencies(
+### Function `get_trial_frequencies` {#id}>     def get_trial_frequencies(
 >         num_trials,
 >         respMTX,
 >         binaries_folder
@@ -629,30 +389,15 @@ value representing the starting point of the time axis
 For each trial, get the MATLAB time duration from <code>respMTX</code> (index 0 is the trial start time) and get <code>leverdata</code> from the 
 created binary .bin file. Divide the number of samples by the MATLAB time duration to get the estimated frequency and check that it's consistent.
 
-A lever movement can be less than 50 ms.
-
-
-
-
-    
+A lever movement can be less than 50 ms.    
 # Module `analysis.preprocess_leverdata.rescale_leverdata` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `rescale_leverdata` {#id}
-
-
-
-
->     def rescale_leverdata(
+### Function `rescale_leverdata` {#id}>     def rescale_leverdata(
 >         binaries_folder,
 >         num_trials
 >     )
@@ -665,30 +410,15 @@ data as binary files.
 files are stored. This folder should contain the binary files named "filtered_trial0.bin",
 "filtered_trial1.bin", and so on
 :param num_trials: The parameter "num_trials" represents the number of trials or iterations that
-need to be processed. It is used in the for loop to iterate over the range from 0 to num_trials
-
-
-
-
-    
+need to be processed. It is used in the for loop to iterate over the range from 0 to num_trials    
 # Module `analysis.preprocess_leverdata.view_processed_trial_FFT` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `view_processed_trial_FFT` {#id}
-
-
-
-
->     def view_processed_trial_FFT(
+### Function `view_processed_trial_FFT` {#id}>     def view_processed_trial_FFT(
 >         trial_i,
 >         binaries_folder
 >     )
@@ -700,48 +430,23 @@ power spectrum of the processed data, and plots it.
 :param trial_i: trial_i is the index of the trial you want to view the processed data for. It is
 used to load the corresponding binary file containing the processed lever data
 :param binaries_folder: The <code>binaries\_folder</code> parameter is the path to the folder where the binary
-files are stored. It should be a string representing the directory path
-
-
-
-
-    
-# Namespace `analysis.velocity` {#id}
-
-
-
-
-    
+files are stored. It should be a string representing the directory path    
+# Namespace `analysis.velocity` {#id}    
 ## Sub-modules
 
 * [analysis.velocity.extract_movement_velocities](#analysis.velocity.extract_movement_velocities)
 * [analysis.velocity.get_velocity_movingavgs](#analysis.velocity.get_velocity_movingavgs)
 * [analysis.velocity.make_velocities_percent_scaled](#analysis.velocity.make_velocities_percent_scaled)
 
-
-
-
-
-
     
 # Module `analysis.velocity.extract_movement_velocities` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `extract_movement_velocities` {#id}
-
-
-
-
->     def extract_movement_velocities(
+### Function `extract_movement_velocities` {#id}>     def extract_movement_velocities(
 >         movement_informations,
 >         binaries_folder,
 >         output_folder
@@ -759,30 +464,15 @@ containing the sample times for each trial are stored. These binary files are na
 "sample_times_trialX.bin", where X is the trial index
 :param output_folder: The <code>output\_folder</code> parameter is the directory where the extracted movement
 velocities will be saved as numpy arrays
-:return: a list of movement velocities.
-
-
-
-
-    
+:return: a list of movement velocities.    
 # Module `analysis.velocity.get_velocity_movingavgs` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `get_velocity_movingavgs` {#id}
-
-
-
-
->     def get_velocity_movingavgs(
+### Function `get_velocity_movingavgs` {#id}>     def get_velocity_movingavgs(
 >         selected_trials,
 >         window_duration,
 >         binaries_folder,
@@ -802,30 +492,15 @@ instantaneous velocity
 containing the lever data and sample times are stored
 :param output_folder: The output_folder parameter is the directory where the output files will be
 saved
-:return: The function does not return anything.
-
-
-
-
-    
+:return: The function does not return anything.    
 # Module `analysis.velocity.make_velocities_percent_scaled` {#id}
-
-
-
-
-
 
     
 ## Functions
 
 
     
-### Function `make_velocities_percent_scaled` {#id}
-
-
-
-
->     def make_velocities_percent_scaled(
+### Function `make_velocities_percent_scaled` {#id}>     def make_velocities_percent_scaled(
 >         selected_trials,
 >         num_interpolation_samples,
 >         velocities_folder,
