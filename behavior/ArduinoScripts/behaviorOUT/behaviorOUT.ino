@@ -53,6 +53,10 @@ void loop() {
       digitalWrite(yellowLED,LOW);
       break;
       
+     case 'K':
+      digitalWrite(yellowLED,HIGH);
+      break;
+
      case 'L':
       digitalWrite(Laser,HIGH);
       digitalWrite(Laser,LOW);

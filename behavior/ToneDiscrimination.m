@@ -251,8 +251,9 @@ while N <= nTrials && ESC
     end
         
     % Post trial (consumption)  ===================================================
-    fprintf(ardOut,'I'); % ITI again, turn tStart to LOW
-    
+    fprintf(ardOut,'K'); % decision ended, turn LED back on, but don't start next trial quite yet
+    [ARDUINO, ESC] = recordContinuous(ARDUINO, durConsumption, escapeKey); % record during consumption
+
     [~,~,keyCode] = KbCheck;
     ESC = keyCode(escapeKey) == 0;
 

@@ -1,13 +1,13 @@
 # PreprocessLeverData
-The lever data, `lever_data`, only holds the raw lever Arduino values from Arduino's `readAnalog()` function, which scales 0-5V (the voltage range going into this pin) to numbers from 0-1023 (so at a resting neutral position, the lever is usually about 550 which anecdotally seems to match Vincent's calculated Voltage of about 2.6V). The Arduino encodes these numbers with values between 0-1023 into 2 bytes of data and sends them over to the computer via USB virtual serial port. The MATLAB program, leverIN_to_matlab.m then listens in and decodes this array of 2 bytes back into the number between 0-1023 and saves it into `lever_data`.
+The lever data, `leverdata`, only holds the raw lever Arduino values from Arduino's `readAnalog()` function, which scales 0-5V (the voltage range going into this pin) to numbers from 0-1023 (so at a resting neutral position, the lever is usually about 550 which anecdotally seems to match Vincent's calculated Voltage of about 2.6V). The Arduino encodes these numbers with values between 0-1023 into 2 bytes of data and sends them over to the computer via USB virtual serial port. The MATLAB program, leverIN_to_matlab.m then listens in and decodes this array of 2 bytes back into the number between 0-1023 and saves it into `leverdata`.
 
 __Additional information on the sampling rate__: It's a more or less consistent sampling rate because the number of data bytes actually being sent through the USB virtual serial port is always exactly 2 bytes. Empirically, it varies, for the first few thousand entries it'll be a little faster ~100us, then for whatever reason it slows down to a more consistent pace of around 150-170us, probably due to hitting/overloading the serial port transfer buffer limit (in the Arduino code, there is no delay, it sends new data as soon as it has read it and reads new data as soon as it's done sending). Since it's so fast, but also empirically quite consistent after the first few thousand entries, I've decided to let go of trying to get it at an exactly even sampling rate since I believe at these several kHz frequencies, the actual animal movements will be approximated closely enough for analysis and comparisons. Plus, sending additional bytes of information (e.g. exact time) through the USB serial port will only slow it down further.
 
-Also, anytime a trial is not currently ongoing--which is when we are in the ITI--so when tStart == LOW or 0V is at the tStart pin (pin 11), `lever_data` will be >2000. First, we will align each trial's MATLAB starting time to each first value of `lever_data` that is not >2000. Dividing the total time between trial start times by the number of entries recorded in `lever_data` between those two points will give an estimate of the sampling frequency and the change in time, `dt`, between any two entries for that trial.
+Also, anytime a trial is not currently ongoing--which is when we are in the ITI--so when tStart == LOW or 0V is at the tStart pin (pin 11), `leverdata` will be >2000. First, we will align each trial's MATLAB starting time to each first value of `leverdata` that is not >2000. Dividing the total time between trial start times by the number of entries recorded in `leverdata` between those two points will give an estimate of the sampling frequency and the change in time, `dt`, between any two entries for that trial.
 
 The sensor itself may have some noise above a cutoff frequency, `cutoff_frequency`, of 40 Hz and all relevant attributes of the animal's movement are below 40 Hz. We'll use a sharp 6th order Butterworth filter to filter this out.
 
-Finally, we'll rescale everything from the 0-1023 Arduino values range back to the 0-5V range: $\text{data} \times \frac{5}{1023}$, and save it as `processed_lever_data`.
+Finally, we'll rescale everything from the 0-1023 Arduino values range back to the 0-5V range: $\text{data} \times \frac{5}{1023}$, and save it as `processed_leverdata`.
 
 All data will be saved as .bin files in case I need to go back to C++ in a folder specified by `output_folder`
 
@@ -18,29 +18,9 @@ All data will be saved as .bin files in case I need to go back to C++ in a folde
 - LeverData matfile
 
 ## Outputs to folder:
-- trial#.bin files as the raw `lever_data` Arduino values
+- trial#.bin files as the raw `leverdata` Arduino values
 - filtered_trial#.bin files as the low-pass Butterworth filtered Arduino values
 - processed_trial#.bin files as the converted voltage values of lever data
-
-## Internal modules:
-
-### leverData2binary
-Make binary files for each trial from the LeverData matfile
-- opens and reads in the corresponding .mat file
-- extracts the `lever_data` variable and puts into a C++ vector<double>
-- remove unused empty rows of zeroes (`lever_data` is initialized in ../behavior/leverIN_to_matlab.m to hold up to 2 hours worth of data, but the unused values are just 0s)
-- extracts each individual trial+subsequent ITI of the `lever_data` and re-lowers the ITI values back down to 0-1023 instead of 2000-2023
-- save each trial+ITI chunk of `lever_data` to its own .bin file
-
-arguments:
-- char* output_folder = the output folder where the binaries will be saved e.g. ./Data/AnB1/B1_20231030/
-- char* matlab_filename = the lever data .mat filename e.g. ./Data/AnB1/B1_20231030.mat
-- int beginning_samples_to_skip = number of beginning samples to skip
-
-Example syntax: ./0a_main ./Data/AnB1/B1_20231030/ ./Data/AnB1/B1_20231030.mat 15460
-
-To compile on Mac M1 with libmatio installed via homebrew: `!g++ -I/opt/homebrew/opt/libmatio/include/ -L/opt/homebrew/Cellar/libmatio/1.5.24/lib/ -o leverData2binary leverData2binary.cpp -lmatio`
-
 
 # PreprocessDataArduino
 This is just a histogram of the previous old `dataArduino`'s sampling rate, as defined by the difference between MATLAB times between every two consecutive samples.
@@ -58,7 +38,7 @@ __Note on possible movements:__
 
 This image lists some of the possible cases that could occur with movement. For our analysis, all of these movements will count. The first, second, and third thresholds are marked with stars, and the beginning of the movement window and ending of the movement window are marked with vertical lines.
 
-The folder defined by `analysis0_folder` needs contain the processed `lever_data` as processed_lever_data_trial#.bin binary files. The extracted hit movements will have MVT0 subtracted off and be temporally aligned to be comparable. They will be saved to a movement_trial#.npy file also in the folder defined by `output_folder`. From this point forward, I'm using `np.save()` to save all analysis as 2D arrays since I'm assuming I don't need to reaccess or further process the entire giant data with C++ anymore.
+The folder defined by `analysis0_folder` needs contain the processed `leverdata` as processed_leverdata_trial#.bin binary files. The extracted hit movements will have MVT0 subtracted off and be temporally aligned to be comparable. They will be saved to a movement_trial#.npy file also in the folder defined by `output_folder`. From this point forward, I'm using `np.save()` to save all analysis as 2D arrays since I'm assuming I don't need to reaccess or further process the entire giant data with C++ anymore.
 
 ## This notebook analyzes 1 day session.
 
