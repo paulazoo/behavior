@@ -86,9 +86,9 @@ int main(int argc, char** argv) {
     }
 
     // Read .mat file
-    matvar = Mat_VarRead(matfp, "leverdata");
+    matvar = Mat_VarRead(matfp, "lever_data");
     if ( nullptr == matvar ) {
-       cerr << "Error reading variable 'leverdata' from MAT file" << endl;
+       cerr << "Error reading variable 'lever_data' from MAT file" << endl;
        return EXIT_FAILURE;
     }
     // Check leverdata taken from .mat file

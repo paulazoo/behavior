@@ -18,9 +18,14 @@ All data will be saved as .bin files in case I need to go back to C++ in a folde
 - LeverData matfile
 
 ## Outputs to folder:
+- full.bin as the full raw `leverdata` Arduino values for the entire session
 - trial#.bin files as the raw `leverdata` Arduino values
 - filtered_trial#.bin files as the low-pass Butterworth filtered Arduino values
 - processed_trial#.bin files as the converted voltage values of lever data
+- sample_times_trial#.bin files as the aligned time values for each sample
+- trial_frequencies.bin as the estimated sampling frequency for each trial
+- tone_indices.bin as the sample index values for tone times for each trial
+- leverpress_indices.bin as the sample index values for leverpress times for each trial
 
 # PreprocessDataArduino
 This is just a histogram of the previous old `dataArduino`'s sampling rate, as defined by the difference between MATLAB times between every two consecutive samples.
@@ -183,6 +188,6 @@ arguments:
 - char* matlab_filename = the lever data .mat filename e.g. ./Data/AnB1/B1_20231030.mat
 - int beginning_samples_to_skip = number of beginning samples to skip
 
-To compile on Mac M1 with libmatio installed via homebrew: `!g++ -I/opt/homebrew/opt/libmatio/include/ -L/opt/homebrew/Cellar/libmatio/1.5.24/lib/ -o leverData2binary leverData2binary.cpp -lmatio`
+To compile on Mac M1 with libmatio installed via homebrew: `!g++ -I/opt/homebrew/opt/libmatio/include/ -L/opt/homebrew/Cellar/libmatio/1.5.26/lib/ -o leverData2binary leverData2binary.cpp -lmatio`
 
 Example syntax: `./leverData2binary ./Data/AnB1/B1_20231030/ ./Data/AnB1/B1_20231030.mat 15460`

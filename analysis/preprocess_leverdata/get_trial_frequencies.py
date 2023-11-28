@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-def get_trial_frequencies(num_trials, respMTX, binaries_folder):
+def get_trial_frequencies(num_trials, respMTX, binaries_folder, show_histogram=False):
     '''
     For each trial, get the MATLAB time duration from `respMTX` (index 0 is the trial start time) and get `leverdata` from the 
     created binary .bin file. Divide the number of samples by the MATLAB time duration to get the estimated frequency and check that it's consistent.
@@ -40,18 +40,19 @@ def get_trial_frequencies(num_trials, respMTX, binaries_folder):
 
     # print out mean and std of sampling rate
     print("mean: ", 1 / (sum(dts) / len(dts)), " Hz")
-    print("std: ", np.std(dts**(-1)), " s")
+    print("std: ", np.std(np.array(dts)**(-1)), " Hz")
     print("min: ", 1 / max(dts), " Hz")
     print("max: ", 1 / min(dts), " Hz")
     print("1st fastest percentile", 1 / np.percentile(dts, 1))
     print("50th percentile", 1 / np.percentile(dts, 50))
     print("99th slowest percentile", 1 / np.percentile(dts, 99))
 
-    # make histogram
-    plt.hist(dts, bins=500, edgecolor='black')
-    plt.xlabel('inter-sample duration')
-    plt.ylabel('count')
-    plt.title("leverdata sampling rate distribution")
-    plt.show()
+    if show_histogram:
+        # make histogram
+        plt.hist(dts, bins=500, edgecolor='black')
+        plt.xlabel('inter-sample duration')
+        plt.ylabel('count')
+        plt.title("leverdata sampling rate distribution")
+        plt.show()
 
     return dts, trial_frequencies
