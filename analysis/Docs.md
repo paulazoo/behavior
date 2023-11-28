@@ -35,6 +35,8 @@ This `dataArduino` only adds samples in between running sections of the trial co
 ## Not used in main analysis anymore.
 
 # HitMovements
+TODO: put back valueerror in extract_leverpresses.py and make it impossible to not be below first threshold within a trial
+
 I will define a `movement` as the recorded lever movement between a defined first to second threshold and back for the third threshold. This notebook is solely for detecting and saving each movement from a day.
 
 __Note on possible movements:__
@@ -53,7 +55,6 @@ The folder defined by `analysis0_folder` needs contain the processed `leverdata`
 
 ## Outputs to folder:
 - movement_trial#.npy for each extracted hit movement
-- buffered_movement_trial#.npy for each extracted hit movement with a 300 sample buffer on either side
 
 # Path
 There are two parts to how a movement between point A and point B might vary. The first is variance in the actual movement path taken to get from point A to point B, and the second is the speed of the movement. Here, I'll analyze the movement path variance, `var_p`, across all __Hit__ trials that successfully have movement from the first threshold to the second threshold and back to the first threshold (this back threshold will effectively be a third threshold) from 1 day (and ignore variance in speed for now).
@@ -69,7 +70,7 @@ I will then plot the variance of this path, `var_p`, over the % movement complet
 - **HitMovements** outputs
 
 ## Outputs to folder:
-- movement_percent_scaled.npy of the movement data scaled between 0 and 100%
+- movement_percent_scaled_trial#.npy of the movement data scaled between 0 and 100%
 - mean_p.npy of E[paths]
 - var_p.npy of Var[paths]
 - num_movements.npy an integer of the number of movements extracted
@@ -115,8 +116,9 @@ This analysis requires 7.5ms of trial data before the actual movement to find th
 - **HitMovements** output
 
 ## Outputs to folder:
-- movement_trial#.npy for each extracted hit movement
-- buffered_velocity_trial#.npy for each extracted hit movement with a 300 sample buffer on either side
+- velocity_trial#.npy velocities (filtered with moving average) for all trials
+- velocitymovement_trial#.npy velocities for the interval of hit movements only
+- velocitymovement_percent_scaled_trial#.npy velocities % completion scaled for the interval of hit movements only
 
 # Jerk
 TODO: normalize by minimum jerk
@@ -158,6 +160,9 @@ where $f_c = \frac{w}{\pi} = 2 \frac{f_\text{cutoff}}{f_\text{sample}}$, $N=$ or
 - **HitMovements** output
 
 ## Outputs to folder:
+- jerk_trial#.npy jerks for all trials from Savitsky-Golay filter
+- jerkmovement_trial#.npy jerks for the interval of hit movements only
+- jerkmovement_percent_scaled_trial#.npy jerks % completion scaled for the interval of hit movements only
 
 # ReactionTimes
 One thing NE might affect is the reaction time to the tone. Here, we plot the reaction time defined as the time between the tone time and the time it took to hit the second lever press threshold (the MATLAB time for lever press time as saved in `respMTX`). We get the means and vars of these reaction times, `rxn_ts`, for all the trials from each day (where each day is a .mat file from a folder specified in `folder_name`), and then we save all the means and vars from every day in the folder to a .pickle. We also plot the means and vars across days and save the plotted figure .pngs in that same folder too.
@@ -172,6 +177,22 @@ TODO: currently does not exclude _b and _c sessions for the same day
 
 ## Outputs to folder:
 - rxn_ts_means_vars.pickle, a pandas table of reaction time means and vars for each session
+
+
+# ViewSingleMovements
+For plotting every single movement individually.
+
+## This notebook analyzes 1 day session.
+
+## Requires:
+- **PreprocessLeverData** output
+- **HitMovements** outputs
+- **Velocity** outputs
+- **Jerk** outputs
+- ToneDisc matfile
+
+## Outputs to folder:
+- plot_movement_trial#.png every single plot made is saved as a .png.
 
 # Submodules
 

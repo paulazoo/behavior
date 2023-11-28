@@ -21,9 +21,9 @@ def get_velocity_movingavgs(window_duration, binaries_folder, num_trials, output
         sample_times = np.fromfile(binaries_folder+"sample_times_trial"+str(trial_index)+".bin", dtype=np.double)
         instantaneous_velocity = np.diff(leverdata) / np.diff(sample_times)
         num_window_samples = int(window_duration / np.median(np.diff(sample_times)))
-        print("samples per window: ", num_window_samples)
+        print("calculated samples per window of size", window_duration, "s:", num_window_samples)
 
-        velocity_movingavg = np.convolve(instantaneous_velocity, np.ones(num_window_samples))
+        velocity_movingavg = np.convolve(instantaneous_velocity, np.ones(num_window_samples), mode='same')
 
         np.save(output_folder+"velocity_trial"+str(trial_index), velocity_movingavg)
     return

@@ -29,7 +29,7 @@ def make_percent_scaled(selected_trials, num_interpolation_samples, file_prefix,
         new_y = data_function(new_x)
         data_percent_scaled = np.array(new_y[:])
         datas_percent_scaled = np.vstack([datas_percent_scaled, new_y[:]])
-        np.save(output_folder+'movement_percent_scaled_trial'+str(trial_index), data_percent_scaled)
+        np.save(output_folder+file_prefix+'_percent_scaled_trial'+str(trial_index), data_percent_scaled)
 
     print("percent scaled shape: ", datas_percent_scaled.shape)
     return datas_percent_scaled

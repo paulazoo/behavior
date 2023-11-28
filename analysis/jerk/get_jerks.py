@@ -21,9 +21,10 @@ def get_jerks(num_trials, window_duration, velocity_folder, binaries_folder, out
         velocity = np.load(velocity_folder+"velocity_trial"+str(trial_index)+".npy")
         sample_times = np.fromfile(binaries_folder+"sample_times_trial"+str(trial_index)+".bin", dtype=np.double)
         num_window_samples = int(window_duration / np.median(np.diff(sample_times)))
-        print("samples per window: ", num_window_samples)
+        print("calculated samples per window: ", num_window_samples)
 
         jerk = signal.savgol_filter(velocity, window_length=num_window_samples, polyorder=4)
         
         np.save(output_folder+'jerk_trial'+str(trial_index), jerk)
-        return
+    
+    return
