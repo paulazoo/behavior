@@ -1,46 +1,53 @@
 import numpy as np
 
 def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline, movement_threshold, no_movement_threshold, output_folder):
-    """
-    The function `extract_leverpresses` extracts lever press indices from binary files based on
-    specified thresholds and returns the lever press indices.
-    
-    :param trials_to_consider: A list of trial indices to consider for extracting lever presses
-    :param binaries_folder: The `binaries_folder` parameter is the path to the folder where the binary
-    files are stored. These binary files contain the lever data for each trial
-    :param movement_baseline: The movement_baseline parameter is the baseline value used to calculate
-    the movement thresholds. It is added to the no_movement_threshold and movement_threshold to
-    determine the actual thresholds for detecting lever presses
-    :param movement_threshold: The `movement_threshold` parameter is used to determine the threshold for
-    detecting lever movements during a trial. It is added to the `movement_baseline` value to set the
-    threshold for movement detection
-    :param no_movement_threshold: The `no_movement_threshold` parameter is a threshold value used to
-    determine when there is no movement detected in the lever data. It is added to the
-    `movement_baseline` value to create a threshold for detecting movement
-    :return: the leverpress_indices, which is a numpy array containing the indices of leverpresses for
-    each trial in trials_to_consider.
-    """
-    # Parameters for extracting hit_movements:
     thresholds = [movement_baseline + no_movement_threshold, \
                   movement_baseline + movement_threshold, \
                     movement_baseline + no_movement_threshold]
     
-    leverdata_leverpress_indices = np.fromfile(binaries_folder+"leverdata_leverpress_indices.bin", dtype=np.double)
+    leverpress_indices = np.fromfile(binaries_folder+"leverpress_indices.bin", dtype=np.double)
     leverpress_information = np.zeros((len(trials_to_consider), 3))
-    for i, trial_index in enumerate(trials_to_consider):
+    i = 0
+    for trial_index in trials_to_consider:
         print("Checking trial ", trial_index, "...")
+
         leverdata = np.fromfile(binaries_folder+"processed_trial"+str(trial_index)+".bin", dtype=np.double)
-        leverdata_leverpress_index = leverdata_leverpress_indices[trial_index]
+        leverpress_index = int(leverpress_indices[trial_index])
 
-        left_index, right_index = bilateral_threshold_search_from_point(leverdata, leverdata_leverpress_index, thresholds)
+        leverdata = np.fromfile(binaries_folder+"processed_trial"+str(trial_index)+".bin", dtype=np.double)
+        leverpress_index = int(leverpress_indices[trial_index])
+        if np.isnan(leverpress_index):
+            raise ValueError("leverpress index is nan.")
+        elif leverdata[leverpress_index] < thresholds[0]:
+            print("leverpress detection was at below first threshold, try moving leverpress index up...")
+            leverpress_index = move_index_up_until_reaches_threshold(leverdata, leverpress_index, thresholds[1])
 
-        leverdata_leverpress_indices[i, 0] = trial_index
-        leverdata_leverpress_indices[i, 1] = left_index
-        leverdata_leverpress_indices[i, 2] = right_index
+        left_index, right_index = bilateral_threshold_search_from_point(leverdata, leverpress_index, thresholds)
+
+        leverpress_information[i, 0] = trial_index
+        leverpress_information[i, 1] = left_index
+        leverpress_information[i, 2] = right_index
+
+        i += 1
+    
     np.save(output_folder+"leverpress_informations", leverpress_information)
     print("number of extracted leverpresses ", len(leverpress_information))
 
     return leverpress_information
+
+
+def move_index_up_until_reaches_threshold(time_series, start_index, threshold_to_reach):
+    index = start_index
+    value = time_series[index]
+    while value < threshold_to_reach:
+        index += 1
+        if index >= len(time_series):
+            raise ValueError("end of trial, did not have leverpress at all.")
+        else:
+            value = time_series[index]
+    return index
+
+
 
 def bilateral_threshold_search_from_point(time_series, start_index, thresholds):
     """
@@ -59,29 +66,43 @@ def bilateral_threshold_search_from_point(time_series, start_index, thresholds):
     :return: the left index and right index, which represent the indices in the time series where the
     first and third thresholds are met, respectively.
     """
-    left_index = start_index - 1
-    right_index = start_index + 1
-    left_value = time_series[left_index]
-    right_value = time_series[right_index]
+    left_index = start_index
+    right_index = start_index
     
-    left_threshold_met = False
+    
+    print("finding right threshold...")
     right_threshold_met = False
-    while ~left_threshold_met or ~right_threshold_met:
-        left_value = time_series[left_index]
+    while right_threshold_met == False:
         right_value = time_series[right_index]
 
-        if left_value < thresholds[0]:
-            left_threshold_met = True
-        else:
-            left_index -= 1
-        if right_value < thresholds[2]:
+        if right_value <= thresholds[2]:
             right_threshold_met = True
+            print('met')
         else:
             right_index += 1
 
-        if left_index >= 0:
-            raise ValueError("first threshold not met within trial.")
-        if right_index < len(time_series):
+        if right_index >= len(time_series):
+            print("threshold: ", thresholds[2], "value at trial edge: ", right_value)
             raise ValueError("third threshold not met within trial.")
 
+    print("finding left threshold...")
+    left_threshold_met = False
+    while left_threshold_met == False:
+        left_value = time_series[left_index]
+        if left_value <= thresholds[0]:
+            left_threshold_met = True
+            print('met')
+        else:
+            left_index -= 1
+
+        if left_index < 0:
+            print("threshold: ", thresholds[0], "value at trial edge: ", left_value)
+            #raise ValueError("first threshold not met within trial.")
+            # TODO: put back valueerror in extract_leverpresses.py and make it impossible to not be below first threshold within a trial
+        
+            print("first threshold not met within trial.")
+            left_index = 0
+            left_threshold_met = True
+        
     return left_index, right_index
+

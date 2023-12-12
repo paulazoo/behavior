@@ -29,4 +29,4 @@ def load_tonedisc_matfile(tone_discriminiation_matfile):
     num_trials = respMTX.shape[0]
     print("number of trials: "+str(num_trials))
 
-    return params, response, respMTX, MTXTrialType, num_trials
+    return params, response, respMTX, MTXTrialType

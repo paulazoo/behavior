@@ -18,13 +18,20 @@ def get_leverdata_indices(binaries_folder, respMTX, num_trials):
     for i in range(0, num_trials):
         leverdata_sample_times = np.fromfile(binaries_folder+"sample_times_trial"+str(i)+".bin", dtype=np.double)
 
-        tone_time = respMTX(i, 1)
-        leverdata_tone_indices.append(tonedisc_time2leverdata_index(tone_time, leverdata_sample_times))
+        tone_time = respMTX[i, 1] # MATLAB indexes from 1, python from 0
+        if ~np.isnan(tone_time):
+            leverdata_tone_indices.append(tonedisc_time2leverdata_index(tone_time, leverdata_sample_times))
+        else:
+            leverdata_tone_indices.append(np.nan)
 
-        leverpress_time = respMTX(i, 3)
-        if leverpress_time:
+        leverpress_time = respMTX[i, 3]
+        if ~np.isnan(leverpress_time):
             leverdata_leverpress_indices.append(tonedisc_time2leverdata_index(leverpress_time, leverdata_sample_times))
+        else:
+            leverdata_leverpress_indices.append(np.nan)
 
+    leverdata_tone_indices = np.array(leverdata_tone_indices)
+    leverdata_leverpress_indices = np.array(leverdata_leverpress_indices)
     leverdata_tone_indices.astype('double').tofile(binaries_folder+"tone_indices.bin")
     leverdata_leverpress_indices.astype('double').tofile(binaries_folder+"leverpress_indices.bin")
 

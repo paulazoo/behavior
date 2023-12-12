@@ -14,8 +14,13 @@ def select_hit_trials(respMTX, num_trials):
     """
     selected_trials = []
     for i in range(0, num_trials):
+        tone_time = respMTX[i, 1] # MATLAB indexes from 1, python from 0
+        leverpress_time = respMTX[i, 3]
+        leverpress_boole = respMTX[i, 2]
+        reward_boole = respMTX[i, 6]
+
         # only consider trials where there was a lever press and there was a reward
-        if respMTX[i, 2] and respMTX[i, 6]:
+        if ~np.isnan(tone_time) and ~np.isnan(leverpress_time) and leverpress_boole == True and reward_boole == True:
             selected_trials.append(i)
     
     print(len(selected_trials), ' hit trials in this session.')
