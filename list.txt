@@ -1,18 +1,15 @@
 Paula:
-- name, organize, and run all recent data for ANA1, ANA2, ANB1, ANB2 through analysis notebooks
+- name, organize, and run all recent data (starting from water restriction) for ANA1, ANA2, ANB1, ANB2 through analysis notebooks
 - calculate and divide by minimal jerk
-- train some WT, headbar mice on Komiyama-based parameters in December: CODE DONE see ./behavior
+- train 4 WT, headbar mice on Komiyama-based parameters in December: CODE DONE see ./behavior and ./behavior/ToneDiscrimination_versions.md
 - ask Arundathi and Sophie about supervision for H2O
-- CAC protocol UROP thing
 - analysis1: Also consider extracting movements by velocity threshold ->
 	then movements are defined by windows with a reward delivery/lever press detection and velocity being above the threshold;
 	this would also affect reaction time
+
+- CAC protocol UROP thing
+
+future experiments:
+- show nulls have a deficit, then either elicit NE release behaviorally (punishment sound) or optogenetically
 - stain brains for c-fos, TH+
-
-
-- Taylor CAC
-- ask Sofie about GCaMP(7?) viral expression
-
-# separate future
-show nulls have a deficit, then either elicit NE release behaviorally (punishment sound) or optogenetically
-
+- pupil video synchronization and DLC pipeline
