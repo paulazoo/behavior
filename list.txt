@@ -1,26 +1,18 @@
 Paula:
 - name, organize, and run all recent data for ANA1, ANA2, ANB1, ANB2 through analysis notebooks
 - calculate and divide by minimal jerk
-- stain brains for c-fos, TH+
 - train some WT, headbar mice on Komiyama-based parameters in December: CODE DONE see ./behavior
-	- water restricted >= 5 days
-	- yellow light on entire ITI, no foreperiod
-	- ITI 1st day 2-4s, 2nd day 4-8s, 3rd day 8-12s
-	- durDecision 1st day 30s, 2nd day 10s
-	- fake image leading up to 4th day, only image 4th day, then fake image leading up to last day, only image last day
-
-	- try: turning lever sideways and having mice push downwards
-	- try: add a reward tone at water delivery
-	- try: having a flat platform for left arm
-	- try: add a white noise for misses
-	- try for better analysis: increase threshold to 1.5mm past first threshold (Komiyama's movements take 500ms...)
+- ask Arundathi and Sophie about supervision for H2O
+- CAC protocol UROP thing
 - analysis1: Also consider extracting movements by velocity threshold ->
 	then movements are defined by windows with a reward delivery/lever press detection and velocity being above the threshold;
 	this would also affect reaction time
+- stain brains for c-fos, TH+
 
 
 - Taylor CAC
 - ask Sofie about GCaMP(7?) viral expression
 
-
+# separate future
+show nulls have a deficit, then either elicit NE release behaviorally (punishment sound) or optogenetically
 

@@ -23,7 +23,9 @@ def get_velocity_movingavgs(window_duration, binaries_folder, num_trials, output
         num_window_samples = int(window_duration / np.median(np.diff(sample_times)))
         print("samples per window: ", num_window_samples)
 
-        velocity_movingavg = np.convolve(instantaneous_velocity, np.ones(num_window_samples))
+        # https://stackoverflow.com/questions/38194270/matlab-convolution-same-to-numpy-convolve
+        # so try not to use the first num_window_samples/2 samples
+        velocity_movingavg = np.convolve(instantaneous_velocity, np.ones(num_window_samples), 'same')
 
         np.save(output_folder+"velocity_trial"+str(trial_index), velocity_movingavg)
     return
