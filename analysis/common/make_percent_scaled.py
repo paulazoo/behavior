@@ -25,7 +25,7 @@ def make_percent_scaled(selected_trials, num_interpolation_samples, file_prefix,
         percent_completion_x = np.linspace(0, 100, data[1,:].shape[0])
 
         data_function = interpolate.interp1d(percent_completion_x, data[1, :], kind='linear')
-        new_x = percent_completion_x = np.linspace(0, 100, num_interpolation_samples)
+        new_x = np.linspace(0, 100, num_interpolation_samples)
         new_y = data_function(new_x)
         data_percent_scaled = np.array(new_y[:])
         datas_percent_scaled = np.vstack([datas_percent_scaled, new_y[:]])

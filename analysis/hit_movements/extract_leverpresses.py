@@ -6,6 +6,7 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
                     movement_baseline + no_movement_threshold]
     
     leverpress_indices = np.fromfile(binaries_folder+"leverpress_indices.bin", dtype=np.double)
+    tone_indices = np.fromfile(binaries_folder+"tone_indices.bin", dtype=np.double)
     leverpress_information = np.zeros((len(trials_to_consider), 3))
     i = 0
     for trial_index in trials_to_consider:
@@ -13,14 +14,14 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
 
         leverdata = np.fromfile(binaries_folder+"processed_trial"+str(trial_index)+".bin", dtype=np.double)
         leverpress_index = int(leverpress_indices[trial_index])
+        tone_index = int(tone_indices[trial_index])
 
-        leverdata = np.fromfile(binaries_folder+"processed_trial"+str(trial_index)+".bin", dtype=np.double)
-        leverpress_index = int(leverpress_indices[trial_index])
         if np.isnan(leverpress_index):
             raise ValueError("leverpress index is nan.")
         elif leverdata[leverpress_index] < thresholds[0]:
             print("leverpress detection was at below first threshold, try moving leverpress index up...")
-            leverpress_index = move_index_up_until_reaches_threshold(leverdata, leverpress_index, thresholds[1])
+            leverpress_index = move_index_up_then_down_until_reaches_threshold(leverdata, leverpress_index, thresholds[1], tone_index)
+            print("new leverpress index value: ", leverdata[leverpress_index])
 
         left_index, right_index = bilateral_threshold_search_from_point(leverdata, leverpress_index, thresholds)
 
@@ -36,15 +37,32 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
     return leverpress_information
 
 
-def move_index_up_until_reaches_threshold(time_series, start_index, threshold_to_reach):
+def move_index_up_then_down_until_reaches_threshold(time_series, start_index, threshold_to_reach, tone_index):
+    try_moving_down = False
+    
+    # first try moving index up
     index = start_index
     value = time_series[index]
     while value < threshold_to_reach:
         index += 1
         if index >= len(time_series):
-            raise ValueError("end of trial, did not have leverpress at all.")
+            print("end of trial, did not have leverpress.")
+            try_moving_down = True
+            break
         else:
             value = time_series[index]
+
+    # now try moving index down
+    if try_moving_down == True:
+        index = start_index
+        value = time_series[index]
+        while value < threshold_to_reach:
+            index -= 1
+            if index <= tone_index:
+                raise ValueError("went back all the way back to tone, did not have leverpress at all.")
+            else:
+                value = time_series[index]
+
     return index
 
 

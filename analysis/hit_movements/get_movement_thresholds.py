@@ -12,7 +12,7 @@ def get_movement_thresholds(params, respMTX):
     represents a different measurement or response
     :return: three values: movement_baseline, movement_threshold, and no_movement_threshold.
     """
-    movement_baseline = respMTX[0, 4] * -1
+    movement_baseline = respMTX[0, 4] * -1 /0.0049 *5 /1023 - 0.1
     print("movement_baseline for all trials should be the same: ", movement_baseline)
     movement_threshold = params[7][0][0][0][0][0] /0.0049 *5 /1023 # VBP's conversion rate is not exact
     print("mvt threshold: ", movement_threshold, "+ movement_baseline = ", movement_baseline + movement_threshold)

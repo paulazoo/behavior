@@ -23,8 +23,8 @@
 %}
 
 %%
-clc; clear all;
-disp("recording from leverIN...")
+clc; clear all; close all;
+disp("Running....")
 % leverIN Arduino initialization
 leverIN = serial("COM4", "Baudrate", 115200);
 fopen(leverIN);
@@ -32,6 +32,7 @@ fopen(leverIN);
 % Data saving storage initialization
 lever_bytes = zeros(72000000,2); % 2 hours = 7200000 milliseconds
 
+disp("Recording lever data...")
 % Main loop
 n = 1;
 while 1

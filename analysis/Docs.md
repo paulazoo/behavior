@@ -211,7 +211,7 @@ arguments:
 - char* matlab_filename = the lever data .mat filename e.g. ./Data/AnB1/B1_20231030.mat
 - int beginning_samples_to_skip = number of beginning samples to skip
 
-To compile on Mac M1 with libmatio installed via homebrew: `!g++ -I/opt/homebrew/opt/libmatio/include/ -L/opt/homebrew/Cellar/libmatio/1.5.26/lib/ -o leverData2binary leverData2binary.cpp -lmatio`
+To compile on Mac M1 with libmatio installed via homebrew: `!g++ -I/opt/homebrew/opt/libmatio/include/ -L/opt/homebrew/Cellar/libmatio/1.5.26/lib/ -o leverdata2binary leverdata2binary.cpp -lmatio`
 
 Example syntax: `./leverData2binary ./Data/AnB1/B1_20231030/ ./Data/AnB1/B1_20231030.mat 15460`
 

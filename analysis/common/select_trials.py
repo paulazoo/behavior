@@ -26,3 +26,14 @@ def select_hit_trials(respMTX, num_trials):
     print(len(selected_trials), ' hit trials in this session.')
     
     return selected_trials
+
+def load_custom_hit_trials(HitMovements_folder):
+    selected_trials = np.load(HitMovements_folder+"hit_trials.npy")
+    
+    print(len(selected_trials), ' hit trials in this session.')
+    
+    return selected_trials
+
+def save_custom_hit_trials(HitMovements_folder, hit_trials):
+    np.save(HitMovements_folder+"hit_trials", hit_trials)
+    return
