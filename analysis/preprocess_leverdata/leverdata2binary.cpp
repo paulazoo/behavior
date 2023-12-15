@@ -124,7 +124,7 @@ int main(int argc, char** argv) {
             // check if a jump from >2000 to <2000 happened between previous lever value and current lever value
             if (lever_value < 2000 && previous_lever_value > 2000) {
                 // switched from 2500 to 500
-                cout << "finished a trialITI: " << i << \
+                cout << "finished a trialITI: " << i << " index:" << num_switches << \
                 " trialITI length: " << i - previous_switch_i << " samples = ~" << (i - previous_switch_i)/5888 << "s" << endl;
                 
                 // Get this trial+subsequent ITI as a separate chunk from the full leverdata
