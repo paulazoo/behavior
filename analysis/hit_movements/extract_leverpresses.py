@@ -9,6 +9,7 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
     tone_indices = np.fromfile(binaries_folder+"tone_indices.bin", dtype=np.double)
     leverpress_information = np.zeros((len(trials_to_consider), 3))
     i = 0
+    second_threshold_indices = np.full(1000, np.nan)
     for trial_index in trials_to_consider:
         print("Checking trial ", trial_index, "...")
 
@@ -29,8 +30,12 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
         leverpress_information[i, 1] = left_index
         leverpress_information[i, 2] = right_index
 
+        second_threshold_index = leverpress_index
+        second_threshold_indices[trial_index] = second_threshold_index
+
         i += 1
-    
+
+    second_threshold_indices.astype('double').tofile(binaries_folder+"second_threshold_indices.bin")
     np.save(output_folder+"leverpress_informations", leverpress_information)
     print("number of extracted leverpresses ", len(leverpress_information))
 
@@ -62,6 +67,10 @@ def move_index_up_then_down_until_reaches_threshold(time_series, start_index, th
                 raise ValueError("went back all the way back to tone, did not have leverpress at all.")
             else:
                 value = time_series[index]
+        # okay, but now go ahead and set index to earliest one that's still above threshold
+        while value > threshold_to_reach:
+            index -= 1
+            value = time_series[index]
 
     return index
 

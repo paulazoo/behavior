@@ -1,5 +1,7 @@
 import numpy as np
 import scipy.signal as signal
+import sympy as sp
+import matplotlib.pyplot as plt
 
 def get_point_acceleration(trial_index, sample_index, window_duration, velocity_folder, binaries_folder):
     velocity = np.load(velocity_folder+"velocity_trial"+str(trial_index)+".npy")
@@ -16,7 +18,7 @@ def get_point_acceleration(trial_index, sample_index, window_duration, velocity_
     return point_acceleration
 
 
-def fit_polynomial_around_index(time, data, center_index, window_size, order=4):
+def fit_polynomial_around_index(time, data, center_index, window_size):
     """
     Fit a polynomial of specified order around a given center_index in a time series.
 
@@ -41,12 +43,26 @@ def fit_polynomial_around_index(time, data, center_index, window_size, order=4):
     local_data = data[start_index:end_index]
 
     # Fit a polynomial to the local data
-    coefficients = np.polyfit(local_time, local_data, order)
+    coefficients = np.polyfit(local_time, local_data, 4)
     poly_fit = np.poly1d(coefficients)
 
     # Evaluate the polynomial at all time values
     fit_data = poly_fit(time)
 
+    # Plot the original data points
+    plt.scatter(local_time, local_data, label='Original Data')
+
+    # Plot the polynomial fit
+    plt.plot(local_time, fit_data[start_index:end_index], label='Polynomial Fit', color='red')
+
+    # Add labels and legend
+    plt.xlabel('X-axis')
+    plt.ylabel('Y-axis')
+    plt.legend()
+
+    # Show the plot
+    plt.show()
+    print(poly_fit)
     return fit_data, poly_fit
 
 def derivative_at_index(poly_fit, index):
@@ -60,5 +76,10 @@ def derivative_at_index(poly_fit, index):
     Returns:
     - derivative: float, the value of the first derivative at the specified index
     """
-    derivative_coefficients = np.polyder(poly_fit)
-    return np.polyval(derivative_coefficients, index)
+    derivative = np.polyder(poly_fit)
+    
+
+    # Evaluate the derivative at the specified point
+    derivative_at_point = np.polyval(derivative, index)
+
+    return derivative_at_point
