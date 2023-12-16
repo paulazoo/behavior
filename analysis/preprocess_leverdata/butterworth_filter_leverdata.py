@@ -15,9 +15,10 @@ def butterworth_filter_leverdata(binaries_folder, num_trials, cutoff_frequency):
     the filter
     :return: The function does not return anything.
     """
+    trial_frequencies = np.fromfile(binaries_folder+"trial_frequencies.bin", dtype=np.double)
+    
     for i in range(0, num_trials):
         trial_leverdata = np.fromfile(binaries_folder+"trial"+str(i)+".bin", dtype=np.double)
-        trial_frequencies = np.fromfile(binaries_folder+"trial_frequencies.bin", dtype=np.double)
 
         # Butterworth filter parameters:
         sampling_frequency = trial_frequencies[i]

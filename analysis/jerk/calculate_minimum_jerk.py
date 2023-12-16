@@ -34,6 +34,29 @@ def solve_x_coefficients(x_0, v_0, a_0, x_f, v_f, a_f, tf):
 
     return smoothest_x_coefficients
 
+
+def solve_x_coefficients_linearalg(x_0, v_0, a_0, x_f, v_f, a_f, tf):
+    # Setup the system of equations Ax = b
+    A = np.array([[1, 0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [0, 0, 2, 0, 0, 0],
+                [1, tf, tf**2, tf**3, tf**4, tf**5],
+                [0, 1, 2*tf, 3*tf**2, 4*tf**3, 5*tf**4],
+                [0, 0, 2, 6*tf, 12*tf**2, 20*tf**3]])
+
+    b = np.array([x_0, v_0, a_0, x_f, v_f, a_f])
+
+    # Solve for the coefficients
+    coefficients = np.linalg.solve(A, b)
+
+    # Output the polynomial coefficients
+    print("The coefficients of the minimum jerk trajectory polynomial are:", coefficients)
+    smoothest_x_coefficients = np.flip(coefficients)
+
+    return smoothest_x_coefficients
+
+
+
 def smoothest_x_function(smoothest_x_coefficients, t_input):
     C1 = smoothest_x_coefficients[0]
     C2 = smoothest_x_coefficients[1]
@@ -44,9 +67,15 @@ def smoothest_x_function(smoothest_x_coefficients, t_input):
 
     return (C1 * t_input**5 + C2 * t_input**4 + C3 * t_input**3 + C4 * t_input**2 + C5 * t_input + C6)
 
-def minimum_jerk_function(smoothest_x_coefficients, t_input):
-    C1 = smoothest_x_coefficients[0]
-    C2 = smoothest_x_coefficients[1]
-    C3 = smoothest_x_coefficients[2]
+def minimum_jerk_function(smoothest_x, t_input):
+    dt = np.median(np.diff(t_input))
 
-    return (5*4*3*C1 * t_input**2 + 4*3*2*C2 * t_input + 3*2*C3)
+    velocity = np.gradient(smoothest_x, dt)
+
+    # Calculate acceleration using central differences
+    acceleration = np.gradient(velocity, dt)
+   
+    # Calculate jerk using central differences
+    jerk = np.gradient(acceleration, dt)
+
+    return jerk
