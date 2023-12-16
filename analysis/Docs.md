@@ -56,73 +56,7 @@ The folder defined by `analysis0_folder` needs contain the processed `leverdata`
 ## Outputs to folder:
 - movement_trial#.npy for each extracted hit movement
 
-# Path
-There are two parts to how a movement between point A and point B might vary. The first is variance in the actual movement path taken to get from point A to point B, and the second is the speed of the movement. Here, I'll analyze the movement path variance, `var_p`, across all __Hit__ trials that successfully have movement from the first threshold to the second threshold and back to the first threshold (this back threshold will effectively be a third threshold) from 1 day (and ignore variance in speed for now).
-
-Then the movements will be scaled across % completion of their entire movement path. This percent completion movement will be saved again in `output_folder` as a movement_percent_scaled_trial#.npy file.
-
-I will then plot the variance of this path, `var_p`, over the % movement completion between the first to second to third threshold. I also calculate the average movement path, `mean_p`, for __Hit__ trials that had movement from the first to second to third threshold for this 1 day. Finally, I will save `var_p` and `mean_p` to .npy files.
-
-## This book analyzes 1 day session.
-
-## Requires:
-- ToneDisc matfile
-- **HitMovements** outputs
-
-## Outputs to folder:
-- movement_percent_scaled_trial#.npy of the movement data scaled between 0 and 100%
-- mean_p.npy of E[paths]
-- var_p.npy of Var[paths]
-- num_movements.npy an integer of the number of movements extracted
-
-# CumulativePathVariance
-To compare the movement path variance, `var_p`, across days, I calculate the cumulative movement path variance, `cumuative_var_p`, as the sum of the variance across 100% of the movement: $\int\limits_{0}^{100} Var_p(p) dp$ where $p =$ % movement completed. Then, I plot the cumulative movement path variance for each day.
-
-### This book analyzes all sessions for an animal.
-
-### Requires:
-- **Path** outputs for all sessions for an animal
-
-### Outputs to folder:
-- cumulative_var_ps.npy the cumulative Var[paths] for each day
-
-# Speed
-As previously explained, there are two parts to how a movement between point A and point B might vary. The second part is the speed of the movement. Here, I calculate the average speed, `s`, of each __Hit__ trial's movement, defined as $\frac{100}{\text{time}}$ in units of % movement/s. I then find the mean of these average speeds, `mean_s`, and variance of these average speeds, `var_s`, across all trials for the day.
-
-### This book analyzes all sessions for an animal.
-
-### Requires:
-- **HitMovements** outputs for all sessions for an animal
-
-### Outputs to folder:
-- mean_ss.npy the mean speed of movement completion across days
-- var_ss.npy the Var[speed] of movement completion across days
-
-# Velocity
-Find the velocity path of movements. Velocity is calculated as the difference of consecutive points with a moving average filter of about 5 ms (~29 samples usually).
-
-__cutoff frequency of a moving average filter__:
-for a moving average filter, $H(w) = \frac{1}{N} | \frac{\sin(wN/2)}{\sin(w/2)} | =0.5= -3 \text{dB}$
-
-where $w = 2\pi \frac{f_\text{cutoff}}{f_\text{sample}}$ and $N=$ num samples per window
-
-This analysis requires 7.5ms of trial data before the actual movement to find the moving average. We are assuming reaction time after tone is always more than 7.5 ms.
-
-## This notebook analyzes 1 day session.
-
-## Requires:
-- ToneDisc matfile
-- **PreprocessLeverData** output (for trial frequencies)
-- **HitMovements** output
-
-## Outputs to folder:
-- velocity_trial#.npy velocities (filtered with moving average) for all trials
-- velocitymovement_trial#.npy velocities for the interval of hit movements only
-- velocitymovement_percent_scaled_trial#.npy velocities % completion scaled for the interval of hit movements only
-
 # Jerk
-TODO: normalize by minimum jerk
-
 __Motivation for using jerk__: So the previous notebooks analyzed variability across multiple curves throughout a day's session. The variability within a single trial, however, is impossible to calculate without making assumptions about the hidden deterministic curve. I originally wanted to try to fit some class of deterministic function to the movements (and then do, for example, a Kalman filter to figure out the exact hidden parameters/function for each movement curve and subtract this to find variability), but later realized that the entire class of target movements the mice are actually aiming for internally might still be completely different between WT and diseased models.
 
 The smoothest movement between point A and point B will be the movement trajectory that minimizes jerk, the third derivative of position, between these two points. As it turns out, for animal movements, this minimal jerk trajectory is also the one expert animals (practiced adult WT humans) will perform for maximum motor efficiency [(Todorov and Jordan 1998)](doi.org/10.1152/jn.1998.80.2.696).
@@ -147,11 +81,6 @@ where $t_f$ is the end/final time of the movement when point B is reached.
 Then after the constants are solved for,
 $j_\text{min}(t)=x_\text{min}'''(t)$
 
-__Jerk estimation__:
-A fourth-order Savitsky–Golay filter is equivalent to taking the second derivative at the window's centre of the continuous least-squares best-fit fourth-order polynomial. The cutoff frequency for this polynomial fit can be calculated as $f_c  = \frac{N+1}{3.2M - 4.6}$
-
-where $f_c = \frac{w}{\pi} = 2 \frac{f_\text{cutoff}}{f_\text{sample}}$, $N=$ order polynomial, and $M=\frac{\text{num samples from window}-1 }{2}$ according to [(Schafer 2011)](inst.eecs.berkeley.edu/~ee123/sp16/docs/SGFilter.pdf)
-
 ## This notebook analyzes 1 day session.
 
 ## Requires:
@@ -164,21 +93,6 @@ where $f_c = \frac{w}{\pi} = 2 \frac{f_\text{cutoff}}{f_\text{sample}}$, $N=$ or
 - jerkmovement_trial#.npy jerks for the interval of hit movements only
 - jerkmovement_percent_scaled_trial#.npy jerks % completion scaled for the interval of hit movements only
 
-# ReactionTimes
-One thing NE might affect is the reaction time to the tone. Here, we plot the reaction time defined as the time between the tone time and the time it took to hit the second lever press threshold (the MATLAB time for lever press time as saved in `respMTX`). We get the means and vars of these reaction times, `rxn_ts`, for all the trials from each day (where each day is a .mat file from a folder specified in `folder_name`), and then we save all the means and vars from every day in the folder to a .pickle. We also plot the means and vars across days and save the plotted figure .pngs in that same folder too.
-
-TODO: currently does not exclude _b and _c sessions for the same day
-
-## This notebook analyzes all sessions for 1 animal.
-
-## Requires:
-- **HitMovements** outputs for all sessions for the animal
-- ToneDisc matfiles for all sessions for the animal
-
-## Outputs to folder:
-- rxn_ts_means_vars.pickle, a pandas table of reaction time means and vars for each session
-
-
 # ViewSingleMovements
 For plotting every single movement individually.
 
@@ -187,7 +101,6 @@ For plotting every single movement individually.
 ## Requires:
 - **PreprocessLeverData** output
 - **HitMovements** outputs
-- **Velocity** outputs
 - **Jerk** outputs
 - ToneDisc matfile
 
