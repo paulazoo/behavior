@@ -108,10 +108,11 @@ $j_\text{min}(t)=x_\text{min}'''(t)$
 - **HitMovements** output
 
 ## Outputs to folder:
-- jerk_trial#.npy jerks for all trials from Savitsky-Golay filter
-- jerkmovement_trial#.npy jerks for the interval of hit movements only
-- jerkmovement_percent_scaled_trial#.npy jerks % completion scaled for the interval of hit movements only
-
+- velocity_trial#.npy velocities for all trials as finite differences
+- acceleration_trial#.npy accelerations for all trials as finite differences
+- jerk_trial#.npy jerks for all trials as finite differences
+- jerk_ratios.npy number of movements x 4 numpy array 
+    - with columns: `trial_index` | `jerk_ratio` | `actual_cumulative_jerk` | `minimum_cumulative_jerk`
 
 # ViewSingleMovements
 For plotting every single movement individually.

@@ -1,6 +1,36 @@
 from sympy import symbols, diff, Eq, solve
 import numpy as np
 
+def get_index_a_b(trial_index, left_index, right_index, PreprocessLeverData_folder):
+    left_index = int(left_index)
+    right_index = int(right_index)
+    index_a = left_index
+
+    leverdata = np.fromfile(PreprocessLeverData_folder+"processed_trial"+str(trial_index)+".bin", dtype=np.double)
+    index_b = np.argmax(leverdata[left_index:right_index+1]) +left_index
+
+    return index_a, index_b
+
+def get_boundary_conditions(index_a, index_b, trial_index, PreprocessLeverData_folder, Jerk_folder):
+    leverdata = np.fromfile(PreprocessLeverData_folder+"processed_trial"+str(trial_index)+".bin", dtype=np.double)
+    velocity = np.load(Jerk_folder+"velocity_trial"+str(trial_index)+".npy")
+    acceleration = np.load(Jerk_folder+"acceleration_trial"+str(trial_index)+".npy")
+
+    x_0 = leverdata[index_a]
+    v_0 = velocity[index_a+1]
+    a_0 = acceleration[index_a+2]
+
+    x_f = leverdata[index_b]
+    v_f = velocity[index_b+1]
+    a_f = acceleration[index_b+2]
+    print("x_0:", x_0, "v_0:", v_0, "a_0:", a_0, "x_f:", x_f, "v_f:", v_f, "a_f:", a_f)
+
+    sample_times = np.fromfile(PreprocessLeverData_folder+"sample_times_trial"+str(trial_index)+".bin", dtype=np.double)
+    tf = sample_times[index_b] - sample_times[index_a]
+    print("tf:", tf, "s")
+
+    return x_0, v_0, a_0, x_f, v_f, a_f, tf
+
 def solve_x_coefficients(x_0, v_0, a_0, x_f, v_f, a_f, tf):
     # Define the symbols
     t, C1, C2, C3, C4, C5, C6 = symbols('t C1 C2 C3 C4 C5 C6')
@@ -56,7 +86,6 @@ def solve_x_coefficients_linearalg(x_0, v_0, a_0, x_f, v_f, a_f, tf):
     return smoothest_x_coefficients
 
 
-
 def smoothest_x_function(smoothest_x_coefficients, t_input):
     C1 = smoothest_x_coefficients[0]
     C2 = smoothest_x_coefficients[1]
@@ -66,6 +95,7 @@ def smoothest_x_function(smoothest_x_coefficients, t_input):
     C6 = smoothest_x_coefficients[5]
 
     return (C1 * t_input**5 + C2 * t_input**4 + C3 * t_input**3 + C4 * t_input**2 + C5 * t_input + C6)
+
 
 def minimum_jerk_function_grad(smoothest_x, t_input):
     dt = np.median(np.diff(t_input))
@@ -79,6 +109,7 @@ def minimum_jerk_function_grad(smoothest_x, t_input):
     jerk = np.gradient(acceleration, dt)
 
     return jerk
+
 
 def minimum_jerk_function(smoothest_x_coefficients, t_input):
     C1 = smoothest_x_coefficients[0]
