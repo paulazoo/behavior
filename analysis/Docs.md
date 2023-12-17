@@ -51,6 +51,27 @@ The folder defined by `analysis0_folder` needs contain the processed `leverdata`
 - leverpress_informations.npy
 - movement_trial#.npy for each extracted hit movement
 
+
+# Path
+Here, I'll analyze the movement path variance across all __Hit__ trials that successfully have movement from the first threshold to the second threshold and back to the first threshold (this back threshold will effectively be a third threshold) from 1 day (and ignore variance in speed for now). These movements are gotten from running **HitMovements** to get leverpress_informations.npy.
+
+I will then plot the variance of this path over the movements aligned to the _second threshold_. I also calculate the average movement path for __Hit__ trials that had movement from the first to second to third threshold for this 1 day. Finally, I will calculate the sum (cumulative) of the path variance for the session.
+
+## This book analyzes 1 day session.
+
+## Requires:
+- ToneDisc matfile
+- **HitMovements** outputs
+
+## Outputs to folder:
+- mean_path_data.npy of E[paths]
+- var_path_data.npy of Var[paths]
+- std_path_data.npy of $\sqrt{\text{Var}[\text{paths}]}$
+- sem_path_data.npy of SEM[paths]
+- path_times.npy of the common aligned time range
+- aligned_path_movements.npy a list of tuples where the first element is all the leverdata time series for each movement from before_duration before the second threshold to after_duration after the second threshold and the second element is the common time range
+- plotted_path_analysis.png as a png of the final figure
+
 # Jerk
 __Motivation for using jerk__: So the previous notebooks analyzed variability across multiple curves throughout a day's session. The variability within a single trial, however, is impossible to calculate without making assumptions about the hidden deterministic curve. I originally wanted to try to fit some class of deterministic function to the movements (and then do, for example, a Kalman filter to figure out the exact hidden parameters/function for each movement curve and subtract this to find variability), but later realized that the entire class of target movements the mice are actually aiming for internally might still be completely different between WT and diseased models.
 
@@ -100,7 +121,8 @@ For plotting every single movement individually.
 - ToneDisc matfile
 
 ## Outputs to folder:
-- plot_movement_trial#.png every single plot made is saved as a .png.
+- plot_trial#.png every single plot made is saved as a .png.
+- plot_basic_trial#.png every single plot of only leverdata made is saved as a .png.
 
 # Submodules (AI generated docs)
 
