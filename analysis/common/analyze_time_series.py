@@ -35,7 +35,7 @@ def make_percent_scaled(selected_trials, num_interpolation_samples, file_prefix,
     print("percent scaled shape: ", datas_percent_scaled.shape)
     return datas_percent_scaled
 
-def average_time_series(data_time_series):
+def average_time_series(data_time_series, common_resolution):
     """
     Compute the average of n different time series data with different sampling frequencies,
     where each time series has separate lists for data values and time values.
@@ -58,8 +58,8 @@ def average_time_series(data_time_series):
     max_time = max(time_values.max() for _, time_values in data_time_series)
     min_time = min(time_values.min() for _, time_values in data_time_series)
 
-    # Define a common time vector with a common frequency (e.g., 1 Hz)
-    common_time = np.arange(min_time, max_time, 0.005)
+    # Define a common time vector with a common frequency (e.g., 0.005 seconds)
+    common_time = np.arange(min_time, max_time, common_resolution)
 
     # Initialize arrays to store the resampled data values for each time series
     resampled_data_series = []

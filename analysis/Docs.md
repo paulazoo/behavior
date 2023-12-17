@@ -24,15 +24,8 @@ All data will be saved as .bin files in case I need to go back to C++ in a folde
 - processed_trial#.bin files as the converted voltage values of lever data
 - sample_times_trial#.bin files as the aligned time values for each sample
 - trial_frequencies.bin as the estimated sampling frequency for each trial
-- tone_indices.bin as the sample index values for tone times for each trial
-- leverpress_indices.bin as the sample index values for leverpress times for each trial
-
-# PreprocessDataArduino
-This is just a histogram of the previous old `dataArduino`'s sampling rate, as defined by the difference between MATLAB times between every two consecutive samples.
-
-This `dataArduino` only adds samples in between running sections of the trial code throughout the main MATLAB ToneDiscriminationV3_GF.m code, leading to very uneven sampling, and it also sends several other bytes of irrelevant information each time (e.g. empty left and right lickspout detection data) which further slows it down.
-
-## Not used in main analysis anymore.
+- tone_indices.bin as the sample index values for tone times for each trial from ToneDisc matfile
+- leverpress_indices.bin as the sample index values for leverpress times for each trial from ToneDisc matfile
 
 # HitMovements
 TODO: put back valueerror in extract_leverpresses.py and make it impossible to not be below first threshold within a trial
@@ -54,6 +47,8 @@ The folder defined by `analysis0_folder` needs contain the processed `leverdata`
 - **PreprocessLeverData** output
 
 ## Outputs to folder:
+- hit_trials.npy the custom hit_trials excluding `hit_trials_to_exclude` at the beginning of the notebook
+- leverpress_informations.npy
 - movement_trial#.npy for each extracted hit movement
 
 # Jerk

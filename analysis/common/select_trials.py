@@ -27,7 +27,7 @@ def select_hit_trials(respMTX, num_trials):
     
     return selected_trials
 
-def load_custom_hit_trials(HitMovements_folder):
+def select_custom_hit_trials(HitMovements_folder):
     selected_trials = np.load(HitMovements_folder+"hit_trials.npy")
     
     print(len(selected_trials), ' hit trials in this session.')
