@@ -27,6 +27,7 @@ All data will be saved as .bin files in case I need to go back to C++ in a folde
 - tone_indices.bin as the sample index values for tone times for each trial from ToneDisc matfile
 - leverpress_indices.bin as the sample index values for leverpress times for each trial from ToneDisc matfile
 
+
 # HitMovements
 TODO: put back valueerror in extract_leverpresses.py and make it impossible to not be below first threshold within a trial
 
@@ -55,6 +56,7 @@ The folder defined by `analysis0_folder` needs contain the processed `leverdata`
 - third_threshold_indices.npy as the sample index for when the movement hit the third threshold within the trial's processed leverdata
 - plot_movements.png as the figure of all hit movements found from first to third threshold
 
+
 # Path
 Here, I'll analyze the movement path variance across all __Hit__ trials that successfully have movement from the first threshold to the second threshold and back to the first threshold (this back threshold will effectively be a third threshold) from 1 day (and ignore variance in speed for now). These movements are gotten from running **HitMovements** to get leverpress_informations.npy.
 
@@ -74,6 +76,7 @@ I will then plot the variance of this path over the movements aligned to the _se
 - path_times.npy of the common aligned time range
 - aligned_path_movements.npy a list of tuples where the first element is all the leverdata time series for each movement from before_duration before the second threshold to after_duration after the second threshold and the second element is the common time range
 - plot_path_analysis.png as a png of the final figure
+
 
 # Jerk
 __Motivation for using jerk__: So the previous notebooks analyzed variability across multiple curves throughout a day's session. The variability within a single trial, however, is impossible to calculate without making assumptions about the hidden deterministic curve. I originally wanted to try to fit some class of deterministic function to the movements (and then do, for example, a Kalman filter to figure out the exact hidden parameters/function for each movement curve and subtract this to find variability), but later realized that the entire class of target movements the mice are actually aiming for internally might still be completely different between WT and diseased models.
