@@ -39,6 +39,15 @@ def get_leverdata_indices(binaries_folder, respMTX, num_trials):
 
 
 def tonedisc_time2leverdata_index(tonedisc_time, leverdata_sample_times):
+    """
+    The function `tonedisc_time2leverdata_index` returns the index of the lever data sample time that is
+    greater than or equal to the tonedisc time.
+    
+    :param tonedisc_time: The tonedisc_time parameter is the time at which a tone is discovered
+    :param leverdata_sample_times: A list of sample times from the lever data. These sample times
+    represent the time at which each sample was taken during an experiment
+    :return: the index of the leverdata sample time that is greater than or equal to the tonedisc time.
+    """
 
     for leverdata_index, leverdata_time in enumerate(leverdata_sample_times):
         if leverdata_time >= tonedisc_time:

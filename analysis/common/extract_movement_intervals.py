@@ -1,6 +1,25 @@
 import numpy as np
 
 def extract_movement_intervals(movement_informations, file_prefix, input_folder, binaries_folder, output_folder, movement_baseline=0):
+    """
+    The function extracts movement intervals from given movement information and saves them in the
+    specified output folder.
+    
+    :param movement_informations: The `movement_informations` parameter is a list of movement
+    information. Each element in the list represents a movement and contains the following information:
+    :param file_prefix: The file prefix is a string that is used to identify the type of data file. It
+    is used to construct the file names for the input and output files
+    :param input_folder: The folder where the input files are located. These input files can be either
+    binary files or numpy files, depending on the value of the `file_prefix` parameter
+    :param binaries_folder: The `binaries_folder` parameter is the folder where the binary files
+    containing the sample times and data are located
+    :param output_folder: The `output_folder` parameter is the directory where the extracted movement
+    intervals will be saved
+    :param movement_baseline: The `movement_baseline` parameter is the baseline value that is subtracted
+    from the movement data. It is used to normalize the movement data by removing any constant offset,
+    defaults to 0 (optional)
+    :return: a list of movements.
+    """
     movements = []
     for movement_information in movement_informations:
         trial_index = int(movement_information[0])

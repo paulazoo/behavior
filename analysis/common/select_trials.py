@@ -28,6 +28,14 @@ def select_hit_trials(respMTX, num_trials):
     return selected_trials
 
 def select_custom_hit_trials(HitMovements_folder):
+    """
+    The function "select_custom_hit_trials" loads and returns a numpy array of selected hit trials from
+    a specified folder.
+    
+    :param HitMovements_folder: The HitMovements_folder parameter is the path to the folder where the
+    hit_trials.npy file is located
+    :return: the selected trials, which are stored in the variable "selected_trials".
+    """
     selected_trials = np.load(HitMovements_folder+"hit_trials.npy")
     
     print(len(selected_trials), ' hit trials in this session.')
@@ -35,5 +43,13 @@ def select_custom_hit_trials(HitMovements_folder):
     return selected_trials
 
 def save_custom_hit_trials(HitMovements_folder, hit_trials):
+    """
+    The function saves a numpy array of hit trials to a specified folder.
+    
+    :param HitMovements_folder: The folder where you want to save the hit_trials data
+    :param hit_trials: The hit_trials parameter is a variable that contains the data for hit trials. It
+    could be an array, a list, or any other data structure that holds the hit trial data
+    :return: nothing.
+    """
     np.save(HitMovements_folder+"hit_trials", hit_trials)
     return

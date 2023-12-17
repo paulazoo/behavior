@@ -7,13 +7,6 @@ import scipy.signal as signal
 import sympy as sp
 import matplotlib.pyplot as plt
 
-def derivative_at_index(local_time, fit_data):
-    index = len(fit_data) // 2
-    
-    delta_t = local_time[index + 1] - local_time[index - 1]
-    derivative = (fit_data[index + 1] - fit_data[index - 1]) / (2 * delta_t)
-    return derivative
-    
 def get_jerks(num_trials, binaries_folder, output_folder):
     """
     The function "get_jerks" calculates the jerk of a given velocity signal using a Savitzky-Golay
@@ -43,7 +36,18 @@ def get_jerks(num_trials, binaries_folder, output_folder):
         np.save(output_folder+'acceleration_trial'+str(trial_index), acceleration)
     return
 
+
 def calculate_jerk(displacement, sampling_frequency):
+    """
+    The function calculates jerk, velocity, and acceleration using central differences given
+    displacement and sampling frequency.
+    
+    :param displacement: The displacement is the change in position of an object over time. It can be
+    measured in meters, centimeters, or any other unit of length
+    :param sampling_frequency: The sampling frequency is the number of samples taken per second. It
+    determines the time interval between each sample
+    :return: three values: jerk, velocity, and acceleration.
+    """
     # Calculate the time step (delta t) from the sampling frequency
     dt = 1 / sampling_frequency
    

@@ -74,7 +74,7 @@ I will then plot the variance of this path over the movements aligned to the _se
 - std_path_data.npy of $\sqrt{\text{Var}[\text{paths}]}$
 - sem_path_data.npy of SEM[paths]
 - path_times.npy of the common aligned time range
-- aligned_path_movements.npy a list of tuples where the first element is all the leverdata time series for each movement from before_duration before the second threshold to after_duration after the second threshold and the second element is the common time range
+- aligned_path_movements_trial#.npy first column is actual times (not zeroed to second threshold) and second column is all the leverdata time series for each movement from before_duration before the second threshold to after_duration after the second threshold
 - plot_path_analysis.png as a png of the final figure
 
 
@@ -133,6 +133,11 @@ For plotting every single movement individually.
 ## Outputs to folder:
 - plot_trial#.png every single plot made is saved as a .png.
 - plot_basic_trial#.png every single plot of only leverdata made is saved as a .png.
+
+
+
+## Python2Excel
+For outputting python numpy arrays (e.g. from .npy files) to a specific excel sheet in a specific excel file
 
 
 

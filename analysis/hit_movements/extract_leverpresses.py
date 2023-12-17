@@ -1,6 +1,26 @@
 import numpy as np
 
 def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline, movement_threshold, no_movement_threshold, output_folder):
+    """
+    The function `extract_leverpresses` extracts lever press information from binary files based on
+    specified thresholds and saves the results in an output folder.
+    
+    :param trials_to_consider: The list of trial indices to consider for extracting lever presses
+    :param binaries_folder: The folder where the binary files containing leverpress and tone indices are
+    stored
+    :param movement_baseline: The movement_baseline parameter is the baseline value used to determine
+    the movement threshold. It is added to the movement_threshold and no_movement_threshold to calculate
+    the actual thresholds
+    :param movement_threshold: The `movement_threshold` is a value that is added to the
+    `movement_baseline` to determine the threshold for detecting lever presses
+    :param no_movement_threshold: The `no_movement_threshold` parameter is the threshold value used to
+    determine if there is no movement detected during a lever press. If the lever data falls below this
+    threshold, it is considered as no movement
+    :param output_folder: The output folder is the directory where the extracted leverpress information
+    and threshold indices will be saved
+    :return: the leverpress_information, which is a numpy array containing information about the
+    leverpresses extracted from the trials.
+    """
     thresholds = [movement_baseline + no_movement_threshold, \
                   movement_baseline + movement_threshold, \
                     movement_baseline + no_movement_threshold]
@@ -41,7 +61,7 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
 
     first_threshold_indices.astype('double').tofile(output_folder+"first_threshold_indices.bin")
     second_threshold_indices.astype('double').tofile(output_folder+"second_threshold_indices.bin")
-    third_threshold_indices.astype('double').tofile(output_folder+"first_threshold_indices.bin")
+    third_threshold_indices.astype('double').tofile(output_folder+"third_threshold_indices.bin")
     np.save(output_folder+"leverpress_informations", leverpress_information)
     print("number of extracted leverpresses ", len(leverpress_information))
 
@@ -49,6 +69,20 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
 
 
 def move_index_up_then_down_until_reaches_threshold(time_series, start_index, threshold_to_reach, tone_index):
+    """
+    The function moves the index up in a time series until it reaches a threshold, and if it fails, it
+    moves the index down until it reaches the threshold or the tone index.
+    
+    :param time_series: The time series is a list of values representing a sequence of measurements or
+    observations over time. Each value in the time series corresponds to a specific time point
+    :param start_index: The starting index is the index from which you want to start moving up or down
+    in the time series
+    :param threshold_to_reach: The threshold value that the time series needs to reach in order to
+    consider it a lever press
+    :param tone_index: The tone_index is the index in the time_series where the tone is played
+    :return: the index at which the value in the time series first reaches or exceeds the threshold to
+    reach.
+    """
     try_moving_down = False
     
     # first try moving index up
