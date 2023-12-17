@@ -9,7 +9,9 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
     tone_indices = np.fromfile(binaries_folder+"tone_indices.bin", dtype=np.double)
     leverpress_information = np.zeros((len(trials_to_consider), 3))
     i = 0
+    first_threshold_indices = np.full(1000, np.nan)
     second_threshold_indices = np.full(1000, np.nan)
+    third_threshold_indices = np.full(1000, np.nan)
     for trial_index in trials_to_consider:
         print("Checking trial ", trial_index, "...")
 
@@ -32,10 +34,14 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
 
         second_threshold_index = leverpress_index
         second_threshold_indices[trial_index] = second_threshold_index
+        first_threshold_indices[trial_index] = left_index
+        third_threshold_indices[trial_index] = right_index
 
         i += 1
 
-    second_threshold_indices.astype('double').tofile(binaries_folder+"second_threshold_indices.bin")
+    first_threshold_indices.astype('double').tofile(output_folder+"first_threshold_indices.bin")
+    second_threshold_indices.astype('double').tofile(output_folder+"second_threshold_indices.bin")
+    third_threshold_indices.astype('double').tofile(output_folder+"first_threshold_indices.bin")
     np.save(output_folder+"leverpress_informations", leverpress_information)
     print("number of extracted leverpresses ", len(leverpress_information))
 
