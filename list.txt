@@ -1,15 +1,13 @@
 Paula:
-- name, organize, and run all recent data (starting from water restriction) for ANA1, ANA2, ANB1, ANB2 through analysis notebooks
-- calculate and divide by minimal jerk
-- train 4 WT, headbar mice on Komiyama-based parameters in December: CODE DONE see ./behavior and ./behavior/ToneDiscrimination_versions.md
+- write CAC protocol UROP thing
+- train 4 WT, headbar mice on Komiyama-based parameters: see ./behavior/ToneDiscrimination_versions.md
 - ask Arundathi and Sophie about supervision for H2O
-- analysis1: Also consider extracting movements by velocity threshold ->
-	then movements are defined by windows with a reward delivery/lever press detection and velocity being above the threshold;
-	this would also affect reaction time
-
-- CAC protocol UROP thing
 
 future experiments:
 - show nulls have a deficit, then either elicit NE release behaviorally (punishment sound) or optogenetically
 - stain brains for c-fos, TH+
 - pupil video synchronization and DLC pipeline
+
+- Also consider extracting movements by velocity threshold ->
+	then movements are defined by windows with a reward delivery/lever press detection and velocity being above the threshold;
+	this would also affect reaction time
