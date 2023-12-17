@@ -113,6 +113,8 @@ $j_\text{min}(t)=x_\text{min}'''(t)$
 - jerk_trial#.npy jerks for all trials as finite differences
 - jerk_ratios.npy number of movements x 4 numpy array 
     - with columns: `trial_index` | `jerk_ratio` | `actual_cumulative_jerk` | `minimum_cumulative_jerk`
+- plot_jerk_ratios.png histogram of jerk ratio values
+
 
 # ViewSingleMovements
 For plotting every single movement individually.

@@ -23,11 +23,11 @@ def get_boundary_conditions(index_a, index_b, trial_index, PreprocessLeverData_f
     x_f = leverdata[index_b]
     v_f = velocity[index_b+1]
     a_f = acceleration[index_b+2]
-    print("x_0:", x_0, "v_0:", v_0, "a_0:", a_0, "x_f:", x_f, "v_f:", v_f, "a_f:", a_f)
+    # print("x_0:", x_0, "v_0:", v_0, "a_0:", a_0, "x_f:", x_f, "v_f:", v_f, "a_f:", a_f)
 
     sample_times = np.fromfile(PreprocessLeverData_folder+"sample_times_trial"+str(trial_index)+".bin", dtype=np.double)
     tf = sample_times[index_b] - sample_times[index_a]
-    print("tf:", tf, "s")
+    # print("tf:", tf, "s")
 
     return x_0, v_0, a_0, x_f, v_f, a_f, tf
 
@@ -56,10 +56,10 @@ def solve_x_coefficients(x_0, v_0, a_0, x_f, v_f, a_f, tf):
     solution = solve(equations, (C1, C2, C3, C4, C5, C6))
 
     # Display the solution
-    print("Solution for the coefficients:")
+    # print("Solution for the coefficients:")
     smoothest_x_coefficients = []
     for coeff, value in solution.items():
-        print(f"{coeff}: {value}")
+        # print(f"{coeff}: {value}")
         smoothest_x_coefficients.append(value)
 
     return smoothest_x_coefficients
@@ -80,7 +80,7 @@ def solve_x_coefficients_linearalg(x_0, v_0, a_0, x_f, v_f, a_f, tf):
     coefficients = np.linalg.solve(A, b)
 
     # Output the polynomial coefficients
-    print("The coefficients of the minimum jerk trajectory polynomial are:", coefficients)
+    # print("The coefficients of the minimum jerk trajectory polynomial are:", coefficients)
     smoothest_x_coefficients = np.flip(coefficients)
 
     return smoothest_x_coefficients
