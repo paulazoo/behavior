@@ -67,7 +67,7 @@ def smoothest_x_function(smoothest_x_coefficients, t_input):
 
     return (C1 * t_input**5 + C2 * t_input**4 + C3 * t_input**3 + C4 * t_input**2 + C5 * t_input + C6)
 
-def minimum_jerk_function(smoothest_x, t_input):
+def minimum_jerk_function_grad(smoothest_x, t_input):
     dt = np.median(np.diff(t_input))
 
     velocity = np.gradient(smoothest_x, dt)
@@ -79,3 +79,10 @@ def minimum_jerk_function(smoothest_x, t_input):
     jerk = np.gradient(acceleration, dt)
 
     return jerk
+
+def minimum_jerk_function(smoothest_x_coefficients, t_input):
+    C1 = smoothest_x_coefficients[0]
+    C2 = smoothest_x_coefficients[1]
+    C3 = smoothest_x_coefficients[2]
+
+    return (5*4*3*C1 * t_input**2 + 4*3*2*C2 * t_input + 3*2*C3)
