@@ -66,6 +66,7 @@ I will then plot the variance of this path over the movements aligned to the _se
 
 ## Requires:
 - ToneDisc matfile
+- **PreprocessLeverData** output
 - **HitMovements** outputs
 
 ## Outputs to folder:
@@ -106,7 +107,6 @@ $j_\text{min}(t)=x_\text{min}'''(t)$
 ## This notebook analyzes 1 day session.
 
 ## Requires:
-- ToneDisc matfile
 - **PreprocessLeverData** output (for trial frequencies)
 - **HitMovements** output
 
@@ -119,16 +119,33 @@ $j_\text{min}(t)=x_\text{min}'''(t)$
 - plot_jerk_ratios.png histogram of jerk ratio values
 
 
-# ViewSingleMovements
-For plotting every single movement individually.
+
+# Speed
+Finds the time between any two markpoints of movement trials. Finds reactions times (first threshold - tone), rise times (when it initially hits second threshold - first threshold), and return times (time when returns to third threshold - when it initially hits second threshold).
 
 ## This notebook analyzes 1 day session.
 
 ## Requires:
 - **PreprocessLeverData** output
 - **HitMovements** outputs
-- **Jerk** outputs
+
+## Outputs to folder:
+- reaction_times.npy a 1D array of reaction times
+- rise_times.npy a 1D array of rise times
+- return_times.npy a 1D array of return times
+
+
+
+# ViewSingleMovements
+For plotting every single movement individually.
+
+## This notebook analyzes 1 day session.
+
+## Requires:
 - ToneDisc matfile
+- **PreprocessLeverData** output
+- **HitMovements** outputs
+- **Jerk** outputs
 
 ## Outputs to folder:
 - plot_trial#.png every single plot made is saved as a .png.
@@ -136,7 +153,7 @@ For plotting every single movement individually.
 
 
 
-## Python2Excel
+# Python2Excel
 For outputting python numpy arrays (e.g. from .npy files) to a specific excel sheet in a specific excel file
 
 
