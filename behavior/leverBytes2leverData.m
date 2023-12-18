@@ -27,4 +27,4 @@ ylim([400 3700])
 
 %% Save the lever_data
 lever_data_filename = input('filename:\n','s');
-save(lever_data_filename+".mat","lever_data");
+save(lever_data_filename+".mat", "lever_data");
