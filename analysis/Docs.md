@@ -104,6 +104,28 @@ where $t_f$ is the end/final time of the movement when point B is reached.
 Then after the constants are solved for,
 $j_\text{min}(t)=x_\text{min}'''(t)$
 
+__More on calculating jerk__:
+_Processed leverdata curve:_
+Quick reminder that the leverdata is already Butterworth filtered above 40Hz.
+
+_Window of analysis:_
+For these analyses, I've been only analyzing from the first threshold to the peak (maximum displacement) of the movement curve.
+
+This is because I wanted to avoid the sudden electrical signal artificially giving me crazy high (values around $10^{20}$) jerks at those points, but later on I think we should do either 1) first threshold to the peak + peak back down to the third threshold or 2) first threshold to the peak + peak back down to the second threshold.
+
+_Actual jerk:_
+Actual jerk curve is first calculated from the direct third derivative (which is calculated using central differences) of the processed leverdata curve.
+
+The reason I didn't take moving averages is because I realized moving averages smooth out the higher derivatives too much, giving much lower (magnitudes lower) jerk values than even the idealized, minimum jerk. The possible problem with this is that calculating without further smoothing of noise may result is higher than actual jerk values from the sensor noise, but considering I was still getting occasional jerk values that were <100% (down to like 95%) of the idealized, minimum jerk, I don't think this is a problem in our case.
+
+_Idealized, minimum jerk:_
+The idealized minimum jerk is calculated based on the boundary conditions of the initial velocity, position, and acceleration at the first threshold point and then the final velocity, position, and acceleration at the peak point. Then, the smoothest movement curve with the least change in acceleration is found to get from the initial conditions to the final conditions. Then, the third derivative of this smoothest movement is the minimum jerk curve. This is calculated analytically because it turns out the smoothest movement curve is always a 5th order polynomial.
+
+_Jerk ratio:_
+The area under the curve of the absolute values from the actual jerk curve is divided by the area under the curve of the absolute values of the minimum jerk curve.
+
+The absolute values are used to ignore sign changes in jerk.
+
 ## This notebook analyzes 1 day session.
 
 ## Requires:
