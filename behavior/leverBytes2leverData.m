@@ -22,7 +22,17 @@ end
 toc
 
 %% Plot the lever_data
-scatter(1:1:n+10000, lever_data(1:1:n+10000, :))
+figure(1)
+scatter((1:1:n+10000)/5888, lever_data(1:1:n+10000, :))
+ylim([400 3700])
+
+%% Preview butterworth filtered lever_data and check that noise is gone
+fc=40;
+fs=5888;
+[b,a] = butter(6, fc/(fs/2));
+filtered_lever_data = filter(b,a,lever_data(1:1:n+10000, :));
+figure(2)
+scatter((1:1:n+10000)/5888, filtered_lever_data)
 ylim([400 3700])
 
 %% Save the lever_data
