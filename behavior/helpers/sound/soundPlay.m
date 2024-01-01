@@ -1,4 +1,7 @@
-function soundPlay(soundId,snd)
-PsychPortAudio('Stop', snd.pahandle);
-PsychPortAudio('FillBuffer', snd.pahandle, snd.buffers(soundId));
-PsychPortAudio('Start', snd.pahandle);
+function soundPlay(soundID,soundStorage)
+
+waves = soundStorage(soundID).waves;
+Fs = soundStorage(soundID).Fs;
+
+%play sound
+sound(waves, Fs);

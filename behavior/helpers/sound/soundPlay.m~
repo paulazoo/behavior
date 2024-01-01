@@ -1,0 +1,5 @@
+function soundPlay(soundID,soundStorage)
+
+player = audioplayer(soundStorage.sounds(spunID), Fs);
+
+play(player);

@@ -127,8 +127,9 @@ escapeKey = KbName('esc');
 ESC = keyCode(escapeKey) == 0;
 
 % Sound ---
-soundPlayer = soundInit();
+soundStorage = soundInit(root_dir);
 vol = [35:-10:5 35:-10:5]; % BASED ON CALIBRATION
+rewardSoundID = 9;
 
 % MVT0 baseline ---
 fprintf('Finding MVT0\n');
@@ -190,7 +191,7 @@ while N <= nTrials && ESC
     % TONE ==============================================================
     fprintf(ardOut,'J'); % ITI finished, turn tStart to HIGH
     respMTX(N,2) = toc(ARDUINO.t0); % tone time
-    soundPlay(cueSoundID,soundPlayer);
+    soundPlay(cueSoundID,soundStorage);
     
     % RESPONSE =======================================================
     % go forward to meet second threshold ------------
@@ -215,9 +216,10 @@ while N <= nTrials && ESC
     if trialType == 1 && leverPress
         fprintf('HIT, REWARD\n')
         respMTX(N,7) = true; % rewarded trial
+        soundPlay(rewardSoundID,soundStorage);
         fprintf(ardOut,'W'); % WATER REWARD
         [ARDUINO, ESC] = recordContinuous(ARDUINO, durWaterValve, escapeKey); % keep reinforcement going
-        fprintf(ardOut,'X'); % STOP WATER  
+        fprintf(ardOut,'X'); % STOP WATER
         nHits = nHits + 1 ; % Total number of hits 
 
     elseif trialType == 1 && ~leverPress
