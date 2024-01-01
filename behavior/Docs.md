@@ -8,22 +8,41 @@
 - up to many (1000) trials per run
 - a run ends after _maxTotalHits_ number of __Hits__ occur
 
-__A Trial__:
+__ITI__:
 - a random _ITI_ duration between each trial:
-    - `fprintf(ardOut,'I')` ARDUINO tStart (pin 8) turns on
-- the actual trial:
-    - `fprintf(ardOut,'J')` ARDUINO tStart (pin 8) turns off
-    - Either __Go trial__ or __No-Go trial__ tone is given
-    - _decision_ period after tone for mouse to press lever or not
-    - __Go trial__:
-        - __Hit__: mouse press lever $\to$ H2O reward delivered $\to$ given _reward_consumption_ duration time to lick
-            - ARDUINO H2O reward (pin 7) `fprintf(ARDUINO.out,'W')`
-        - __Miss__: mouse doesn't press lever $\to$ no reward
-    - __No-Go trial__:
-        - __CR__: (correct reject) mouse doesn't press lever $\to$ no punishment and P(water reward) based on _fractRewCorrRej_ (aka "Surprise reward mode")
-            - for "Surprise reward mode", ARDUINO H2O reward (pin 7) `fprintf(ARDUINO.out,'W')`
-        - __FA__: (false alarm) mouse press lever $\to$ air puff punishment
-            - ARDUINO air punishment (pin 4) `fprintf(ARDUINO.out,'A')`
+    - `fprintf(ardOut,'I')` ARDUINO TStart (pin 11) LOW
+    - For the last second of the ITI, don't go to trial unless no movement past noMvtThresh
+    - if ITIMovement detected, restart last second of ITI until no movement is detected
+
+__TONE (Actual trial)__:
+- `fprintf(ardOut,'J')` ARDUINO TStart (pin 11) HIGH
+- trial start time in `respMTX` is now
+- Now play tone: Either __Go trial__ or __No-Go trial__ tone is given
+
+__RESPONSE__:
+- _decision_ period after tone for mouse to press lever or not
+
+__PREREINFORCEMENT__:
+- record licks and lever passively for durPreReinforcement
+
+__REINFORCEMENT__:
+- __Go trial__:
+    - __Hit__: mouse press lever $\to$ H2O reward delivered $\to$ given _reward_consumption_ duration time to lick
+        - reward sound played
+        - `fprintf(ardOut,'W')` ARDUINO water reward (pin 7) for durWaterValve
+        - then `fprintf(ardOut,'X')` ARDUINO stop water
+    - __Miss__: mouse doesn't press lever $\to$ nothing
+- __No-Go trial__:
+    - __CR (correct reject)__: mouse doesn't press lever $\to$ no punishment and P(water reward) based on _fractRewCorrRej_ (aka "Surprise reward mode")
+        - for "Surprise reward mode", ARDUINO H2O reward (pin 7) `fprintf(ARDUINO.out,'W')`
+    - __FA (false alarm)__ and params.punish == true: mouse press lever $\to$ air puff punishment
+        - ARDUINO air punishment (pin 4) `fprintf(ARDUINO.out,'A')`
+    - __FA (false alarm)__ and params.punish == false: mouse press lever $\to$ nothing
+
+__CONSUMPTION (Post reinforcement)__:
+- decision ended, turn LED back on, but don't start next trial quite yet
+- TStart still HIGH
+- record licks and lever passively for durConsumption
 
 ## ToneDiscrimination.m Output:
 __data.params__

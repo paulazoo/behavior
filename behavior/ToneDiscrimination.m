@@ -181,7 +181,7 @@ while N <= nTrials && ESC
     % For the last second of the ITI, don't go to trial unless no movement past noMvtThresh
     detectionParams = [1.0 MVT0 noMvtThresh];
     [ARDUINO, ITIMovement, ESC] = detectITIMovement(ARDUINO, detectionParams, escapeKey);
-    % if ITIMovement detected, restart ITI until no movement is detected for entire ITI
+    % if ITIMovement detected, restart last second of ITI until no movement is detected
     while ITIMovement == true
         respMTX(N,6) = true; % pressed during ITI
         disp('movement detected, extending ITI...\n')
@@ -252,7 +252,7 @@ while N <= nTrials && ESC
         error("No logic for reinforcement found.");
     end
         
-    % Post trial (consumption)  ===================================================
+    % CONSUMPTION  ===================================================
     fprintf(ardOut,'K'); % decision ended, turn LED back on, but don't start next trial quite yet
     [ARDUINO, ESC] = recordContinuous(ARDUINO, durConsumption, escapeKey); % record during consumption
 
