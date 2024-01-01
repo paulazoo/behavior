@@ -24,5 +24,5 @@ Each file within the folders is named
 - `day`: as an integer e.g 4
 - `run`: first run does not have a letter, subsequent runs start from letter b
 
-# 2pData:
+### 2pData:
 .tif files of 2p data
