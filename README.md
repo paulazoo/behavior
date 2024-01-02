@@ -13,3 +13,6 @@ See ./analysis/Docs.md
 Tone Discrimination behavior code.
 
 See ./behavior/Docs.md
+
+# behavioral_setup
+How to build Tone Discrimination behavioral setup and parts needed
