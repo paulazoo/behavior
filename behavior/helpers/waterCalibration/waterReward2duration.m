@@ -18,7 +18,7 @@ if exist([systName filesep 'dataCalibration_valve' num2str(valveID) '.mat'],'fil
     d = dataCalibration.valveDurTested;
     r = dataCalibration.rewardDelivered;
 else
-    fprintf('WARNING: No calibration file found in "%shelpers%scalibration%s%s%s".\n',Root,filesep,filesep,systName,filesep);
+    fprintf('WARNING: No calibration file found in "%shelpers%scalibration%s%s%s".\n',root_dir,filesep,filesep,systName,filesep);
     durValve = nan;
     return
 end
@@ -28,7 +28,7 @@ dateCalib = dataCalibration.date;
 today = date;
 if datenum(today) - datenum(dateCalib) > 30
     fprintf('WARNING: Last time valve #%i was calibrated is %i days ago\n',valveID,datenum(today) - datenum(dateCalib));
-    fprintf('Consider testing with ''water_testCalibrationRL'' function or calibrate!\n');
+    fprintf('Consider testing with ''calculateWaterCalibration'' function or calibrate!\n');
 end
 
 % Check amount set from calibration

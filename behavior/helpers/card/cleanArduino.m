@@ -11,3 +11,4 @@ switch type
 end
 fclose(ard);
 delete(ard);
+end

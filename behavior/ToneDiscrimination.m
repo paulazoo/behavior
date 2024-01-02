@@ -1,20 +1,18 @@
 % This is the master branch
 clear all; close all; clc;
-root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\';
+root_dir = 'C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\';
 
 cd(root_dir);
 addpath([pwd filesep 'helpers' filesep]);
-addpath([pwd filesep 'helpers' filesep 'analysis']);
 addpath([pwd filesep 'helpers' filesep 'waterCalibration' filesep]);
 addpath([pwd filesep 'helpers' filesep 'card']);
 addpath([pwd filesep 'helpers' filesep 'general']);
 addpath([pwd filesep 'helpers' filesep 'sound']);
-addpath([pwd filesep 'helpers' filesep 'graphs']);
 addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 
 %% PARAMS ==================================================================
 % ANIMAL SPECIFIC PARAMS
-[filename, pathname] = uigetfile({'*.m'}, 'Please select animal specific params');
+[filename, pathname] = uigetfile({'params_*.m'}, 'Please select animal specific params');
 
 % Define params
 run(fullfile(pathname, filename));
@@ -65,7 +63,6 @@ toneSelect = params.toneSelection; % Range from 1o 4. 1 means only max. 2 means 
 
 % Switches
 punishSwitch = params.punish;
-trainingSwitch = params.training; % True for training for FA. Next trial is No-GO
 
 % Termination Criteria
 maxMiss = params.maxMiss; % NOT IMPLEMENTED YET Maximum miss trials in a row. Use nan for no limits
@@ -98,7 +95,7 @@ end
 
 % Verification that dur pre-reinforcement is larger than 0 if laser mode 3
 % is selected.
-if laserMode == 3 && durPreReinforcement < 0.01
+if strcmp(laserMode,'Arch/Jaws-Reinf') && durPreReinforcement < 0.01
     error('You cannot use this laser mode if durPreReinforcement is set to 0 sec');
 end
 
@@ -113,11 +110,11 @@ respMTX = nan(nTrials,7);
 nM = 0;
 nHits = 0;
 % Randomize trials ---
-MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractNoGo, durITISettings, paramsLaser);
+MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractNoGo, durITISettings, params.laser);
 
 % If opto mode == 3 or 4; 0 laser trial. it will be determined while running
 % trials instead
-if any(laserMode == [3 4])
+if ~strcmp(laserMode,'None')
     MTXTrialType(:,5) = 0;
 end
 
@@ -223,22 +220,22 @@ while N <= nTrials && ESC
         nHits = nHits + 1 ; % Total number of hits 
 
     elseif trialType == 1 && ~leverPress
-        fprintf('MISS, DO NOTHING'\n);
+        fprintf('MISS, DO NOTHING\n');
         respMTX(N,7) = false; % not a rewarded trial
 
     elseif trialType == 0 && leverPress && punishSwitch
-        fprintf('FALSE ALARM, PUNISHMENT'\n);
+        fprintf('FALSE ALARM, PUNISHMENT\n');
         respMTX(N,7) = false; % not a rewarded trial
         fprintf(ardOut,'A'); % AIR PUNISHMENT
         [ARDUINO, ESC] = recordContinuous(ARDUINO, durAirPuff, escapeKey); % keep reinforcement going
         fprintf(ardOut,'B'); % STOP AIR
 
     elseif trialType == 0 && leverPress && ~punishSwitch
-        fprintf('FALSE ALARM, DO NOTHING'\n);
+        fprintf('FALSE ALARM, DO NOTHING\n');
         respMTX(N,7) = false; % not a rewarded trial
 
     elseif trialType == 0 && ~leverPress && unifrnd(0, 1) > fractRewCR
-        fprintf('CORRECT REJECTION, DO NOTHING'\n);
+        fprintf('CORRECT REJECTION, DO NOTHING\n');
         respMTX(N,7) = false; % not a rewarded trial
 
     elseif trialType == 0 && ~leverPress % so unifrnd(0, 1) was < fractRewCR
@@ -287,26 +284,24 @@ params.systName = systName(1:end-1);
 
 data.params = params;
 data.response = response;
+data.arduino = ARDUINO.data;
 
-% Check or Create folder for animalName
+% Check or Create folder for animalID
 cd(root_dir);
-if exist([root_dir 'Data'],'dir') == 0
-    mkdir(pwd,'Data');
+if exist([root_dir 'ToneDiscriminationData'],'dir') == 0
+    mkdir(pwd,'ToneDiscriminationData');
 end
-if exist([root_dir 'Data\ToneDiscrimination'],'dir') == 0
-    mkdir('Data','ToneDiscrimination');
-end
-
-if exist([root_dir 'Data\ToneDiscrimination\' animalID],'dir') == 0
-    mkdir('Data\ToneDiscrimination',[animalID]);
+if exist([root_dir 'ToneDiscriminationData\' animalID],'dir') == 0
+    mkdir('ToneDiscriminationData',[animalID]);
 end
 
 % Make sure you do not overwrite previous data by creating a different save
 % name (append b,c,d,...)
-saveName = sprintf('ToneDisc_%s_%s',animalID,date);
+day = datetime('now','TimeZone','local','Format','yyyyMMdd');
+saveName = sprintf('ToneDisc_%s_%s',animalID,day);
 alphabets = 'bcdefghijklmnopqrstuvwxyz';
 idArd = 1;
-while exist(['Data\ToneDiscrimination\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
+while exist(['ToneDiscriminationData\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
     if idArd == 1
         saveName(end+1) = alphabets(idArd);
     else
@@ -316,16 +311,23 @@ while exist(['Data\ToneDiscrimination\' animalID '\' saveName '.mat'],'file') &&
 end
 
 % save
-save(['Data\ToneDiscrimination\' animalID '\' saveName],'data');
+save(['ToneDiscriminationData\' animalID '\' saveName],'data');
 fprintf('Data was saved properly\n');
 
 % Plot all the data
-figure()
+figure(1)
 hold on
+title('behaviorIN Lever')
 plot(ARDUINO.data(:, 1), ARDUINO.data(:, 2)) % lever data
-plot(ARDUINO.data(:, 1), ARDUINO.data(:, 4)) % lick data
+hold off
+figure(2)
+hold on
+title('behaviorIN Licks')
+plot(ARDUINO.data(:, 1), ARDUINO.data(:, 3)) % lick data
 hold off
 
 %% CLEAN UP =========================================
-cleanArduino(ARDUINO.in);
-cleanArduino(ARDUINO.out);
+cleanArduino(ardIn, 'IN');
+clear ardIn
+cleanArduino(ardOut, 'OUT');
+clear ardOut

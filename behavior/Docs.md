@@ -1,7 +1,11 @@
 # ./ToneDiscrimination.m
 - reads from behaviorIN.ino
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
-- lever sensor movement in ./helpers/leverMVT/detectMVTV2.m
+- fine lever sensing in leverIN.ino
+
+## requirements:
+- MATLAB Statistics and Machine Learning Toolbox
+- PsychToolbox (for detecting keypresses) [http://psychtoolbox.org/download#Windows](see download instructions here)
 
 ## description:
 - water-restricted mouse does 1 run of program per day

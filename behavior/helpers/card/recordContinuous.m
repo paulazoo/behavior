@@ -8,17 +8,13 @@ function [ARDUINO,ESC] = recordContinuous(ARDUINO,recordingDuration,escapeKey)
     %   data = data read from arduino:
     %        d(1) = absolute time
     %        d(2) = lever value
-    %        d(3) = lickspout1 value
-    %        d(4) = lickspout2 value
-    %        d(5) = accelerator X value
-    %        d(6) = accelerator Y value
-    %        d(7) = accelerator Z value
+    %        d(3) = lickspout value
     
     ESC = true;
     
     recordingStart_time = tic;
     current_time = toc(recordingStart_time);
-    while leverPress == false && ESC && current_time < recordingDuration
+    while ESC && current_time < recordingDuration
         % update time
         current_time = toc(recordingStart_time);
 
