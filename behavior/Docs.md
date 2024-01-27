@@ -119,11 +119,7 @@ read most recent values from ArdIN
 - outputs: `d` the data
     - d(1) = absolute time
     - d(2) = lever value
-    - d(3) = lickspout1 value
-    - d(4) = lickspout2 value
-    - d(5) = accelerator X value
-    - d(6) = accelerator Y value
-    - d(7) = accelerator Z value
+    - d(3) = lickspout value
 
 # ./helpers/card/cleanArduino.m
 turn all to LOW if ArdOUT, then close regardless if ArdIN or ArdOUT
@@ -191,11 +187,7 @@ detect a lever press
     - data = data read from arduino:
         - d(1) = absolute time
         - d(2) = lever value
-        - d(3) = lickspout1 value
-        - d(4) = lickspout2 value
-        - d(5) = accelerator X value
-        - d(6) = accelerator Y value
-        - d(7) = accelerator Z value
+        - d(3) = lickspout value
     - `params` = [`detectionDuration` `MVT0` `noMvtThresh` `mvtThresh` `maxLeverPressDuration`];
 - outputs: `ARDUINO`, `leverPress`, `ESC`
 
@@ -210,11 +202,7 @@ detect movement past noMvtThresh (for during ITI)
     - data = data read from arduino:
         - d(1) = absolute time
         - d(2) = lever value
-        - d(3) = lickspout1 value
-        - d(4) = lickspout2 value
-        - d(5) = accelerator X value
-        - d(6) = accelerator Y value
-        - d(7) = accelerator Z value
+        - d(3) = lickspout value
     - `params` = [`detectionDuration` `MVT0` `noMvtThresh`];
 - outputs: `ARDUINO`, `ITIMovement`, `ESC`
 
