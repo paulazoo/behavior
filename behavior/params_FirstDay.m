@@ -16,7 +16,7 @@ params.durations.preReinforcement = 0.5; % time after successful lever press and
 params.durations.maxLeverPressDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
 
 % Lever Press Detection ==================================
-params.mvt.noMvtThresh = 0.12; % first threshold in Volts
+params.mvt.noMvtThresh = 0.1; % first threshold in Volts
 params.mvt.mvtThresh = 0.15; % second threshold in Volts
 
 % Tone selection ==================================

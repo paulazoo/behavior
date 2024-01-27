@@ -10,9 +10,10 @@ addpath([pwd filesep 'helpers' filesep 'sound']);
 addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 
 %% PARAMS =================================================================
-amountReward = 2;
-noMvtThresh = 0.12;
-mvtThresh = 0.2;
+animalID = 'ANPaula';
+amountReward = 6;
+noMvtThresh = 0.1;
+mvtThresh = 0.12;
 maxLeverPressDuration = 2;
 durPreReinforcement = 0.5;
 maxTotalHits = 100;
@@ -50,7 +51,9 @@ AsyncLeverDataStarted = input('did you start the asynchronous LeverData recordin
 %% RUN TRIALS ==============================================================
 % =========================================================================
 ARDUINO.t0 = tic;
+ARDUINO.idx = 1;
 nHits = 0;
+fprintf('Running RewardLever...')
 
 while ESC
     % RESPONSE =======================================================
@@ -88,34 +91,24 @@ while ESC
 end
 
 %% SAVE  =======================================================
-response.respMTX = respMTX(1:N-1,:);
-response.respMTXheader = responseMTXheader;
-
-params.MTXTrialType = MTXTrialType;
-params.MTXTrialTypeHeader = {'TRIAL#'; 'TRIALTYPE(0 no-go / 1 go)'; 'TONEID'; 'durITI'};
-[~,systName] = system('hostname');
-params.systName = systName(1:end-1);
-
-data.params = params;
-data.response = response;
 data.arduino = ARDUINO.data;
 
 % Check or Create folder for animalID
 cd(root_dir);
-if exist([root_dir 'ToneDiscriminationData'],'dir') == 0
-    mkdir(pwd,'ToneDiscriminationData');
+if exist([root_dir 'RewardLeverData'],'dir') == 0
+    mkdir(pwd,'RewardLeverData');
 end
-if exist([root_dir 'ToneDiscriminationData\' animalID],'dir') == 0
-    mkdir('ToneDiscriminationData',[animalID]);
+if exist([root_dir 'RewardLeverData\' animalID],'dir') == 0
+    mkdir('RewardLeverData',[animalID]);
 end
 
 % Make sure you do not overwrite previous data by creating a different save
 % name (append b,c,d,...)
 day = datetime('now','TimeZone','local','Format','yyyyMMdd');
-saveName = sprintf('ToneDisc_%s_%s',animalID,day);
+saveName = sprintf('RewardLever_%s_%s',animalID,day);
 alphabets = 'bcdefghijklmnopqrstuvwxyz';
 idArd = 1;
-while exist(['ToneDiscriminationData\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
+while exist(['RewardLeverData\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
     if idArd == 1
         saveName(end+1) = alphabets(idArd);
     else
@@ -125,7 +118,7 @@ while exist(['ToneDiscriminationData\' animalID '\' saveName '.mat'],'file') && 
 end
 
 % save
-save(['ToneDiscriminationData\' animalID '\' saveName],'data');
+save(['RewardLeverData\' animalID '\' saveName],'data');
 fprintf('Data was saved properly\n');
 
 % Plot all the data

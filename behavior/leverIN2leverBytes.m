@@ -23,7 +23,6 @@
 %}
 
 %%
-clc; clear all; close all;
 disp("Running....")
 % leverIN Arduino initialization
 leverIN = serial("COM11", "Baudrate", 115200);

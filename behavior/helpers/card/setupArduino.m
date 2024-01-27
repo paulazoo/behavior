@@ -9,8 +9,8 @@ switch systName
         portIn = 'COM3';
         portOut = 'COM4';
     case 'minicomputer' %2P4 room
-        portIn = 'COM5';
-        portOut = 'COM6';
+        portIn = 'COM9';
+        portOut = 'COM10';
 end
 
 % close all currently open ports

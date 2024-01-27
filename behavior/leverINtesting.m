@@ -48,6 +48,7 @@ figure()
 subplot(1,2,1)
 hold on
 scatter(1:1:n, lever_data(1:1:n, :))
+ylim([0 3000])
 
 %% Try the reverse lever_data
 % will take up to 5.6 min for 7200000 (2 hours worth) of samples
@@ -64,6 +65,7 @@ toc
 subplot(1,2,2)
 hold on
 scatter(1:1:n, lever_data(1:1:n, :))
+ylim([0 3000])
 
 %%
 [~,~,keyCode] = KbCheck;

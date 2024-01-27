@@ -1,6 +1,5 @@
 % This is the master branch
-clear all; close all; clc;
-root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior';
+root_dir = 'C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior';
 
 cd(root_dir);
 addpath([pwd filesep 'helpers' filesep]);
