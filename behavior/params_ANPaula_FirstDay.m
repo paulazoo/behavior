@@ -27,7 +27,7 @@ params.punish = false; % punish false alarm with puff
 
 % AutoStop ==================================
 params.maxMiss = nan; % NOT IMPLEMENTED YET Maximum miss trials in a row. Use nan for no limits
-params.maxTotalHits = 3; % Maximum total of hits. Use nan for no limits.
+params.maxTotalHits = 100; % Maximum total of hits. Use nan for no limits.
 
 % Laser ==================================
 params.laser.fractionLaser = 0; % fraction of laser trials. possible values: 0.5 0.4 1/3 0.3 1/4 0.2 0.1 0
