@@ -148,6 +148,7 @@ randomize Go vs No Go trials, tone according to trial type, durITI, and laser
 helper function for random permutations of vectors
 
 # ./helpers/sound/soundInit.m
+- arguments: `root_dir` the root directory
 initialize sound player with `soundStorage` = 
 ```
 [
@@ -156,8 +157,7 @@ initialize sound player with `soundStorage` =
     9 'soundFiles/click_500ms.mp3'
     ]
 ```
-columns: index | freq | amplitude | sound duration | SNR
-- outputs: `snd` the sound player
+columns: index | mp3
 
 # ./helpers/sound/soundPlay.m
 play a sound
@@ -165,8 +165,15 @@ play a sound
 
 # ./helpers/waterCalibration/waterReward2duration.m
 get valve duration based on water reward amount and calibration .mat file (should be in the helpers/waterCalibration folder)
-- arguments: `rewAmount`,`valveID`
+- arguments: `rewAmount`,`valveID`,`root_dir`
 - outputs: `durValve`
+
+# ./helpers/waterCalibration/calculateWaterCalibration.m
+repeatedly test and then calculate water calibration function. Saves a dataCalibration_valve2.m file in helpers/waterCalibration folder
+
+# ./helpers/waterCalibration/checkWaterCalibration.m
+check the water calibration amount
+- arguments: `rewAmount`
 
 # ./helpers/leverMVT/referenceMVT.m
 get referenceMVT for some number of Arduino samples
