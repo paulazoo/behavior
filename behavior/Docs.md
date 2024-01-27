@@ -148,7 +148,6 @@ randomize Go vs No Go trials, tone according to trial type, durITI, and laser
 helper function for random permutations of vectors
 
 # ./helpers/sound/soundInit.m
-- arguments: `root_dir` the root directory
 initialize sound player with `soundStorage` = 
 ```
 [
@@ -158,6 +157,7 @@ initialize sound player with `soundStorage` =
     ]
 ```
 columns: index | mp3
+- arguments: `root_dir` the root directory
 
 # ./helpers/sound/soundPlay.m
 play a sound
