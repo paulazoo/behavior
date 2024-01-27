@@ -1,7 +1,11 @@
 # ./ToneDiscrimination.m
 - reads from behaviorIN.ino
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
-- lever sensor movement in ./helpers/leverMVT/detectMVTV2.m
+- fine lever sensing in leverIN.ino
+
+## requirements:
+- MATLAB Statistics and Machine Learning Toolbox
+- PsychToolbox (for detecting keypresses) [http://psychtoolbox.org/download#Windows](see download instructions here)
 
 ## description:
 - water-restricted mouse does 1 run of program per day
@@ -9,8 +13,8 @@
 - a run ends after _maxTotalHits_ number of __Hits__ occur
 
 __ITI__:
+- `fprintf(ardOut,'I')` ARDUINO TStart (pin 11) LOW
 - a random _ITI_ duration between each trial:
-    - `fprintf(ardOut,'I')` ARDUINO TStart (pin 11) LOW
     - For the last second of the ITI, don't go to trial unless no movement past noMvtThresh
     - if ITIMovement detected, restart last second of ITI until no movement is detected
 

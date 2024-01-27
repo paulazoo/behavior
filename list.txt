@@ -1,5 +1,4 @@
 Paula:
-- write CAC protocol UROP thing
 - train 4 WT, headbar mice on Komiyama-based parameters: see ./behavior/ToneDiscrimination_versions.md
 - ask Arundathi and Sophie about supervision for H2O
 
@@ -8,6 +7,9 @@ future experiments:
 - stain brains for c-fos, TH+
 - pupil video synchronization and DLC pipeline
 
+
+
+Extra:
 - Also consider extracting movements by velocity threshold ->
 	then movements are defined by windows with a reward delivery/lever press detection and velocity being above the threshold;
 	this would also affect reaction time

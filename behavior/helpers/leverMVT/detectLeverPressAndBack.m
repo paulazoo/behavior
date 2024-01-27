@@ -1,4 +1,4 @@
-function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
+function [ARDUINO,leverPressAndBack,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
     % DETECT LEVER MOVEMENT ABOVE THRHESHOLD DEFINED IN PARAMS
     % ARDUINO is a structure with fields
     %   in = serial port for input arduino
@@ -18,6 +18,7 @@ function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
     maxLeverPressDuration = params(5);
 
     leverPress = false;
+    leverPressAndBack = false;
 
     ESC = true;
     
@@ -63,4 +64,23 @@ function [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
         ARDUINO.idx = ARDUINO.idx+1;
     end
     
+    while leverPress == true && ESC && current_time < detectionDuration
+        % update time
+        current_time = toc(detectionStart_time);
+
+        % update arduinoIN data
+        ARDUINO.data(ARDUINO.idx,:) = readArduino(ARDUINO.in, ARDUINO.t0);
+
+        % check if we come back below noMvtThresh
+        if ARDUINO.data(ARDUINO.idx,2) < (MVT0+noMvtThresh)
+            leverPressAndBack = true;
+        end
+
+        % for escaping
+        [~,~,keyCode] = KbCheck;
+        ESC = keyCode(escapeKey) == 0;
+
+        % increment Arduino.idx
+        ARDUINO.idx = ARDUINO.idx+1;
+    end
     

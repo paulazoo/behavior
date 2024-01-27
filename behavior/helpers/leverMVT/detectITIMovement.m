@@ -8,11 +8,7 @@ function [ARDUINO,ITIMovement,ESC] = detectITIMovement(ARDUINO,params,escapeKey)
     %   data = data read from arduino:
     %        d(1) = absolute time
     %        d(2) = lever value
-    %        d(3) = lickspout1 value
-    %        d(4) = lickspout2 value
-    %        d(5) = accelerator X value
-    %        d(6) = accelerator Y value
-    %        d(7) = accelerator Z value
+    %        d(3) = lickspout value
     % params = [detectionDuration MVT0 noMvtThresh];
     
     detectionDuration = params(1);

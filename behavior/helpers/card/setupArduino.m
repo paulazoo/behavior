@@ -5,10 +5,12 @@ function [ardIn,ardOut] = setupArduino()
 [~,systName] = system('hostname');
 systName = systName(1:end-1);
 switch systName
-        case 'SIPE-VIS1' %2P4
+    case 'SIPE-VIS1' %2P4 room
         portIn = 'COM19';
         portOut = 'COM20';
-    
+    case 'minicomputer' %2P4 room
+        portIn = 'COM5';
+        portOut = 'COM6';
 end
 
 % close all currently open ports

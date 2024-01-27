@@ -1,7 +1,7 @@
 #include <SPI.h> // https://www.arduino.cc/reference/en/language/functions/communication/spi/
 
 const int leverInput = A0;
-const int tStart = 7;
+const int tStart = 11;
 
 int lever_data = 0;
 
@@ -9,7 +9,7 @@ void setup()
 {
     // 115200 bits per s = 14400 bytes per s
     Serial.begin(115200);
-    pinMode(7, INPUT);
+    pinMode(11, INPUT);
     pinMode(A0, INPUT);
 }
 
