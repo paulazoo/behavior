@@ -12,10 +12,11 @@ addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 %% PARAMS =================================================================
 amountReward = 2;
 noMvtThresh = 0.12;
-mvtThresh = 0.25;
+mvtThresh = 0.2;
 maxLeverPressDuration = 2;
-durPreReinforcement = 0.1;
+durPreReinforcement = 0.5;
 maxTotalHits = 100;
+cueSoundID = 1;
 
 %% SETUP ===================================================================
 % Open communication with Arduino ---
@@ -57,13 +58,14 @@ while ESC
     detectionParams = [60 MVT0 noMvtThresh mvtThresh maxLeverPressDuration];
     [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,detectionParams,escapeKey);
     % ------------
-
-    % PREREINFORCEMENT ===============================================
-    [ARDUINO, ESC] = recordContinuous(ARDUINO, durPreReinforcement, escapeKey);
-    
-    % REINFORCEMENT ==================================================
     if leverPress
-        fprintf('REWARD\n')
+        soundPlay(cueSoundID,soundStorage);
+        fprintf('PRESSED\n')
+
+        % PREREINFORCEMENT ===============================================
+        [ARDUINO, ESC] = recordContinuous(ARDUINO, durPreReinforcement, escapeKey);
+
+        % REINFORCEMENT ==================================================
         soundPlay(rewardSoundID,soundStorage);
         fprintf(ardOut,'W'); % WATER REWARD
         [ARDUINO, ESC] = recordContinuous(ARDUINO, durWaterValve, escapeKey); % keep reinforcement going

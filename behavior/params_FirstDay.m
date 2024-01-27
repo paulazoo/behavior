@@ -12,12 +12,12 @@ params.durations.ITISettings = [2.0 4.0];
 params.durations.rewardConsumption = 2.5; % time after reward delivery
 params.durations.airPuff = 0.3; % time for air puff valve
 params.durations.decision = 30; %time after tone to make decision
-params.durations.preReinforcement = 0.1; % time after successful lever press and before reinforcement
+params.durations.preReinforcement = 0.5; % time after successful lever press and before reinforcement
 params.durations.maxLeverPressDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
 
 % Lever Press Detection ==================================
 params.mvt.noMvtThresh = 0.12; % first threshold in Volts
-params.mvt.mvtThresh = 0.25; % second threshold in Volts
+params.mvt.mvtThresh = 0.2; % second threshold in Volts
 
 % Tone selection ==================================
 params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
