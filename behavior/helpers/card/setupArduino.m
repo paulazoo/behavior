@@ -6,8 +6,8 @@ function [ardIn,ardOut] = setupArduino()
 systName = systName(1:end-1);
 switch systName
     case 'SIPE-VIS1' %2P4 room
-        portIn = 'COM19';
-        portOut = 'COM20';
+        portIn = 'COM3';
+        portOut = 'COM4';
     case 'minicomputer' %2P4 room
         portIn = 'COM5';
         portOut = 'COM6';

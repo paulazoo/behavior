@@ -26,8 +26,13 @@
 clc; clear all; close all;
 disp("Running....")
 % leverIN Arduino initialization
-leverIN = serial("COM4", "Baudrate", 115200);
+leverIN = serial("COM11", "Baudrate", 115200);
 fopen(leverIN);
+
+% Keyboard
+escapeKey = KbName('esc');
+[~,~,keyCode] = KbCheck;
+ESC = keyCode(escapeKey) == 0;
 
 % Data saving storage initialization
 lever_bytes = zeros(72000000,2); % 2 hours = 7200000 milliseconds
@@ -35,19 +40,23 @@ lever_bytes = zeros(72000000,2); % 2 hours = 7200000 milliseconds
 disp("Recording lever data...")
 % Main loop
 n = 1;
-while 1
+while ESC
     % Get whatever the latest 2 bytes of data are
     leverIN_serial_output = fread(leverIN, 2);
     lever_bytes(n, :) = uint8(leverIN_serial_output(1:2));
     
     n=n+1;
+    
+    [~,~,keyCode] = KbCheck;
+    ESC = keyCode(escapeKey) == 0;
 end
 
-%% Save the lever_bytes
-lever_bytes_filename = input('filename:\n','s');
-save(lever_bytes_filename+".mat","lever_bytes","n");
-
-%% Close serial port connections
+disp('Closing...')
 fclose(leverIN)
 delete(leverIN)
 clear leverIN
+disp('Closed')
+
+%% Save the lever_bytes
+lever_bytes_filename = input('filename: ','s');
+save(lever_bytes_filename+".mat","lever_bytes","n");

@@ -25,7 +25,7 @@ end
 
 d(1) = toc(t0);
 leverOutput = typecast(uint8(behaviorINOutput(1:2)), "int16"); % lever
-d(2) = double(leverOutput)*5/1023;
+d(2) = 5 - (double(leverOutput)*5/1023); % flip it since LVDT core on the ground is now higher voltage
 d(3) = typecast(uint8([behaviorINOutput(3), 0]), "int16"); % lick
 
 if msgOn; fprintf('time: %3.3f\n lever: %2.3f\n lick: %d\n',d(1),d(2),d(3)); end
