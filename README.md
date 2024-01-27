@@ -10,6 +10,9 @@ Each analysis notebook has documentation explaining what is going on inside of i
 See ./analysis/Docs.md
 
 # behavior
-Tone Discrimination behavior code.
+Tone Discrimination task behavior code.
 
 See ./behavior/Docs.md
+
+# behavioral_setup
+Tone Discrimination task behavioral setup circuits, links to parts needed, and onshape documents
