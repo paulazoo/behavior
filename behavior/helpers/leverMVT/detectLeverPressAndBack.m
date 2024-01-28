@@ -1,4 +1,4 @@
-function [ARDUINO,leverPressAndBack,ESC] = detectLeverPress(ARDUINO,params,escapeKey)
+function [ARDUINO,leverPressAndBack,ESC] = detectLeverPressAndBack(ARDUINO,params,escapeKey)
     % DETECT LEVER MOVEMENT ABOVE THRHESHOLD DEFINED IN PARAMS
     % ARDUINO is a structure with fields
     %   in = serial port for input arduino
@@ -45,7 +45,6 @@ function [ARDUINO,leverPressAndBack,ESC] = detectLeverPress(ARDUINO,params,escap
             % otherwise check if the time for completing a leverPress Mvt is up
             elseif time_since_noMvtThresh > maxLeverPressDuration
                 started_below_noMvtThresh = false;
-                time_since_noMvtThresh = 0;
                 disp('ran out of time to pass both noMvtThresh and mvtThresh.')
             end
         end
@@ -64,9 +63,10 @@ function [ARDUINO,leverPressAndBack,ESC] = detectLeverPress(ARDUINO,params,escap
         ARDUINO.idx = ARDUINO.idx+1;
     end
     
-    while leverPress == true && ESC && current_time < detectionDuration
+    while leverPress == true && ESC && current_time < detectionDuration && leverPressAndBack == false
         % update time
         current_time = toc(detectionStart_time);
+        time_since_noMvtThresh = current_time - noMvtThresh_time;
 
         % update arduinoIN data
         ARDUINO.data(ARDUINO.idx,:) = readArduino(ARDUINO.in, ARDUINO.t0);
@@ -74,6 +74,11 @@ function [ARDUINO,leverPressAndBack,ESC] = detectLeverPress(ARDUINO,params,escap
         % check if we come back below noMvtThresh
         if ARDUINO.data(ARDUINO.idx,2) < (MVT0+noMvtThresh)
             leverPressAndBack = true;
+        % otherwise check if the time for completing a leverPress Mvt is up
+        elseif time_since_noMvtThresh > maxLeverPressDuration
+            leverPress = false;
+            started_below_noMvtThresh = false;
+            disp('ran out of time to come back.')
         end
 
         % for escaping

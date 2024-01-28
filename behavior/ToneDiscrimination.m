@@ -11,7 +11,7 @@ addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 
 %% PARAMS ==================================================================
 % ANIMAL SPECIFIC PARAMS
-[filename, pathname] = uigetfile({'params_*.m'}, 'Please select animal specific params');
+[filename, pathname] = uigetfile({'params_ToneDisc_*.m'}, 'Please select animal specific params');
 
 % Define params
 run(fullfile(pathname, filename));
@@ -192,7 +192,7 @@ while N <= nTrials && ESC
     % RESPONSE =======================================================
     % go forward to meet second threshold ------------
     detectionParams = [durDecision MVT0 noMvtThresh mvtThresh maxLeverPressDuration];
-    [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,detectionParams,escapeKey);
+    [ARDUINO,leverPress,ESC] = detectLeverPressAndBack(ARDUINO,detectionParams,escapeKey);
     if leverPress
         fprintf('Lever press detected\n');
         respMTX(N,3) = true; % lever pressed successfully

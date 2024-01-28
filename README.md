@@ -16,3 +16,10 @@ See ./behavior/Docs.md
 
 # behavioral_setup
 Tone Discrimination task behavioral setup circuits, links to parts needed, and onshape documents
+
+
+# Links:
+
+- [Mouse Sheet](https://docs.google.com/spreadsheets/d/19wCclBikHGM9I7mC9KswDK4F_hUnNYrtRgdheY806y0/edit#gid=623959417)
+
+- [Behavioral Log](https://docs.google.com/spreadsheets/d/14bH8ziaiqkDQYOi2d_TXP478pRqoUfz2ywRKtrnejeU/edit?usp=sharing)

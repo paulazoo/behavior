@@ -2,6 +2,9 @@ Data_Copy/*
 Data_Renamed/*
 our_suite2p/test_output*
 ideas_and_discussions/lab_meeting_presentations/*
+behavior/LeverData/*
+behavior/RewardLeverData/*
+behavior/ToneDiscriminationData/*
 
 # windows things
 desktop.ini

@@ -10,14 +10,12 @@ addpath([pwd filesep 'helpers' filesep 'sound']);
 addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 
 %% PARAMS =================================================================
-animalID = 'ANPaula';
-amountReward = 6;
-noMvtThresh = 0.1;
-mvtThresh = 0.12;
-maxLeverPressDuration = 2;
-durPreReinforcement = 0.5;
-maxTotalHits = 100;
-cueSoundID = 1;
+% ANIMAL SPECIFIC PARAMS
+[filename, pathname] = uigetfile({'params_RewardLever_*.m'}, 'Please select animal specific params');
+
+% Define params
+run(fullfile(pathname, filename));
+animalID = params.animalID;
 
 %% SETUP ===================================================================
 % Open communication with Arduino ---
@@ -74,6 +72,7 @@ while ESC
         [ARDUINO, ESC] = recordContinuous(ARDUINO, durWaterValve, escapeKey); % keep reinforcement going
         fprintf(ardOut,'X'); % STOP WATER
         nHits = nHits + 1;
+        disp(nHits)
     end
   
     % Stop if nHits > maxTotalHits
@@ -85,12 +84,17 @@ while ESC
         end
     end
 
+    if nHits > nHitsToStartIncreasingThreshold
+        mvtThresh = mvtThresh + thresholdIncreaseStep;
+    end
+
     [~,~,keyCode] = KbCheck;
     ESC = keyCode(escapeKey) == 0;
 
 end
 
 %% SAVE  =======================================================
+data.params = params;
 data.arduino = ARDUINO.data;
 
 % Check or Create folder for animalID
