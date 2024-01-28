@@ -17,6 +17,21 @@ addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 run(fullfile(pathname, filename));
 animalID = params.animalID;
 
+amountReward = params.amountReward;
+
+noMvtThresh = params.noMvtThresh;
+mvtThresh = params.mvtThresh;
+maxLeverPressDuration = params.maxLeverPressDuration;
+
+durPreReinforcement = params.durPreReinforcement;
+
+nHitsToStartIncreasingThreshold = params.nHitsToStartIncreasingThreshold;
+thresholdIncreaseStep = params.thresholdIncreaseStep;
+maxTotalHits = params.maxTotalHits;
+
+cueSoundID = params.cueSoundID;
+rewardSoundID = params.rewardSoundID;
+
 %% SETUP ===================================================================
 % Open communication with Arduino ---
 [ardIn,ardOut] = setupArduino();
@@ -31,7 +46,6 @@ ESC = keyCode(escapeKey) == 0;
 % Sound ---
 soundStorage = soundInit(root_dir);
 vol = [35:-10:5 35:-10:5]; % BASED ON CALIBRATION
-rewardSoundID = 9;
 
 % MVT0 baseline ---
 fprintf('Finding MVT0\n');

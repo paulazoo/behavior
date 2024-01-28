@@ -59,6 +59,7 @@ ARDUINO.idx = 1;
 
 % Tone selection --- 
 toneSelect = params.toneSelection; % Range from 1o 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
+rewardSoundID = params.rewardSoundID;
 
 % Switches
 punishSwitch = params.punish;
@@ -125,7 +126,6 @@ ESC = keyCode(escapeKey) == 0;
 % Sound ---
 soundStorage = soundInit(root_dir);
 vol = [35:-10:5 35:-10:5]; % BASED ON CALIBRATION
-rewardSoundID = 9;
 
 % MVT0 baseline ---
 fprintf('Finding MVT0\n');

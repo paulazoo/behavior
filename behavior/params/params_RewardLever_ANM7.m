@@ -13,3 +13,4 @@ params.thresholdIncreaseStep = 0.002;
 params.maxTotalHits = 100;
 
 params.cueSoundID = 1;
+params.rewardSoundID = 9;

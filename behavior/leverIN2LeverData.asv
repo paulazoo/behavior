@@ -49,7 +49,7 @@ subplot(1,2,1)
 hold on
 scatter(1:1:n, lever_data(1:1:n, :))
 ylim([0 3000])
-title('non-reversed')
+title('notreversed')
 
 %% Try the reverse lever_data
 % will take up to 5.6 min for 7200000 (2 hours worth) of samples
@@ -96,6 +96,5 @@ filtered_lever_data = filter(b,a,lever_data(1:1:n, :));
 figure()
 hold on
 scatter((1:1:n)/5888, filtered_lever_data)
-title('Butterworth filter preview')
-xlabel('seconds')
+title('Butterworth filtered')
 hold off
