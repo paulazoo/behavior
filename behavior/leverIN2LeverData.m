@@ -92,10 +92,10 @@ end
 fc=50;
 fs=5888;
 [b,a] = butter(6, fc/(fs/2));
-filtered_lever_data = filter(b,a,lever_data(1:1:1000000, :));
+filtered_lever_data = filter(b,a,lever_data(1:1:10000000, :));
 figure()
 hold on
-scatter((1:1:1000000)/5888, filtered_lever_data)
+scatter((1:1:10000000)/5888, filtered_lever_data)
 title('Butterworth filter preview')
 xlabel('seconds')
 hold off

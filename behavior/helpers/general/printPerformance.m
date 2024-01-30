@@ -1,5 +1,5 @@
 function str = printPerformance(respMTX,MTXTrialType,N)
-respWindow4Hit = 0.8; % Used for Hrate corrected
+respWindow4Hit = 10; % Used for Hit corrected rate
 
 % PRINT PERFORMANCE ========================================================================================
 RT = respMTX(:,4) - respMTX(:,2);

@@ -99,7 +99,7 @@ while ESC
     end
 
     if nHits > nHitsToStartIncreasingThreshold
-        mvtThresh = mvtThresh + thresholdIncreaseStep;
+        mvtThresh = mvtThresh + thresholdIncreaseStep
     end
 
     [~,~,keyCode] = KbCheck;
