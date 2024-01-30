@@ -11,7 +11,7 @@ addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 
 %% PARAMS =================================================================
 % ANIMAL SPECIFIC PARAMS
-[filename, pathname] = uigetfile({'params_RewardLever_*.m'}, 'Please select animal specific params');
+[filename, pathname] = uigetfile({'params/params_RewardLever_*.m'}, 'Please select animal specific params');
 
 % Define params
 run(fullfile(pathname, filename));
@@ -48,7 +48,7 @@ soundStorage = soundInit(root_dir);
 vol = [35:-10:5 35:-10:5]; % BASED ON CALIBRATION
 
 % MVT0 baseline ---
-fprintf('Finding MVT0\n');
+fprintf('Finding MVT0 (ideal ~1.8)\n');
 MVT0 = mean(referenceMVT(ARDUINO,100));
 disp('Thresholds to pass:')
 disp(MVT0 + noMvtThresh);
@@ -71,7 +71,7 @@ while ESC
     % RESPONSE =======================================================
     % go forward to meet second threshold ------------
     detectionParams = [60 MVT0 noMvtThresh mvtThresh maxLeverPressDuration];
-    [ARDUINO,leverPress,ESC] = detectLeverPress(ARDUINO,detectionParams,escapeKey);
+    [ARDUINO,leverPress,ESC] = detectLeverPressAndBack(ARDUINO,detectionParams,escapeKey);
     % ------------
     if leverPress
         soundPlay(cueSoundID,soundStorage);
@@ -144,6 +144,8 @@ figure(1)
 hold on
 title('behaviorIN Lever')
 plot(ARDUINO.data(:, 1), ARDUINO.data(:, 2)) % lever data
+yline(MVT0+noMvtThresh)
+yline(MVT0+mvtThresh)
 hold off
 figure(2)
 hold on

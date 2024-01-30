@@ -1,4 +1,4 @@
-params.animalID = 'ANM8';
+params.animalID = 'ANM5';
 
 params.amountReward = 6;
 
@@ -8,8 +8,8 @@ params.maxLeverPressDuration = 60;
 
 params.durPreReinforcement = 0.5;
 
-params.nHitsToStartIncreasingThreshold = 20;
-params.thresholdIncreaseStep = 0.002;
+params.nHitsToStartIncreasingThreshold = 50;
+params.thresholdIncreaseStep = 0.001;
 params.maxTotalHits = 100;
 
 params.cueSoundID = 1;

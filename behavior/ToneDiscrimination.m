@@ -1,5 +1,5 @@
-% This is the master branch
-root_dir = 'C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior';
+clear all; close all; clc;
+root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior';
 
 cd(root_dir);
 addpath([pwd filesep 'helpers' filesep]);
@@ -11,7 +11,7 @@ addpath([pwd filesep 'helpers' filesep 'leverMVT']);
 
 %% PARAMS ==================================================================
 % ANIMAL SPECIFIC PARAMS
-[filename, pathname] = uigetfile({'params_ToneDisc_*.m'}, 'Please select animal specific params');
+[filename, pathname] = uigetfile({'params/params_ToneDisc_*.m'}, 'Please select animal specific params');
 
 % Define params
 run(fullfile(pathname, filename));

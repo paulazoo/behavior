@@ -75,12 +75,12 @@ while lever_data_saved == false
     lever_data_choice = input('Use non-reversed or reversed? [1 or 2]\n', 's');
     if lever_data_choice == '1'
         lever_data_filename = input('saving non-reversed lever data. Filename:\n','s');
-        save(lever_data_filename+".mat", "lever_data", "lever_data_choice");
+        save("LeverData_"+lever_data_filename+".mat", "lever_data", "lever_data_choice");
         lever_data_saved = true;
     elseif lever_data_choice == '2'
         lever_data_filename = input('saving reversed lever data. Filename:\n','s');
         lever_data = reversed_lever_data;
-        save(lever_data_filename+".mat", "lever_data", "lever_data_choice");
+        save("LeverData_"+lever_data_filename+".mat", "lever_data", "lever_data_choice");
         lever_data_saved = true;
     else
         fprintf('input not recognized. asking again...\n')
@@ -92,10 +92,10 @@ end
 fc=50;
 fs=5888;
 [b,a] = butter(6, fc/(fs/2));
-filtered_lever_data = filter(b,a,lever_data(1:1:n, :));
+filtered_lever_data = filter(b,a,lever_data(1:1:1000000, :));
 figure()
 hold on
-scatter((1:1:n)/5888, filtered_lever_data)
+scatter((1:1:1000000)/5888, filtered_lever_data)
 title('Butterworth filter preview')
 xlabel('seconds')
 hold off

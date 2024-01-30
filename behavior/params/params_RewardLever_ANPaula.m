@@ -2,7 +2,7 @@ params.animalID = 'ANPaula';
 
 params.amountReward = 6;
 
-params.noMvtThresh = 0.1;
+params.noMvtThresh = 0.12;
 params.mvtThresh = 0.15;
 params.maxLeverPressDuration = 10;
 

@@ -27,7 +27,7 @@ function [ARDUINO,leverPressAndBack,ESC] = detectLeverPressAndBack(ARDUINO,param
     time_since_noMvtThresh = 0;
     detectionStart_time = tic;
     current_time = toc(detectionStart_time);
-    while leverPress == false && ESC && current_time < detectionDuration
+    while leverPressAndBack == false && ESC && current_time < detectionDuration
         % update time
         current_time = toc(detectionStart_time);
 
@@ -55,30 +55,18 @@ function [ARDUINO,leverPressAndBack,ESC] = detectLeverPressAndBack(ARDUINO,param
             noMvtThresh_time = current_time;
         end
 
-        % for escaping
-        [~,~,keyCode] = KbCheck;
-        ESC = keyCode(escapeKey) == 0;
 
-        % increment Arduino.idx
-        ARDUINO.idx = ARDUINO.idx+1;
-    end
-    
-    while leverPress == true && ESC && current_time < detectionDuration && leverPressAndBack == false
-        % update time
-        current_time = toc(detectionStart_time);
-        time_since_noMvtThresh = current_time - noMvtThresh_time;
-
-        % update arduinoIN data
-        ARDUINO.data(ARDUINO.idx,:) = readArduino(ARDUINO.in, ARDUINO.t0);
-
-        % check if we come back below noMvtThresh
-        if ARDUINO.data(ARDUINO.idx,2) < (MVT0+noMvtThresh)
-            leverPressAndBack = true;
-        % otherwise check if the time for completing a leverPress Mvt is up
-        elseif time_since_noMvtThresh > maxLeverPressDuration
-            leverPress = false;
-            started_below_noMvtThresh = false;
-            disp('ran out of time to come back.')
+        % for coming back:
+        if leverPress == true && leverPressAndBack == false
+            % check if we come back below noMvtThresh
+            if ARDUINO.data(ARDUINO.idx,2) < (MVT0+noMvtThresh)
+                leverPressAndBack = true;
+            % otherwise check if the time for completing a leverPress Mvt is up
+            elseif time_since_noMvtThresh > maxLeverPressDuration
+                leverPress = false;
+                started_below_noMvtThresh = false;
+                disp('ran out of time to come back.')
+            end
         end
 
         % for escaping
@@ -88,4 +76,5 @@ function [ARDUINO,leverPressAndBack,ESC] = detectLeverPressAndBack(ARDUINO,param
         % increment Arduino.idx
         ARDUINO.idx = ARDUINO.idx+1;
     end
+   
     
