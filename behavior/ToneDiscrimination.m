@@ -178,11 +178,11 @@ while N <= nTrials && ESC
     detectionParams = [1.0 MVT0 noMvtThresh];
     [ARDUINO, ITIMovement, ESC] = detectITIMovement(ARDUINO, detectionParams, escapeKey);
     % if ITIMovement detected, restart last second of ITI until no movement is detected
-    while ITIMovement == true
-        respMTX(N,6) = true; % pressed during ITI
-        disp('movement detected, extending ITI...\n')
-        [ARDUINO, ITIMovement, ESC] = detectITIMovement(ARDUINO, detectionParams, escapeKey);
-    end
+    % while ITIMovement == true
+    %     respMTX(N,6) = true; % pressed during ITI
+    %     disp('movement detected, extending ITI...\n')
+    %     [ARDUINO, ITIMovement, ESC] = detectITIMovement(ARDUINO, detectionParams, escapeKey);
+    % end
     
     % TONE ==============================================================
     fprintf(ardOut,'J'); % ITI finished, turn tStart to HIGH
@@ -213,8 +213,12 @@ while N <= nTrials && ESC
         fprintf('HIT, REWARD\n')
         respMTX(N,7) = true; % rewarded trial
         soundPlay(rewardSoundID,soundStorage);
+        waterStartTime = toc(ARDUINO.t0);
+        deltaWaterTime = toc(ARDUINO.t0) - waterStartTime;
         fprintf(ardOut,'W'); % WATER REWARD
-        [ARDUINO, ESC] = recordContinuous(ARDUINO, durWaterValve, escapeKey); % keep reinforcement going
+        while deltaWaterTime < durWaterValve
+            deltaWaterTime = toc(ARDUINO.t0) - waterStartTime;
+        end
         fprintf(ardOut,'X'); % STOP WATER
         nHits = nHits + 1 ; % Total number of hits 
 
@@ -226,7 +230,7 @@ while N <= nTrials && ESC
         fprintf('FALSE ALARM, PUNISHMENT\n');
         respMTX(N,7) = false; % not a rewarded trial
         fprintf(ardOut,'A'); % AIR PUNISHMENT
-        [ARDUINO, ESC] = recordContinuous(ARDUINO, durAirPuff, escapeKey); % keep reinforcement going
+        pause(durAirPuff);
         fprintf(ardOut,'B'); % STOP AIR
 
     elseif trialType == 0 && leverPress && ~punishSwitch
@@ -318,6 +322,8 @@ figure(1)
 hold on
 title('behaviorIN Lever')
 plot(ARDUINO.data(:, 1), ARDUINO.data(:, 2)) % lever data
+yline(MVT0+noMvtThresh)
+yline(MVT0+mvtThresh)
 hold off
 figure(2)
 hold on

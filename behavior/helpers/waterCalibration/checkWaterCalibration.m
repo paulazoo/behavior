@@ -4,48 +4,37 @@ if nargin < 1
     rewAmount = input('Enter reward amount to be tested\n');
 end
 
-root_dir = 'C:\Users\paulazhu\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior\';
+%%
+root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior';
 cd(root_dir);
 addpath([pwd filesep 'helpers' filesep 'waterCalibration' filesep]);
-addpath([pwd filesep 'helpers' filesep 'card']);
+addpath([pwd filesep 'helpers' filesep 'card'])
 
-% PARAMS ==============================
-n = 100;
+%% PARAMS ==============================
+nTrials = 1;
 
-% SETUP ==================================
-escapeKey = KbName('esc');
-[~,~,keyCode] = KbCheck;
-ESC = false;
-
+%% SETUP ==================================
 [ardIn,ardOut] = setupArduino();
 durValve = waterReward2duration(rewAmount,2,root_dir);
 
 fprintf('Testing reward:%1.3f uL\n',rewAmount)
-input('Fill both reservoirs and press ENTER\n');
+input('Fill water and press ENTER\n');
 
-% RUN TEST ==================================================
-for i = 1:n % Open valve n times
+%% RUN TEST ==================================================
+for i = 1:1:nTrials
     t0 = tic;
-    deltaT = 0;
-    fprintf(ardOut,'W');
-    if ESC; fprintf(ardOut,'X'); break; end
-
-    while deltaT < durValve && ~ESC
-        deltaT = toc(t0);;
-        
-        [~,~,keyCode] = KbCheck;
-        ESC = keyCode(escapeKey) > 0;
-
-        if ESC; fprintf(ardOut,'X'); break; end
+    deltaT = toc(t0);
+    fprintf(ardOut,'W'); % WATER REWARD
+    while deltaT < durValve
+        deltaT = toc(t0);
     end
-
     fprintf(ardOut,'X');
-    pause(0.2);
+    pause(0.1);
 end
 
-fprintf('Total volume delivered = %2.2f mL\n',rewAmount*n*10^-3);
+fprintf('Total volume delivered = %2.2f uL\n',rewAmount*nTrials);
 
-% CLEAN UP =======================================
+%% CLEAN UP =======================================
 cleanArduino(ardIn,'IN');
 cleanArduino(ardOut,'OUT');
 

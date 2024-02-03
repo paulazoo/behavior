@@ -82,9 +82,14 @@ while ESC
 
         % REINFORCEMENT ==================================================
         soundPlay(rewardSoundID,soundStorage);
+        waterStartTime = toc(ARDUINO.t0);
+        deltaWaterTime = toc(ARDUINO.t0) - waterStartTime;
         fprintf(ardOut,'W'); % WATER REWARD
-        [ARDUINO, ESC] = recordContinuous(ARDUINO, durWaterValve, escapeKey); % keep reinforcement going
+        while deltaWaterTime < durWaterValve
+            deltaWaterTime = toc(ARDUINO.t0) - waterStartTime;
+        end
         fprintf(ardOut,'X'); % STOP WATER
+
         nHits = nHits + 1;
         disp(nHits)
     end

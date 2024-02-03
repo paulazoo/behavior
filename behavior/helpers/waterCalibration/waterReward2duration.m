@@ -8,8 +8,8 @@ systName = systName(1:end-1);
 cd([root_dir filesep 'helpers' filesep 'waterCalibration' filesep]);
 
 % Load calibration file
-if exist([systName filesep 'dataCalibration_valve' num2str(valveID) '.mat'],'file') > 0
-    load([systName filesep 'dataCalibration_valve' num2str(valveID) '.mat'])
+if exist([root_dir filesep 'helpers' filesep 'waterCalibration' filesep systName filesep 'dataCalibration_valve' num2str(valveID) '.mat'],'file') > 0
+    load([root_dir filesep 'helpers' filesep 'waterCalibration' filesep systName filesep 'dataCalibration_valve' num2str(valveID) '.mat'])
     valveDurTested = dataCalibration.valveDurTested;
     rewardDelivered = dataCalibration.rewardDelivered;
 else
