@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def get_second_threshold_aligned_movements(before_duration, after_duration, PreprocessLeverData_folder, HitMovements_folder, output_folder):
-    leverdata_second_threshold_indices = np.fromfile(PreprocessLeverData_folder+"second_threshold_indices.bin", dtype=np.double)
+    leverdata_second_threshold_indices = np.fromfile(HitMovements_folder+"second_threshold_indices.bin", dtype=np.double)
     movement_informations = np.load(HitMovements_folder+"leverpress_informations.npy")
     trial_frequencies = np.fromfile(PreprocessLeverData_folder+"trial_frequencies.bin", dtype=np.double)
 

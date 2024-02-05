@@ -13,9 +13,9 @@ def get_trial_frequencies(num_trials, respMTX, binaries_folder, show_histogram=F
     trial_frequencies = []
     for i in range(0, num_trials-1):
         print("Trial ",i)
-        # from the .mat file's respMTX, index 0 is the trial start time
-        trial_start_time = respMTX[i][0]
-        next_trial_start_time = respMTX[i+1][0]
+        # from the .mat file's respMTX, index 1 is the tone time
+        trial_start_time = respMTX[i][1]
+        next_trial_start_time = respMTX[i+1][1]
         print("Duration in MATLAB seconds from respMTX: ", next_trial_start_time - trial_start_time)
 
         # Read the binary file created by the C++ program which is saved as double

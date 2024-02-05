@@ -79,35 +79,32 @@ __data.params__
     - _[2] laserMode_: either 'Arch/Jaws', 'ChR2, 'Arch/Jaws-Reinf', or 'ArchSuprise'
     - _[3] laserLocation_: num, LC=1 PFC=2 MC=3
     - _[4] controlExperiments_: boole, whether this is a control laser run or not (laser settings are all the same, but no optogenetic laser light actually delivered)
-- _[15] MTXTrialTypeHeader_: header,
-`TRIAL#` | `TRIALTYPE(0 no-go / 1 go)` | `TONEID` | `durITI`
 - _[14] MTXTrialType_: nTrials x 5 [what's the last col?] matrix, row vals based on _MTXTrialTypeHeader_. Trials not run (d/t reaching _maxTotalHits_ number of hits) are rows of NaN
     - `TRIAL#`: num, index of trial
     - `TRIALTYPE(0 no-go / 1 go)`: boole, 1 if __Go trial__ or 0 if __No-Go trial__
     - `TONEID`: num, tone id that was played
     - `durITI`: ITI duration for that trial
+- _[15] MTXTrialTypeHeader_: header,
+`TRIAL#` | `TRIALTYPE(0 no-go / 1 go)` | `TONEID` | `durITI`
 - _[16] systName_: string, system/computer hostname
 
 __data.response__
-- _[1] dataArduinoHeader_: header,
-`TimeMATLAB` | `MVT` | `LICK1` | `LICK2`
+- _[0] respMTX_: num of actual trials in run x 7 matrix, row vals based on _respMTXheader_
+    - [0] `timeSessionStart`: double, MATLAB time at session start and start of first ITI
+    - [1] `timeTone`: double, MATLAB time for tone and trial start
+    - [2] `leverPressed`: boole, 1 if press, 0 if doesn't press
+    - [3] `timePressed`: double, MATLAB time when press happens
+    - [4] `MVT0`: V, reference movement as the mean of the first 100 values of lever movement
+    - [5]` ITIPress`: if press lever before tone during the foreperiod duration
+    - [6] `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
+
+__data.arduino__
 - _[0] dataArduino_:
     - ARDUINO.data with each row as data sent from behaviorIN.ino
     - `TimeMATLAB`: double, MATLAB time
     - `MVT`: V, lever sensor movement
     - `LICK`: boole, lickspout 1 sensor
     - `LICK2`: boole, lickspout 2 sensor
-- _[3] respMTXheader_: header,
-`timeTrialStart` | `timeTone` | `leverPressed` | `timePressed` | `MVT0` | `ITIPress` | `rew`
-- _[2] respMTX_: num of actual trials in run x 7 matrix, row vals based on _respMTXheader_
-    - `timeTrialStart`: double, MATLAB time at trial start includes foreperiod duration but not ITI
-    - `timeTone`: double, MATLAB time for tone
-    - `leverPressed`: boole, 1 if press, 0 if doesn't press
-    - `timePressed`: double, MATLAB time when press happens
-    - `MVT0`: V, reference movement as the mean of the first 100 values of lever movement
-    - `ITIPress`: if press lever before tone during the foreperiod duration
-    -  `rew`: 1 if __Hit__, 0 if __Miss__, 0 if __FA__, 0 if __CR__ unless "Surprise reward mode" then 1 if surprise reward
-
 
 # ./helpers/card/setupArduino.m
 setup and open serial ports for ArdIN and ArdOUT

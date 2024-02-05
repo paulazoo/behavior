@@ -166,7 +166,7 @@ while N <= nTrials && ESC
     respMTX(N,6) = false; % pressed during ITI
     respMTX(N,7) = false; % rewarded trial
     
-    respMTX(N,1) = toc(ARDUINO.t0); % TRIAL START, leverIN is aligned to this
+    respMTX(N,1) = toc(ARDUINO.t0); % SESSION START
 
     % ITI =================================================================
     durITI = MTXTrialType(N, 4);

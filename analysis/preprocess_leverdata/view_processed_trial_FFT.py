@@ -25,5 +25,5 @@ def view_processed_trial_FFT(trial_i, binaries_folder):
     ax.set_title('Power Spectrum of '+'processed_leverdata')
     ax.set_ylabel('Power Spectral Density')
     ax.set_xlabel('Frequency [Hz]')
-    plt.xlim([0, 60])
+    plt.xlim([0, 100])
     plt.show()

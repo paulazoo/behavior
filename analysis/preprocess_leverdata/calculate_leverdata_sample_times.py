@@ -20,7 +20,7 @@ def calculate_leverdata_sample_times(binaries_folder, respMTX, num_trials):
                 leverdata = np.fromfile(binaries_folder+"processed_trial"+str(i)+".bin", dtype=np.double)
                 trial_frequencies = np.fromfile(binaries_folder+"trial_frequencies.bin", dtype=np.double)
                 sampling_frequency = trial_frequencies[i]
-                trial_start_time = respMTX[i, 0]
+                trial_start_time = respMTX[i, 1]
 
                 leverdata_sample_times = calculate_sample_times(leverdata, sampling_frequency, trial_start_time)
                 
