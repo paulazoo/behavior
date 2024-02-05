@@ -105,9 +105,11 @@ def solve_x_coefficients(x_0, v_0, a_0, x_f, v_f, a_f, tf):
     # Display the solution
     # print("Solution for the coefficients:")
     smoothest_x_coefficients = []
-    for coeff, value in solution.items():
-        # print(f"{coeff}: {value}")
-        smoothest_x_coefficients.append(value)
+    for coefficient in [C1, C2, C3, C4, C5, C6]:
+        if coefficient in solution:
+            smoothest_x_coefficients.append(solution[coefficient])
+        else:
+            smoothest_x_coefficients.append(0)
 
     return smoothest_x_coefficients
 
