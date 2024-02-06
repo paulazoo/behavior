@@ -39,13 +39,9 @@ def get_trial_frequencies(num_trials, respMTX, binaries_folder, show_histogram=F
     trial_frequencies_np.astype('double').tofile(binaries_folder+"trial_frequencies.bin")
 
     # print out mean and std of sampling rate
-    print("mean: ", 1 / (sum(dts) / len(dts)), " Hz")
-    print("std: ", np.std(np.array(dts)**(-1)), " Hz")
-    print("min: ", 1 / max(dts), " Hz")
-    print("max: ", 1 / min(dts), " Hz")
-    print("1st fastest percentile", 1 / np.percentile(dts, 1))
-    print("50th percentile", 1 / np.percentile(dts, 50))
-    print("99th slowest percentile", 1 / np.percentile(dts, 99))
+    print("mean: ", 1 / (sum(dts) / len(dts)), " Hz, std: ", np.std(np.array(dts)**(-1)), " Hz")
+    print("min: ", 1 / max(dts), " Hz max: ", 1 / min(dts), " Hz")
+    print("1st fastest percentile", 1 / np.percentile(dts, 1), "50th", 1 / np.percentile(dts, 50), "99th slowest", 1 / np.percentile(dts, 99))
 
     if show_histogram:
         # make histogram

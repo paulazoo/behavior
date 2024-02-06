@@ -22,6 +22,7 @@ params.mvt.mvtThresh = 0.2; % second threshold in Volts
 % Tone selection ==================================
 params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
 params.rewardSoundID = 9;
+params.cueSoundID = 1;
 
 % Switches ==================================
 params.punish = false; % punish false alarm with puff

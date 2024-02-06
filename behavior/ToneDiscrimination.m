@@ -60,6 +60,7 @@ ARDUINO.idx = 1;
 % Tone selection --- 
 toneSelect = params.toneSelection; % Range from 1o 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
 rewardSoundID = params.rewardSoundID;
+cueSoundID = params.cueSoundID;
 
 % Switches
 punishSwitch = params.punish;

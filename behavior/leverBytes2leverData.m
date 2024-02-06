@@ -5,7 +5,7 @@ load lever_bytes_test.mat
 % will take up to 69 seconds lol for 7200000 (2 hours worth) of samples
 tic
 lever_data = zeros(72000000,1); % 2 hours = 7200000 milliseconds
-for i=1:1:n
+for i=1:1:length(lever_data)
     lever_data(i, :) = typecast(uint8(lever_bytes(i, :)), "int16");
 end
 toc
@@ -15,14 +15,14 @@ toc
 tic
 reversed_lever_bytes = zeros(72000000,2);
 reversed_lever_bytes = horzcat(lever_bytes(1:end-1, 2), lever_bytes(2:end, 1));
-lever_data = zeros(72000000,1); % 2 hours = 7200000 milliseconds
-for i=1:1:n
+% lever_data = zeros(72000000,1); % 2 hours = 7200000 milliseconds
+for i=1:1:2303000
     lever_data(i, :) = typecast(uint8(reversed_lever_bytes(i, :)), "int16");
 end
 toc
 
 %% Plot the lever_data
-scatter(1:1:n+10000, lever_data(1:1:n+10000, :))
+scatter(1:1:2303000+2303000, lever_data(1:1:2303000+2303000, :))
 ylim([400 3700])
 
 %% Save the lever_data

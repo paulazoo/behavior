@@ -29,6 +29,7 @@ nHitsToStartIncreasingThreshold = params.nHitsToStartIncreasingThreshold;
 thresholdIncreaseStep = params.thresholdIncreaseStep;
 maxTotalHits = params.maxTotalHits;
 
+toneSelect = params.toneSelection; % Range from 1o 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
 cueSoundID = params.cueSoundID;
 rewardSoundID = params.rewardSoundID;
 

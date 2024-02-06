@@ -83,34 +83,34 @@ def move_index_up_then_down_until_reaches_threshold(time_series, start_index, th
     :return: the index at which the value in the time series first reaches or exceeds the threshold to
     reach.
     """
-    try_moving_down = False
+    try_moving_up = False
     
-    # first try moving index up
+    # first try moving index down
     index = start_index
     value = time_series[index]
-    while value < threshold_to_reach:
-        index += 1
-        if index >= len(time_series):
-            print("end of trial, did not have leverpress.")
-            try_moving_down = True
-            break
-        else:
-            value = time_series[index]
-
-    # now try moving index down
-    if try_moving_down == True:
-        index = start_index
-        value = time_series[index]
+    if try_moving_up == False:
         while value < threshold_to_reach:
             index -= 1
             if index <= tone_index:
-                raise ValueError("went back all the way back to tone, did not have leverpress at all.")
+                print("went back all the way back to tone, did not have leverpress at all.")
+                try_moving_up = True
+                break
             else:
                 value = time_series[index]
-        # okay, but now go ahead and set index to earliest one that's still above threshold
-        while value > threshold_to_reach:
-            index -= 1
-            value = time_series[index]
+        # while value > threshold_to_reach: # now move index up until the earliest point it pressed lever
+        #     index -= 1
+        #     value = time_series[index]
+
+    # now try moving index up
+    if try_moving_up == True:
+        index = start_index
+        value = time_series[index]
+        while value < threshold_to_reach:
+            index += 1
+            if index >= len(time_series):
+                raise ValueError("end of trial, did not have leverpress.")
+            else:
+                value = time_series[index]
 
     return index
 

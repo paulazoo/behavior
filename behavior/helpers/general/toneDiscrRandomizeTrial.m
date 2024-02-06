@@ -1,7 +1,6 @@
-function MTXTrialType = toneDiscrRandomizeTrial(nTrials,toneSelect,fractGo,ITISettings,paramsLaser)
+function MTXTrialType = toneDiscrRandomizeTrial(nTrials,fractGo,ITISettings,paramsLaser)
 % % EXAMPLE:
 % nTrials = 301;
-% toneSelect = 4; %number of tone intensities per tone A or B
 % fractGo = 0.4; %fraction of go trials.
 % ITISettings = [1 3];
 % paramsLaser = [0.25 10]; %fractLaser trials; ntrial baseline (at the beginning of a session)
@@ -23,8 +22,8 @@ trialType = a(idx)';
 
 
 %% Randomize tone according to trial type
-a = 1:toneSelect; %GO;
-b = a+4; %noGo
+a = 1; %GO;
+b = 5; %noGo
 idx1 = vecOfRandPerm(length(a),nTrials);
 idx2 = vecOfRandPerm(length(b),nTrials);
 X = [a(idx1); b(idx2)];

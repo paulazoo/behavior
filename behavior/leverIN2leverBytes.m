@@ -26,7 +26,7 @@
 clc; clear all; close all;
 disp("Running....")
 % leverIN Arduino initialization
-leverIN = serial("COM4", "Baudrate", 115200);
+leverIN = serial("COM11", "Baudrate", 115200);
 fopen(leverIN);
 
 % Data saving storage initialization

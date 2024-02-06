@@ -12,5 +12,6 @@ params.nHitsToStartIncreasingThreshold = 5;
 params.thresholdIncreaseStep = 0.001;
 params.maxTotalHits = 100;
 
+params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities
 params.cueSoundID = 1;
 params.rewardSoundID = 9;
