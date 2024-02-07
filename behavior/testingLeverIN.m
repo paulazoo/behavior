@@ -50,7 +50,7 @@ figure()
 subplot(1,2,1)
 hold on
 scatter(1:1:n, lever_data(1:1:n, :))
-ylim([0 3000])
+%ylim([0 3000])
 title('non-reversed')
 
 %% Try the reverse lever_data
@@ -68,7 +68,7 @@ toc
 subplot(1,2,2)
 hold on
 scatter(1:1:n, reversed_lever_data(1:1:n, :))
-ylim([0 3000])
+%ylim([0 3000])
 title('reversed')
 
 %% Pick which lever_data to save
@@ -91,13 +91,13 @@ end
 
 
 %% Preview butterworth filtered lever_data and check that noise is gone
-fc=50;
+fc=40;
 fs=5888;
 [b,a] = butter(6, fc/(fs/2));
 filtered_lever_data = filter(b,a,lever_data(1:1:1000000, :));
 figure()
 hold on
-scatter((1:1:1000000), 5 - (filtered_lever_data*5/1023))
+scatter((1:1:1000000), (filtered_lever_data-2000)*5/1023)
 title('Butterworth filter preview')
 xlabel('seconds')
 hold off

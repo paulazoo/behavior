@@ -70,7 +70,7 @@ threshold_shift = 0.0
 name = 'ANM8'
 session = '20240202_d4'
 num_trials = 109
-threshold_shift = -0.01
+threshold_shift = 0.0
 
 name = 'ANM8'
 session = '20240203_d5'
