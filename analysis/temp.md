@@ -52,8 +52,12 @@ threshold_shift = 0.0
 name = 'ANM1'
 session = '20240212_d7'
 num_trials = 63
-threshold_shift = 0.05
+threshold_shift = 0.07
 
+name = 'ANM1'
+session = '20240213_d8'
+num_trials = 76
+threshold_shift = 0.0
 
 
 name = 'ANM8'
@@ -86,3 +90,20 @@ name = 'ANM5'
 session = '20240212_d1'
 num_trials = 57
 threshold_shift = 0.07
+
+name = 'ANM5'
+session = '20240213_d2'
+num_trials = 66
+threshold_shift = 0.0
+
+
+name = 'ANM3'
+session = '20240213_d1'
+num_trials = 75
+threshold_shift = 0.00
+
+
+name = 'ANM4'
+session = '20240213_d1'
+num_trials = 58
+threshold_shift = 0.00
