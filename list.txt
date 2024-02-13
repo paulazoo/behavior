@@ -1,6 +1,4 @@
 Paula:
-- train 4 WT, headbar mice on Komiyama-based parameters: see ./behavior/ToneDiscrimination_versions.md
-- ask Arundathi and Sophie about supervision for H2O
 
 future experiments:
 - show nulls have a deficit, then either elicit NE release behaviorally (punishment sound) or optogenetically

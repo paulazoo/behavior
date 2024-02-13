@@ -8,10 +8,10 @@ params.fractNoGo = 0; %fraction of NoGo trials
 params.fractRewCorrRej = 0; %fraction of correct rejection trials that are rewarded
 
 % Durations ==================================
-params.durations.ITISettings = [2.0 4.0];
+params.durations.ITISettings = [8.0 12.0];
 params.durations.rewardConsumption = 2.5; % time after reward delivery
 params.durations.airPuff = 0.3; % time for air puff valve
-params.durations.decision = 30; %time after tone to make decision
+params.durations.decision = 10; %time after tone to make decision
 params.durations.preReinforcement = 0.25; % time after successful lever press and before reinforcement
 params.durations.maxLeverPressDuration = 2.0; % time to pass both noMvtThresh and mvtThresh in order to count as lever press
 

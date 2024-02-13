@@ -41,7 +41,7 @@ def extract_leverpresses(trials_to_consider, binaries_folder, movement_baseline,
 
         if np.isnan(leverpress_index):
             raise ValueError("leverpress index is nan.")
-        elif leverdata[leverpress_index] < thresholds[0]:
+        elif leverdata[leverpress_index] < thresholds[1]:
             print("leverpress detection was at below first threshold, try moving leverpress index up...")
             leverpress_index = move_index_up_then_down_until_reaches_threshold(leverdata, leverpress_index, thresholds[1], tone_index)
             print("new leverpress index value: ", leverdata[leverpress_index])
