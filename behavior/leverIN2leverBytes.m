@@ -14,11 +14,8 @@
     While the loop is running, simply do Ctrl+C or stop the program to stop
     recording from serial port.
 
-    231026: tested with Arduino UNO USB virtual serial port on M1 Mac-- 9kHz sampling rate somehow
-    231027: tested with Arduino UNO USB virtual serial port on Windows-- >5kHz
-    231030: tested with the real setup, start lever_data before session,
-    end lever_data before session ESC OR after session ends normally
-    ends--> 9kHz
+    240207: BOTH LeverIN AND BehaviorIN MUST BE PLUGGED IN FOR RESISTANCE
+    VALUES TO WORK OUT
 
 %}
 
