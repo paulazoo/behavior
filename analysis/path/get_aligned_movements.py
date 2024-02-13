@@ -66,7 +66,7 @@ def get_first_threshold_aligned_movements(before_duration, after_duration, Prepr
 
 
 
-def get_tone_aligned_movements(before_duration, after_duration, PreprocessLeverData_folder, HitMovements_folder):
+def get_tone_aligned_movements(before_duration, after_duration, PreprocessLeverData_folder, HitMovements_folder, output_folder):
     leverdata_tone_indices = np.fromfile(PreprocessLeverData_folder+"tone_indices.bin", dtype=np.double)
     movement_informations = np.load(HitMovements_folder+"leverpress_informations.npy")
     trial_frequencies = np.fromfile(PreprocessLeverData_folder+"trial_frequencies.bin", dtype=np.double)
@@ -79,10 +79,6 @@ def get_tone_aligned_movements(before_duration, after_duration, PreprocessLeverD
 
         sample_times = np.fromfile(PreprocessLeverData_folder+"sample_times_trial"+str(trial_index)+".bin", dtype=np.double)
         tone_index = int(leverdata_tone_indices[trial_index])
-        
-        left_index, right_index = movement_information[1:]
-        left_index = int(left_index)
-        right_index = int(right_index)
 
         sampling_frequency = trial_frequencies[trial_index]
 
