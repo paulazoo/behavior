@@ -17,7 +17,7 @@ params.durations.maxLeverPressDuration = 2.0; % time to pass both noMvtThresh an
 
 % Lever Press Detection ==================================
 params.mvt.noMvtThresh = 0.15; % first threshold in Volts
-params.mvt.mvtThresh = 0.25; % second threshold in Volts
+params.mvt.mvtThresh = 0.5; % second threshold in Volts
 
 % Tone selection ==================================
 params.toneSelection = 1; % Range from 1 to 4. 1 means only max. 2 means two max, ... and 4 all tone intensities

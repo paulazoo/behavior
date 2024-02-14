@@ -1,5 +1,6 @@
 clear all; close all; clc;
 root_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\behavior';
+save_dir = 'D:\Dropbox (MIT)\Giselle Fernandes\DataShare_with_Paula\Data_Renamed';
 
 cd(root_dir);
 addpath([pwd filesep 'helpers' filesep]);
@@ -291,11 +292,11 @@ data.response = response;
 data.arduino = ARDUINO.data;
 
 % Check or Create folder for animalID
-cd(root_dir);
-if exist([root_dir 'ToneDiscriminationData'],'dir') == 0
+cd(save_dir);
+if exist([save_dir 'ToneDiscriminationData'],'dir') == 0
     mkdir(pwd,'ToneDiscriminationData');
 end
-if exist([root_dir 'ToneDiscriminationData\' animalID],'dir') == 0
+if exist([save_dir 'ToneDiscriminationData\' animalID],'dir') == 0
     mkdir('ToneDiscriminationData',[animalID]);
 end
 
@@ -305,7 +306,7 @@ day = datetime('now','TimeZone','local','Format','yyyyMMdd');
 saveName = sprintf('ToneDisc_%s_%s',animalID,day);
 alphabets = 'bcdefghijklmnopqrstuvwxyz';
 idArd = 1;
-while exist(['ToneDiscriminationData\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
+while exist([save_dir '\ToneDiscriminationData\' animalID '\' saveName '.mat'],'file') && idArd <= length(alphabets)
     if idArd == 1
         saveName(end+1) = alphabets(idArd);
     else
@@ -315,7 +316,7 @@ while exist(['ToneDiscriminationData\' animalID '\' saveName '.mat'],'file') && 
 end
 
 % save
-save(['ToneDiscriminationData\' animalID '\' saveName],'data');
+save([save_dir '\ToneDiscriminationData\' animalID '\' saveName],'data');
 fprintf('Data was saved properly\n');
 
 % Plot all the data
@@ -337,3 +338,5 @@ cleanArduino(ardIn, 'IN');
 clear ardIn
 cleanArduino(ardOut, 'OUT');
 clear ardOut
+
+cd(root_dir)
