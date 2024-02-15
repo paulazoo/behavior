@@ -3,7 +3,7 @@
 - sets things in behaviorOUT.ino e.g. `fprintf(ardOut,'I')`
 - high temporal resolution lever sensing in leverIN.ino
     - equation for converting voltage to displacement assuming fulcrum is 1/3 of the way: $\frac{X}{0.5V} \cdot S \cdot 2$ where $S=$ half the total LVDT range and $V=$ the total up and down voltage.
-    - 240213 using $S=5.08\text{mm}$ from HR200 and $V=6\text{V}$: 0.15V to 0.25V thresholds are then 0.508mm to 0.8466mm
+    - 240213 using $S=5.08\text{mm}$ from HR200 and $V=6\text{V}$: 0.15V to 0.5V thresholds are then 0.508mm to 1.6mm
 
 ## requirements:
 - MATLAB Statistics and Machine Learning Toolbox
