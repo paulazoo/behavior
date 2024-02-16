@@ -97,7 +97,7 @@ fs=5800;
 filtered_lever_data = filter(b,a,lever_data(1:1:n, :));
 figure()
 hold on
-scatter((1:1:n), (filtered_lever_data-2000)*5/1023)
+scatter((1:1:n), (filtered_lever_data)*5/1023)
 title('Butterworth filter preview')
 xlabel('seconds')
 hold off
@@ -105,6 +105,6 @@ hold off
 %% Preview butterworth filtered lever_data and check that noise is gone
 figure()
 hold on
-scatter(1:1:n, (lever_data(1:1:n, :)-2000)*5/1023)
+scatter(1:1:n, (lever_data(1:1:n, :))*5/1023)
 xlabel('seconds')
 hold off
